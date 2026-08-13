@@ -459,65 +459,6 @@ function goNext(){
 renderPage();
 
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
-const prdData={
-  1:{title:'标记 1 · 日期匹配规则',badge:'业务规则',badgeType:'',
-     text:'日历中标有彩色点的日期 = 有 mockEvents 的日期\n点击日期 → selectDay(d)：\n• 设 selectedDate\n• 重置 selectedChipName 和 examType="big"\n• 150ms 后 renderPage()\n\n命中行程（matchedEvent）：\n• selectedDate 与 mockEvents 某条日期字符串完全匹配\n• 自动预填 examType=matchedEvent.examType\n• 自动预填 selectedChipName=matchedEvent.title\n• 显示橙色"已匹配日历行程"卡片\n\n未命中：显示灰色"当前日期无行程"卡片\n提交后 createCalendarEvent=true 写入 uploadStep1'},
-  2:{title:'标记 2 · 考试模式选择规则',badge:'交互规范',badgeType:'interaction',
-     text:'examType 默认 "big"（大考全科）\n命中行程时 examType 从 matchedEvent.examType 读取\n\n两个选项卡：\n• big：大考全科（期中/期末/模考）\n• small：小考单科（周测/单元考/随堂小测）\n\npickType(t)：\n• 更新 examType\n• 重置 selectedChipName=""\n• 重新 renderPage()\n\n命中行程时无名称输入框；未命中时显示考试名称输入框'},
-  3:{title:'标记 3 · 提交与 localStorage 写入规则',badge:'数据规范',badgeType:'data',
-     text:'goNext() 写入 localStorage "uploadStep1"：\n{\n  examDate: fmtD(selectedDate),\n  examName: 命中时=matchedEvent.title，否则=nameInput.value||selectedChipName||"未命名考试",\n  examType: "big"|"small",\n  childId: selectedChild||"",\n  childName: getChildName(selectedChild),\n  createCalendarEvent: !matchedEvent（bool）,\n  createdAt: Date.now()\n}\n\n写完后跳转 shangchuanfupan.html（步骤 2/2）\n\n⚠️ 注意：产品文档记录跳转目标为 shangchuanfupan.html，非 scshijuan.html'},
-  4:{title:'标记 4 · 考试归属选择规则',badge:'交互规范',badgeType:'interaction',
-     text:'考试归属用于指定本次考试属于哪个孩子\n\nchildList = [{id:"1",name:"张小明"},{id:"2",name:"张小红"}]\n\n显示规则：\n• 选择日期后始终显示"考试归属"区域\n• 命中行程且行程有 child 字段 → 自动选中对应孩子，chip 上显示"自动匹配"标签\n• 未命中行程 / 行程无 child 字段 → 所有 chip 未选中，底部提示"请选择该考试归属的孩子"\n\npickChild(id)：\n• 点击选中，再点取消（toggle）\n• 更新 selectedChild\n• 重新 renderPage()\n\n提交时 childId 和 childName 写入 uploadStep1'}
-};
-let _curPrdId=null;
-(function(){const prdK='prd_xuanzhexingzhi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_xuanzhexingzhi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

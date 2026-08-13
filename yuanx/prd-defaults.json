@@ -1,0 +1,370 @@
+{
+  "bianjijiazhang": {
+    "1": {
+      "title": "标记 1 · 头像更换规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "原型阶段：点击头像区域循环切换预设字符（姓氏/字母），模拟更换效果，不调用真实文件选择器。\n\n正式版本规则：\n• 点击头像弹出底部 ActionSheet：拍照 / 从相册选择 / 取消\n• 图片裁剪为 1:1 圆形，最大 2MB\n• 上传成功后实时更新头像显示\n• 头像存储于 CDN，URL 保存至用户 profile"
+    },
+    "2": {
+      "title": "标记 2 · 昵称编辑规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "字段规则：\n• 最大长度：20 个字符\n• 不允许纯空白\n• 不做敏感词校验（原型阶段）\n\n保存行为：\n• 点击顶部\"保存\"按钮写入 localStorage.profileName\n• Toast 提示\"保存成功\"，800ms 后自动返回上一页\n• 返回时若有未保存修改，弹 confirm 确认对话框\n\n数据来源：\n• 优先读取 localStorage.profileName\n• 无记录则显示默认值\"张妈妈\""
+    }
+  },
+  "cuoti": {
+    "1": {
+      "title": "标记 1 · 学情统计规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "统计范围：当前选中学生 + 当前科目筛选下的试卷。\n\n指标定义：\n• 试卷总数：符合筛选条件的试卷数量\n• 累计错题：所有试卷 wrongQ 之和\n• 平均得分率：scoreRate 平均值，保留 1 位小数\n\n数据来源：本地 papers 数组（原型 mock 数据）"
+    },
+    "3": {
+      "title": "标记 2 · 试卷列表项规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "排序：按 date 倒序（新→旧）。\n\n颜色编码：每个科目对应固定图标色（数学红、英语蓝、物理紫…）。\n\n点击行为：跳转 fenxibaogao.html。\n\n分析中状态：若 localStorage.reportTask.status === generating，在列表顶部插入进行中卡片；completed 则显示报告就绪卡片。\n\n空状态：无匹配试卷时显示空状态插画 + 提示文案。"
+    }
+  },
+  "fenxi": {
+    "1": {
+      "title": "标记 1 · 报告 Banner 状态机",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "reportBanner 读 localStorage \"reportTask\"：\n• null 或 status===\"read\" → display:none\n• status===\"generating\" → 黄色 banner + 旋转图标\n  8秒后自动升级为 completed 并重渲染\n• status===\"completed\" → 绿色 banner + 勾选图标\n\n点击 handleBannerClick()：\n• generating → 跳转 loading.html\n• completed → 写 status=\"read\" → 跳转 fenxibaogao.html\n\n⚠️ generating 时 setTimeout 8000ms 自动升级不可取消"
+    },
+    "2": {
+      "title": "标记 2 · 备考日程挂件数据规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "挂件数据来自 rili.html mockEvents 中最近一条 type===mock_exam\n当前 hardcode：\n• 倒计时：2（天后）\n• 日期：11-05 周四\n• 考试名：期中综合考试\n\nAI tip 文案：hardcode，提及\"数学二次函数最值\"和\"物理受力分析\"\n\n点击整个挂件 → 跳转 rili.html"
+    },
+    "3": {
+      "title": "标记 3 · 学情复盘入口数据规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "fec-stats-row 显示三项汇总数据：\n• 历史试卷：7（hardcode，对应 cuoti.html cuotiRecords 数组长度）\n• 累计错题：27（hardcode）\n• 平均得分率：76.2%（hardcode）\n\n这些数字应从 localStorage 实际错题记录聚合计算\n当前均为 mock 静态值，与 cuoti.html 数据不同步\n\n点击整个 fec 卡片 → 跳转 cuoti.html"
+    }
+  },
+  "fenxibaogao": {
+    "1": {
+      "title": "标记 1 · 报告头部数据规范",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "报告对象结构：\n• exam.name：考试名称\n• exam.subject：学科\n• exam.date：YYYY-MM-DD\n• scoreRate：得分率（数字，如 78.5）\n• kpResults：知识点数组，每项含 name/level/errorRate/desc\n\n得分率展示精度：保留一位小数，单位\"%\"。"
+    },
+    "2": {
+      "title": "标记 2 · 试卷原图展示规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "• 缩略图尺寸：90×120px，圆角 8px，横向滚动容器\n• 每张图底部叠加\"第 N 页\"黑色半透明标签\n• 点击任意图片弹出全屏预览覆盖层（opacity 动画）\n• 点击遮罩任意位置关闭预览（无独立关闭按钮之外的遮罩关闭）\n• 原型中使用 SVG Mock 图，含学科色彩编码与题目模拟内容"
+    },
+    "3": {
+      "title": "标记 3 · 知识点三档分类规则",
+      "badge": "PRD业务规则",
+      "badgeType": "",
+      "text": "所有知识点归入且仅归入一个档位：\n\n🔴 待改进（urgent）：错误率 ≥50%\n  → 重点突破，优先刷专项题\n\n🟡 需关注（attention）：错误率 25%-49%\n  → 加强巩固，定期复习\n\n🟢 继续保持（keep）：错误率 <25%\n  → 维持，轻量复习即可\n\n三档比例色条高度 28px，圆角 14px，各段 flex 值等于该档知识点数量。"
+    },
+    "4": {
+      "title": "标记 4 · 知识点卡片交互",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "• 知识点按 urgent→attention→keep 分组展示\n• 每组有分组标题（含 emoji + 文字说明）\n• 卡片左侧 border-left 3px 对应档位颜色\n• 点击卡片：当前为 Toast 占位（\"查看知识点趋势：XXX\"）\n• 正式版本应跳转该知识点的历史趋势详情页\n• 卡片展示：知识点名称（加粗）+ 描述（灰色）+ 错误率（档位颜色）"
+    },
+    "5": {
+      "title": "标记 5 · 无缝脱敏分享规则",
+      "badge": "PRD业务规则",
+      "badgeType": "",
+      "text": "点击【把分析报告分享到社区】按钮：\n• 采用零阻断（Zero-Friction）流程，无需弹出隐私选择弹窗\n• 默认固定 includePhotos = false（不含任何试卷原图）\n• 自动将得分率、三档分布、知识点提炼列表打包写入 sessionStorage.shareReport\n• 提示 Toast 并无缝跳转至 fabutiezi.html，将数据自动注入发帖编辑区"
+    }
+  },
+  "gouxuancuoti": {
+    "1": {
+      "title": "标记 1 · AI识别结果展示",
+      "badge": "显示规则",
+      "badgeType": "data",
+      "text": "每科展示：\n• 试卷缩略图（点击放大）\n• AI识别题目总数\n• 自动判定错题数\n• 当前人工修正后的错题数\n\n数据来源：AI识别结果（原型用模拟数据，每科默认10题2个错题）。"
+    },
+    "2": {
+      "title": "标记 2 · 题号勾选交互",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "题号颜色：\n• 红色 = 错题\n• 灰色 = 正确\n• 橙色边框 = 新手动添加的题\n\n点击切换对/错。\n点击\"+\"可手动添加题号（弹窗输入）。\n修改后 Tab 上显示绿色小点\"已人工微调\"。"
+    },
+    "3": {
+      "title": "标记 3 · 生成报告按钮",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "文案：生成大考诊断报告（N科全涵盖）。\n点击后写入 localStorage.reportTask，跳转 loading.html。\n报告包含：考试名称、科目列表、各科错题号列表。"
+    }
+  },
+  "loading": {
+    "1": {
+      "title": "标记 1 · 进度模拟规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "进度条模拟（startProgress）：\n• 每 500ms 增加 random()*8+4（约 4~12%）\n• 到达 100% 时停止 interval\n• 同时调用 updateTaskState(\"completed\")\n• 600ms 后渲染完成态 renderComplete()\n\n步骤文案按 progress/20 分档（0/20/40/60/80）：\n① 提取错题知识点\n② 匹配考纲知识图谱\n③ 跨学科关联分析\n④ 生成提分建议\n⑤ 合成诊断报告\n\nbgMode=true 时 interval 立即停止（后台模式）"
+    },
+    "2": {
+      "title": "标记 2 · 状态机与后台模式",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "reportTask 状态机（localStorage \"reportTask\"）：\n• generating：分析中，后台运行\n• completed：分析完成，可查看\n• read：用户已阅读报告\n\n后台模式（bgMode）：\n• 点击\"继续上传其它科目\"→ setBgMode() → 跳转 xuanzhexingzhi.html\n• 点击\"返回首页\"→ setBgMode() → 跳转 fenxi.html\n• setBgMode 仅在未完成时写 generating 状态\n\n返回此页时：\n• taskInfo.status===\"completed\" → 直接渲染完成态，不重跑进度\n• 否则从头运行 renderLoading()"
+    }
+  },
+  "login": {
+    "1": {
+      "title": "标记 1 · 短信验证码规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "获取验证码按钮规则：\n• 初始 disabled（手机号未满 11 位）\n• phoneInput input 事件实时格式化 3-4-4\n• getRawPhone().length===11 且 countdown===0 → 启用\n\n发送后（sendSms）：\n• countdown=60，每秒递减\n• 按钮文字变为 \"{n}s 后重发\"\n• 倒计时归零 → 若手机号仍 11 位则重新启用\n\n测试验证码：888888（hardcode）\n• 输入 888888 → 进入新用户引导（Step 2）\n• 其他任意 4+ 位 → 直接登录 → 跳转 fenxi.html"
+    },
+    "2": {
+      "title": "标记 2 · 引导流程概览",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "Step 1（登录）：手机号 + 验证码\n• 888888 触发新用户建档流程（Step 2 -> Step 3）\n\nStep 2（产品介绍）：\n• 展现 3 大核心价值，点击后进入孩子信息录入页。"
+    },
+    "3": {
+      "title": "标记 3 · 孩子档案收集规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "表单包含字段：\n• 姓名：必填，未填点击保存弹出 Toast 提示\n• 年级：下拉菜单，默认\"高三\"\n• 学校：选填，可输入学校简称\n• 学习科目：多选胶囊，选中后打亮并高亮存储\n\n数据持久化：\n• 提交后通过 localStorage 存储为 `child_info` 对象，可供主页和个人中心调用。"
+    }
+  },
+  "quanburicheng": {
+    "1": {
+      "title": "标记 1 · 类型筛选规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "filter-strip 4 个筛选芯片：\n全部(all) / 考试安排(mock_exam) / 报名招考(registration) / 家长会/活动(custom)\n\nfilterType(type, btn)：\n• 更新 currentFilter\n• 移除所有 .active，给当前 btn 添加\n• 重新 renderList()\n\n筛选逻辑：type=\"all\" → 显示全量\n否则 allSchedules.filter(s => s.type === type)\n\n⚠️ 已知 Bug：\n报名/招考 芯片的 onclick=\"filterType('registration', class)\"\n\"class\" 是 JS 保留字，传入 btn 参数为 undefined\n→ querySelectorAll 后的 btn.classList.add() 抛出 TypeError\n→ 筛选功能崩溃，active 样式无法切换"
+    },
+    "2": {
+      "title": "标记 2 · 日程列表数据规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "allSchedules 数组（6条）：\n• id, title, date(YYYY-MM-DD), daysLeft(文字), type, subject\n\ntypeConfig 映射（5种）：\n• mock_exam → 考试 / 橙色 / assignment\n• registration → 招考 / 蓝色 / how_to_reg\n• physical_exam → 体检 / 绿色 / local_hospital\n• custom → 活动 / 紫色 / event\n• gaokao → 高考 / 红色 / flag\n\n点击卡片 → showEventDetail(idx)：\n• idx 是 filteredCache 中的下标\n• 渲染 bottom sheet modal\n• 删除按钮 → deleteEvent(idx) → 从 allSchedules splice 后重渲\n\n新建日程 → addEvent()：prompt 输入标题，硬写 date=2026-11-20, type=custom"
+    }
+  },
+  "queren_dacuoti": {
+    "1": {
+      "title": "标记 1 · 吸顶 Tab 交互规范",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "Tab 来源：由 localStorage.reportTask.subjects 决定，仅显示本次大考涉及的科目。\n\n点击 Tab：平滑滚动（scrollIntoView smooth）到对应科目区域。\n\nScroll-spy：手势滚动时，根据各科目 section 的 offsetTop 判断当前可见科目，自动高亮对应 Tab，并将 Tab 滚入可视范围（inline: nearest）。"
+    },
+    "2": {
+      "title": "标记 2 · 错题勾选规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "默认状态：根据 mock 数据中 wrong:true 的题目预选中（模拟 AI 识别结果）。\n\n点击题卡：切换该题错题状态，红色边框 + 红色圆形打勾 = 已标记为错题。\n\n底部计数：实时统计所有科目已勾选错题总数。\n\n提交条件：至少勾选 1 道错题，否则 Toast 提示。"
+    },
+    "3": {
+      "title": "标记 3 · 数据提交规范",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "提交时更新 localStorage.reportTask：\n• status: generating\n• wrongCount: 勾选总数\n• wrongIds: 勾选题目 id 数组\n\n跳转：→ loading.html（模拟 AI 分析中）\n\nloading.html 完成后跳转 fenxibaogao.html 查看报告。"
+    }
+  },
+  "rili": {
+    "1": {
+      "title": "标记 1 · 年月选择器规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "点击月份标签（如\"2026 年 7 月\"）触发 openMonthPicker()。\n\n弹窗规则：\n• 居中白底卡片弹窗，遮罩层点击关闭\n• 顶部年份导航：pickerYear ± 1年，左右箭头\n• 3×4月份按钮网格（1月–12月）\n• 当前 focusedYear+focusedMonth 高亮主色\n• 点击月份：更新 focusedYear/focusedMonth → 关闭弹窗 → 重渲染日历\n• 不改变已选中的 selectedDate\n• \"取消\"按钮仅关闭弹窗"
+    },
+    "2": {
+      "title": "标记 2 · 日期点击交互规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "点击日期格子仅改变 selectedDate，不自动弹出任何表单。\n\n日期格子状态：\n• today：主色圆圈边框（border 1.5px）\n• selected：主色背景填充，白色文字\n• other-month：灰色文字（非当月日期）\n• 有事件：格子下方最多3个彩色小圆点\n\n点击非当月日期：仅视觉高亮，不切换月份视图\n周起始：周一为第一列（startDow===0 映射为 7）"
+    },
+    "3": {
+      "title": "标记 3 · 空日期状态与新增入口",
+      "badge": "PRD业务规则",
+      "badgeType": "",
+      "text": "所选日期无事件时的展示规则：\n• 灰色文字\"当天暂无日程\"（居中）\n• 下方虚线按钮\"+ 添加日程\"（主色虚线边框，主色文字）\n• 点击该按钮调用 addEvent() 并 pre-fill 所选日期\n• 不在点击空白日期格时自动弹出表单\n\n新增事件后 type 默认为 custom，颜色 #9C27B0"
+    },
+    "4": {
+      "title": "标记 4 · 综合日程挂件规则",
+      "badge": "PRD业务规则",
+      "badgeType": "",
+      "text": "顶部橙红渐变卡片（schedule-hero-card）固定展示：\n\n主事件大卡：\n• shc-main-title：最近一次考试名称\n• shc-main-badge：倒计时\"X 天后\"白底红字\n• 点击：日历跳转到对应日期（jumpToEventDate）\n\n次要事件列表（2条）：\n• 表情图标 + 事件名 + 日期 + 天数标签\n• 点击同样 jumpToEventDate\n\nAI 冲刺提示：固定文案，黑色半透明底条\n\n注意：挂件内容为静态 Mock，不随 mockEvents 数组动态更新"
+    }
+  },
+  "scshijuan": {
+    "1": {
+      "title": "标记 1 · 考试类型选择",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "小考·单科：一张试卷，录入一个科目，跳转单科错题勾选页（gouxuancuoti.html）。\n\n大考·全科：多张试卷，可选多科，跳转多科错题确认页（queren_dacuoti.html），顶部含吸顶科目 Tab。\n\n默认选中：小考·单科。"
+    },
+    "2": {
+      "title": "标记 2 · 考试信息字段",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "考试名称：必填，不可为空。\n孩子：下拉选择，数据来源 bianjixs.html 的 students 数组。\n考试日期：date 选择器，默认今日。\n\n提交后写入 localStorage.reportTask，字段包含 status/examName/subject/totalQ/mode/date。"
+    },
+    "3": {
+      "title": "标记 3 · 科目选择规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "小考模式：单选下拉，选一个科目 + 填总题数。\n\n大考模式：多选 Chip，至少选 1 个科目，不需要填总题数（每科单独录入）。\n\n大考模式科目 Chip 点击切换 active 状态，选中高亮为主色。"
+    }
+  },
+  "shangchuanfupan": {
+    "1": {
+      "title": "标记 1 · 上下文信息栏",
+      "badge": "显示规则",
+      "badgeType": "data",
+      "text": "显示考试名称、日期、考试类型（大考/小考）。\n数据来源：上一步 xuanzhexingzhi.html 写入 localStorage.uploadStep1。\n若 uploadStep1 为空则重定向回 xuanzhexingzhi.html。"
+    },
+    "2": {
+      "title": "标记 2 · 试卷上传交互",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "小考模式：\n• 点击空白区域触发上传（拍照/相册）\n• 支持多张，上传后显示缩略图网格\n• 点缩略图放大预览，叉号删除\n\n大考模式：\n• 每科独立上传区域，按9科排列\n• 已上传科目显示\"已上传\"绿色状态\n• 进度条显示已上传科目数/总科目数"
+    },
+    "3": {
+      "title": "标记 3 · 提交按钮规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "禁用状态：未上传任何图片时按钮置灰。\n激活后文案：\n• 小考：完成，去勾选错题\n• 大考：确认提交（N科·共N张）\n点击后跳转 gouxuancuoti.html，延迟1.2s模拟识别过程。"
+    }
+  },
+  "shequ": {
+    "1": {
+      "title": "标记 1 · 圈子",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "circles 数组定义 5 个圈子：全部(0)/高一(1)/高二(2)/高三(3)/其它(4)\nactiveCircle 默认 0（全部）\n\nfilterCircle(id) 执行：\n① 更新 activeCircle\n② 重渲染圈子 chip 列表\n③ 重渲染帖子列表\n\n筛选逻辑：activeCircle===0 时显示全部\n否则按 post.circleId === activeCircle 过滤\n\n注：圈子 id 与 post.circleId 数字匹配，非名称匹配"
+    },
+    "2": {
+      "title": "标记 2 · 帖子",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "热门标签规则（isHot）：\n• post.pinned === true，OR\n• post.likes > 100\n满足任一条件显示红色\"热\"标签\n\n点亮（有用）规则：\n• litPosts 用 Set 存储已点亮 post.id\n• 点击切换：已点亮则删除，未点亮则添加\n• 显示数 = post.likes + (isLit ? 1 : 0)\n• 状态仅存内存，刷新后重置\n\n报告标签：post.isReport===true 时显示蓝色\"报告\"标签\n图片数>1 时右下角显示 +N"
+    },
+    "3": {
+      "title": "标记 3 · 发帖",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "发帖按钮 → window.location.href=\"fabutiezi.html\"\n\n两种进入 fabutiezi.html 的方式：\n① 直接点击发帖按钮：空白表单\n② 从 fenxibaogao.html 分享：\n   fenxibaogao 写 sessionStorage \"shareReport\"\n   fabutiezi 的 loadSharedReport() 读取后删除\n   自动填充内容文本并注入报告微卡片\n\n发布成功后跳转回 shequ.html"
+    }
+  },
+  "shezhi": {
+    "1": {
+      "title": "标记 1 · 账号安全数据显示规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "手机号：固定脱敏格式 138 **** 8888\n（原始值不存 localStorage，仅作展示用）\n\n密码状态：显示\"已设置\"或\"未设置\"\n→ 点击跳转修改/设置密码页面\n\n认证状态：从 user.verified 读取\n→ true = 已认证（绿色），false = 未认证（橙色警告）"
+    },
+    "2": {
+      "title": "标记 2 · 认证状态徽章规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "家长认证 menu-item 点击 → 跳转 jiazhangrenzheng.html\n\n已认证状态（user.verified=true）：\n• mi-badge: 绿色背景，文字\"已认证\"\n• 可再次点击进入查看\n\n未认证状态（user.verified=false）：\n• mi-badge: 橙色背景，文字\"去认证\"\n• 点击进入认证流程"
+    },
+    "3": {
+      "title": "标记 3 · 退出登录与注销合规流",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "• 退出登录：清除本地 token 并清空缓存，保留服务端账号数据。\n• 注销账号（合规改造）：点击后弹出包含资产清空与风险告诫的注销须知；须主动勾选同意《账号注销协议》复选框后方可解锁“确认注销”按钮，提交后清空数据并跳转登录页。"
+    }
+  },
+  "tiezidetail": {
+    "1": {
+      "title": "标记 1 · 帖子",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "posts 对象：以 postId 为键（1-7）\n• 字段：id, author, avatarColor, circleName, title, content, likes, comments, shares, images[], pinned, isReport, time\n\n图片网格布局规则：\n• 1张 → cols-1（全宽）\n• 2张 → cols-2（各半）\n• 3张或更多 → cols-3（三列，1:1 比例）\n\nisHot 判断：post.pinned===true OR post.likes>100\n\npostId 来源：URL 参数 ?id=N，缺省为 1\n• posts[postId] 不存在时 fallback 到 posts[1]"
+    },
+    "2": {
+      "title": "标记 2 · 评论交互",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "评论区单条评论交互规范：\n• 支持点赞、回复、单条评论更多（举报/拉黑）操作\n• 拉黑特定评论者后，系统会自动过滤黑名单用户的发言，并不在评论列表中呈现"
+    },
+    "3": {
+      "title": "标记 3 · 举报与拉黑安全治理",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "举报与拉黑安全治理规范：\n• 点击右上角 more_vert 弹出 ActionSheet：选择【举报帖子】或【拉黑作者】\n• 举报规则（小红书对标）：支持 5 种违规原因，选择“其它违规内容”时平滑展示 200 字 limit 输入框，空内容提交触发拦截 Toast\n• 拉黑作者规则：将用户加入 blacklistedAuthors 集合，全局隐藏该作者发表的所有帖子内容与评论内容"
+    }
+  },
+  "wode": {
+    "1": {
+      "title": "标记 1 · 认证状态徽章规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "user.verified 控制显示：\n• true → 绿色 badge：<verified> 已认证家长\n• false → 橙色 badge：<warning> 未认证\n\n认证入口：jiazhangrenzheng.html"
+    },
+    "2": {
+      "title": "标记 2 · 分析次数配额规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "quota 配额格式：\n\"免费 {free} 次 + 奖励 {bonus} 次 · 剩余 {totalRemain} 次\"\n\n规则：每月 1 号自动刷新 free 次数。"
+    },
+    "3": {
+      "title": "标记 3 · 社区互动记录规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "包含 3 项精简互动入口：\n1. 我的发帖：查看与管理自己发布的所有帖子/高二\n2. 有用：快速浏览个人点有用的社区内容\n3. 评论：查看历史评论与收到的回复"
+    }
+  },
+  "xiaoxi": {
+    "1": {
+      "title": "标记 1 · 社交互动与空状态规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "social-strip 有 3 个入口：赞/新增粉丝/评论和回复\n• 点击切换至子视图\n• 若数组为空，渲染定制化 empty-state 结构（含引导Icon、提示文本及 CTA 操作按钮）\n\n测试操作：\n右上角点击“清空数据演示”可一键切换全局空状态展示。"
+    },
+    "2": {
+      "title": "标记 2 · 频道列表空状态处理",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "消息频道包含系统通知、诊断提醒及私信：\n• 频道列表为空时整体展示空状态布局。\n• 引导按钮可直达社区或诊断工具。"
+    }
+  },
+  "xiugaishouji": {
+    "1": {
+      "title": "标记 1 · 原手机校验规范",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "发送条件：点击即可发送验证码。\n\n倒计时：60s 倒计时，归零后恢复点击。\n\n校验规则：验证码输入 ≥4 位时激活【下一步】按钮。"
+    },
+    "2": {
+      "title": "标记 2 · 新绑定与校验规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "手机号格式：11位数字，自动格式化 3-4-4。\n\n校验规则：\n1. 新号码不能等于原绑定号码（138****8888）。\n2. 手机号满 11 位且验证码 ≥4 位激活【确认更换】。"
+    }
+  },
+  "xuanzhexingzhi": {
+    "1": {
+      "title": "标记 1 · 日期匹配规则",
+      "badge": "业务规则",
+      "badgeType": "",
+      "text": "日历中标有彩色点的日期 = 有 mockEvents 的日期\n点击日期 → selectDay(d)：\n• 设 selectedDate\n• 重置 selectedChipName 和 examType=\"big\"\n• 150ms 后 renderPage()\n\n命中行程（matchedEvent）：\n• selectedDate 与 mockEvents 某条日期字符串完全匹配\n• 自动预填 examType=matchedEvent.examType\n• 自动预填 selectedChipName=matchedEvent.title\n• 显示橙色\"已匹配日历行程\"卡片\n\n未命中：显示灰色\"当前日期无行程\"卡片\n提交后 createCalendarEvent=true 写入 uploadStep1"
+    },
+    "2": {
+      "title": "标记 2 · 考试模式选择规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "examType 默认 \"big\"（大考全科）\n命中行程时 examType 从 matchedEvent.examType 读取\n\n两个选项卡：\n• big：大考全科（期中/期末/模考）\n• small：小考单科（周测/单元考/随堂小测）\n\npickType(t)：\n• 更新 examType\n• 重置 selectedChipName=\"\"\n• 重新 renderPage()\n\n命中行程时无名称输入框；未命中时显示考试名称输入框"
+    },
+    "3": {
+      "title": "标记 3 · 提交与 localStorage 写入规则",
+      "badge": "数据规范",
+      "badgeType": "data",
+      "text": "goNext() 写入 localStorage \"uploadStep1\"：\n{\n  examDate: fmtD(selectedDate),\n  examName: 命中时=matchedEvent.title，否则=nameInput.value||selectedChipName||\"未命名考试\",\n  examType: \"big\"|\"small\",\n  childId: selectedChild||\"\",\n  childName: getChildName(selectedChild),\n  createCalendarEvent: !matchedEvent（bool）,\n  createdAt: Date.now()\n}\n\n写完后跳转 shangchuanfupan.html（步骤 2/2）\n\n⚠️ 注意：产品文档记录跳转目标为 shangchuanfupan.html，非 scshijuan.html"
+    },
+    "4": {
+      "title": "标记 4 · 考试归属选择规则",
+      "badge": "交互规范",
+      "badgeType": "interaction",
+      "text": "考试归属用于指定本次考试属于哪个孩子\n\nchildList = [{id:\"1\",name:\"张小明\"},{id:\"2\",name:\"张小红\"}]\n\n显示规则：\n• 选择日期后始终显示\"考试归属\"区域\n• 命中行程且行程有 child 字段 → 自动选中对应孩子，chip 上显示\"自动匹配\"标签\n• 未命中行程 / 行程无 child 字段 → 所有 chip 未选中，底部提示\"请选择该考试归属的孩子\"\n\npickChild(id)：\n• 点击选中，再点取消（toggle）\n• 更新 selectedChild\n• 重新 renderPage()\n\n提交时 childId 和 childName 写入 uploadStep1"
+    }
+  }
+}

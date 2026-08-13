@@ -491,63 +491,6 @@ render();
 
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
 
-const prdData={
-  1:{title:'标记 1 · 帖子',badge:'数据规范',badgeType:'data',
-     text:'posts 对象：以 postId 为键（1-7）\n• 字段：id, author, avatarColor, circleName, title, content, likes, comments, shares, images[], pinned, isReport, time\n\n图片网格布局规则：\n• 1张 → cols-1（全宽）\n• 2张 → cols-2（各半）\n• 3张或更多 → cols-3（三列，1:1 比例）\n\nisHot 判断：post.pinned===true OR post.likes>100\n\npostId 来源：URL 参数 ?id=N，缺省为 1\n• posts[postId] 不存在时 fallback 到 posts[1]'},
-  2:{title:'标记 2 · 评论交互',badge:'交互规范',badgeType:'interaction',
-     text:'评论区单条评论交互规范：\n• 支持点赞、回复、单条评论更多（举报/拉黑）操作\n• 拉黑特定评论者后，系统会自动过滤黑名单用户的发言，并不在评论列表中呈现'},
-  3:{title:'标记 3 · 举报与拉黑安全治理',badge:'交互规范',badgeType:'interaction',
-     text:'举报与拉黑安全治理规范：\n• 点击右上角 more_vert 弹出 ActionSheet：选择【举报帖子】或【拉黑作者】\n• 举报规则（小红书对标）：支持 5 种违规原因，选择“其它违规内容”时平滑展示 200 字 limit 输入框，空内容提交触发拦截 Toast\n• 拉黑作者规则：将用户加入 blacklistedAuthors 集合，全局隐藏该作者发表的所有帖子内容与评论内容'}
-};
-let _curPrdId=null;
-(function(){const prdK='prd_tiezidetail';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_tiezidetail';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

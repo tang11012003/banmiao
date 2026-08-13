@@ -522,67 +522,6 @@ render();
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
 
 /* ─── PRD 标注系统 ─── */
-const prdData={
-1:{title:'标记 1 · 年月选择器规则',badge:'交互规范',badgeType:'interaction',
-text:'点击月份标签（如"2026 年 7 月"）触发 openMonthPicker()。\n\n弹窗规则：\n• 居中白底卡片弹窗，遮罩层点击关闭\n• 顶部年份导航：pickerYear ± 1年，左右箭头\n• 3×4月份按钮网格（1月–12月）\n• 当前 focusedYear+focusedMonth 高亮主色\n• 点击月份：更新 focusedYear/focusedMonth → 关闭弹窗 → 重渲染日历\n• 不改变已选中的 selectedDate\n• "取消"按钮仅关闭弹窗'},
-2:{title:'标记 2 · 日期点击交互规则',badge:'交互规范',badgeType:'interaction',
-text:'点击日期格子仅改变 selectedDate，不自动弹出任何表单。\n\n日期格子状态：\n• today：主色圆圈边框（border 1.5px）\n• selected：主色背景填充，白色文字\n• other-month：灰色文字（非当月日期）\n• 有事件：格子下方最多3个彩色小圆点\n\n点击非当月日期：仅视觉高亮，不切换月份视图\n周起始：周一为第一列（startDow===0 映射为 7）'},
-3:{title:'标记 3 · 空日期状态与新增入口',badge:'PRD业务规则',badgeType:'',
-text:'所选日期无事件时的展示规则：\n• 灰色文字"当天暂无日程"（居中）\n• 下方虚线按钮"+ 添加日程"（主色虚线边框，主色文字）\n• 点击该按钮调用 addEvent() 并 pre-fill 所选日期\n• 不在点击空白日期格时自动弹出表单\n\n新增事件后 type 默认为 custom，颜色 #9C27B0'},
-4:{title:'标记 4 · 综合日程挂件规则',badge:'PRD业务规则',badgeType:'',
-text:'顶部橙红渐变卡片（schedule-hero-card）固定展示：\n\n主事件大卡：\n• shc-main-title：最近一次考试名称\n• shc-main-badge：倒计时"X 天后"白底红字\n• 点击：日历跳转到对应日期（jumpToEventDate）\n\n次要事件列表（2条）：\n• 表情图标 + 事件名 + 日期 + 天数标签\n• 点击同样 jumpToEventDate\n\nAI 冲刺提示：固定文案，黑色半透明底条\n\n注意：挂件内容为静态 Mock，不随 mockEvents 数组动态更新'}
-};
-let _curPrdId=null;
-(function(){const prdK='prd_rili';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-e.stopPropagation();
-closePrd();
-_curPrdId=id;
-const d=prdData[id];
-const mark=e.currentTarget;
-const rect=mark.getBoundingClientRect();
-const overlay=document.createElement('div');
-overlay.className='prd-overlay';
-overlay.onclick=closePrd;
-document.body.appendChild(overlay);
-const pop=document.createElement('div');
-pop.className='prd-popover';
-pop.id='prdPop';
-const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-const arrow=document.createElement('div');
-arrow.className='prd-popover-arrow';
-pop.appendChild(arrow);
-document.body.appendChild(pop);
-const popW=290,popH=280;
-const appRect=document.getElementById('app').getBoundingClientRect();
-let left=Math.min(rect.left-10,appRect.right-popW-8);
-left=Math.max(appRect.left+8,left);
-const spaceBelow=window.innerHeight-rect.bottom-12;
-let top,arrowTop,arrowDir;
-if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-pop.style.left=left+'px';
-pop.style.top=top+'px';
-const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-arrow.style.left=arrowLeft+'px';
-arrow.style.top=arrowTop+'px';
-if(arrowDir==='bottom')arrow.style.transform='rotate(45deg)';
-}
-function closePrd(){
-const ov=document.querySelector('.prd-overlay');
-const pop=document.getElementById('prdPop');
-if(ov)ov.remove();
-if(pop)pop.remove();
-_curPrdId=null;
-}
-function savePrd(id){
-const ta=document.getElementById('prdTa');
-if(ta)prdData[id].text=ta.value;
-  const prdK='prd_rili';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-closePrd();
-showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

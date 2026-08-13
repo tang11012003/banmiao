@@ -380,65 +380,10 @@ function showToast(msg){
   setTimeout(() => t.remove(), 2000);
 }
 
-const prdData={
-  1:{title:'标记 1 · 社交互动与空状态规则',badge:'交互规范',badgeType:'interaction',
-     text:'social-strip 有 3 个入口：赞/新增粉丝/评论和回复\n• 点击切换至子视图\n• 若数组为空，渲染定制化 empty-state 结构（含引导Icon、提示文本及 CTA 操作按钮）\n\n测试操作：\n右上角点击“清空数据演示”可一键切换全局空状态展示。'},
-  2:{title:'标记 2 · 频道列表空状态处理',badge:'数据规范',badgeType:'data',
-     text:'消息频道包含系统通知、诊断提醒及私信：\n• 频道列表为空时整体展示空状态布局。\n• 引导按钮可直达社区或诊断工具。'}
-};
 
-let _curPrdId=null;
-(function(){const prdK='prd_xiaoxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
 
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
 
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
 
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_xiaoxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

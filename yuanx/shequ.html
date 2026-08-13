@@ -144,63 +144,6 @@ ${p.images.length>0?`<div class="post-image"><img src="${p.images[0]}">${p.image
 
 renderPosts();
 
-const prdData={
-  1:{title:'标记 1 · 圈子',badge:'交互规范',badgeType:'interaction',
-     text:'circles 数组定义 5 个圈子：全部(0)/高一(1)/高二(2)/高三(3)/其它(4)\nactiveCircle 默认 0（全部）\n\nfilterCircle(id) 执行：\n① 更新 activeCircle\n② 重渲染圈子 chip 列表\n③ 重渲染帖子列表\n\n筛选逻辑：activeCircle===0 时显示全部\n否则按 post.circleId === activeCircle 过滤\n\n注：圈子 id 与 post.circleId 数字匹配，非名称匹配'},
-  2:{title:'标记 2 · 帖子',badge:'业务规则',badgeType:'',
-     text:'热门标签规则（isHot）：\n• post.pinned === true，OR\n• post.likes > 100\n满足任一条件显示红色"热"标签\n\n点亮（有用）规则：\n• litPosts 用 Set 存储已点亮 post.id\n• 点击切换：已点亮则删除，未点亮则添加\n• 显示数 = post.likes + (isLit ? 1 : 0)\n• 状态仅存内存，刷新后重置\n\n报告标签：post.isReport===true 时显示蓝色"报告"标签\n图片数>1 时右下角显示 +N'},
-  3:{title:'标记 3 · 发帖',badge:'交互规范',badgeType:'interaction',
-     text:'发帖按钮 → window.location.href="fabutiezi.html"\n\n两种进入 fabutiezi.html 的方式：\n① 直接点击发帖按钮：空白表单\n② 从 fenxibaogao.html 分享：\n   fenxibaogao 写 sessionStorage "shareReport"\n   fabutiezi 的 loadSharedReport() 读取后删除\n   自动填充内容文本并注入报告微卡片\n\n发布成功后跳转回 shequ.html'}
-};
-let _curPrdId=null;
-(function(){const prdK='prd_shequ';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_shequ';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

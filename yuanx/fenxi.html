@@ -270,67 +270,6 @@ function handleBannerClick(){
 }
 checkReportBanner();
 
-const prdData={
-  1:{title:'标记 1 · 报告 Banner 状态机',badge:'业务规则',badgeType:'',
-     text:'reportBanner 读 localStorage "reportTask"：\n• null 或 status==="read" → display:none\n• status==="generating" → 黄色 banner + 旋转图标\n  8秒后自动升级为 completed 并重渲染\n• status==="completed" → 绿色 banner + 勾选图标\n\n点击 handleBannerClick()：\n• generating → 跳转 loading.html\n• completed → 写 status="read" → 跳转 fenxibaogao.html\n\n⚠️ generating 时 setTimeout 8000ms 自动升级不可取消'},
-  2:{title:'标记 2 · 备考日程挂件数据规则',badge:'数据规范',badgeType:'data',
-     text:'挂件数据来自 rili.html mockEvents 中最近一条 type===mock_exam\n当前 hardcode：\n• 倒计时：2（天后）\n• 日期：11-05 周四\n• 考试名：期中综合考试\n\nAI tip 文案：hardcode，提及"数学二次函数最值"和"物理受力分析"\n\n点击整个挂件 → 跳转 rili.html'},
-  3:{title:'标记 3 · 学情复盘入口数据规则',badge:'数据规范',badgeType:'data',
-     text:'fec-stats-row 显示三项汇总数据：\n• 历史试卷：7（hardcode，对应 cuoti.html cuotiRecords 数组长度）\n• 累计错题：27（hardcode）\n• 平均得分率：76.2%（hardcode）\n\n这些数字应从 localStorage 实际错题记录聚合计算\n当前均为 mock 静态值，与 cuoti.html 数据不同步\n\n点击整个 fec 卡片 → 跳转 cuoti.html'}
-};
-let _curPrdId=null;
-(function(){const prdK='prd_fenxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_fenxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  const t=document.createElement('div');
-  t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';
-  t.textContent='产品规则已更新并保存';
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(),2000);
-}
 function switchStudent(v){ location.reload(); }
 </script>
 <script src="prd-runtime.js"></script>

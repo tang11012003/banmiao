@@ -282,30 +282,6 @@ function confirmAddQ() {
 renderAnchorBar();
 renderPageBody();
 
-const prdData={
-  1:{title:'标记 1 · AI识别结果展示',badge:'显示规则',badgeType:'data',
-     text:'每科展示：\n• 试卷缩略图（点击放大）\n• AI识别题目总数\n• 自动判定错题数\n• 当前人工修正后的错题数\n\n数据来源：AI识别结果（原型用模拟数据，每科默认10题2个错题）。'},
-  2:{title:'标记 2 · 题号勾选交互',badge:'交互规范',badgeType:'interaction',
-     text:'题号颜色：\n• 红色 = 错题\n• 灰色 = 正确\n• 橙色边框 = 新手动添加的题\n\n点击切换对/错。\n点击"+"可手动添加题号（弹窗输入）。\n修改后 Tab 上显示绿色小点"已人工微调"。'},
-  3:{title:'标记 3 · 生成报告按钮',badge:'业务规则',badgeType:'',
-     text:'文案：生成大考诊断报告（N科全涵盖）。\n点击后写入 localStorage.reportTask，跳转 loading.html。\n报告包含：考试名称、科目列表、各科错题号列表。'}
-};
-function openPrd(e,id){
-  e.stopPropagation();closePrd();
-  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
-  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML='<div class="prd-pop-head"><div class="prd-pop-title">'+d.title+'<span class="'+badgeCls+'">'+d.badge+'</span></div></div><div class="prd-pop-body"><textarea id="prdTa">'+d.text+'</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd('+id+')">保存</button></div>';
-  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  const popW=290,popH=260;
-  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
-  let top=rect.bottom+8;if(window.innerHeight-rect.bottom<popH)top=rect.top-popH-8;
-  pop.style.left=left+'px';pop.style.top=top+'px';
-}
-function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
-function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

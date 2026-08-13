@@ -140,70 +140,13 @@ function goBack(){
 })();
 
 /* ─── PRD 标注系统 ─── */
-const prdData={
-  1:{title:'标记 1 · 头像更换规则',badge:'交互规范',badgeType:'interaction',
-     text:'原型阶段：点击头像区域循环切换预设字符（姓氏/字母），模拟更换效果，不调用真实文件选择器。\n\n正式版本规则：\n• 点击头像弹出底部 ActionSheet：拍照 / 从相册选择 / 取消\n• 图片裁剪为 1:1 圆形，最大 2MB\n• 上传成功后实时更新头像显示\n• 头像存储于 CDN，URL 保存至用户 profile'},
-  2:{title:'标记 2 · 昵称编辑规则',badge:'业务规则',badgeType:'',
-     text:'字段规则：\n• 最大长度：20 个字符\n• 不允许纯空白\n• 不做敏感词校验（原型阶段）\n\n保存行为：\n• 点击顶部"保存"按钮写入 localStorage.profileName\n• Toast 提示"保存成功"，800ms 后自动返回上一页\n• 返回时若有未保存修改，弹 confirm 确认对话框\n\n数据来源：\n• 优先读取 localStorage.profileName\n• 无记录则显示默认值"张妈妈"'}
-};
 
-let _curPrdId=null;
 (function(){
   const prdK='prd_bianjijiazhang';
   const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');
   Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});
 })();
 
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  _curPrdId=id;
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg)';
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_bianjijiazhang';
-  const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');
-  prdS[id]=prdData[id].text;
-  localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

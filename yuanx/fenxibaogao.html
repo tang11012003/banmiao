@@ -213,107 +213,10 @@ function shareToCommunity(){
 }
 
 /* ─── PRD 标注系统 ─── */
-const prdData={
-  1:{
-    title:'标记 1 · 报告头部数据规范',
-    badge:'数据规范',badgeType:'data',
-    text:'报告对象结构：\n• exam.name：考试名称\n• exam.subject：学科\n• exam.date：YYYY-MM-DD\n• scoreRate：得分率（数字，如 78.5）\n• kpResults：知识点数组，每项含 name/level/errorRate/desc\n\n得分率展示精度：保留一位小数，单位"%"。'
-  },
-  2:{
-    title:'标记 2 · 试卷原图展示规则',
-    badge:'交互规范',badgeType:'interaction',
-    text:'• 缩略图尺寸：90×120px，圆角 8px，横向滚动容器\n• 每张图底部叠加"第 N 页"黑色半透明标签\n• 点击任意图片弹出全屏预览覆盖层（opacity 动画）\n• 点击遮罩任意位置关闭预览（无独立关闭按钮之外的遮罩关闭）\n• 原型中使用 SVG Mock 图，含学科色彩编码与题目模拟内容'
-  },
-  3:{
-    title:'标记 3 · 知识点三档分类规则',
-    badge:'PRD业务规则',badgeType:'',
-    text:'所有知识点归入且仅归入一个档位：\n\n🔴 待改进（urgent）：错误率 ≥50%\n  → 重点突破，优先刷专项题\n\n🟡 需关注（attention）：错误率 25%-49%\n  → 加强巩固，定期复习\n\n🟢 继续保持（keep）：错误率 <25%\n  → 维持，轻量复习即可\n\n三档比例色条高度 28px，圆角 14px，各段 flex 值等于该档知识点数量。'
-  },
-  4:{
-    title:'标记 4 · 知识点卡片交互',
-    badge:'交互规范',badgeType:'interaction',
-    text:'• 知识点按 urgent→attention→keep 分组展示\n• 每组有分组标题（含 emoji + 文字说明）\n• 卡片左侧 border-left 3px 对应档位颜色\n• 点击卡片：当前为 Toast 占位（"查看知识点趋势：XXX"）\n• 正式版本应跳转该知识点的历史趋势详情页\n• 卡片展示：知识点名称（加粗）+ 描述（灰色）+ 错误率（档位颜色）'
-  },
-  5:{
-    title:'标记 5 · 无缝脱敏分享规则',
-    badge:'PRD业务规则',badgeType:'',
-    text:'点击【把分析报告分享到社区】按钮：\n• 采用零阻断（Zero-Friction）流程，无需弹出隐私选择弹窗\n• 默认固定 includePhotos = false（不含任何试卷原图）\n• 自动将得分率、三档分布、知识点提炼列表打包写入 sessionStorage.shareReport\n• 提示 Toast 并无缝跳转至 fabutiezi.html，将数据自动注入发帖编辑区'
-  }
-};
 
-let _curPrdId=null;
-(function(){const prdK='prd_fenxibaogao';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
 
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  _curPrdId=id;
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
 
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
 
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`
-<div class="prd-pop-head">
-  <div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div>
-</div>
-<div class="prd-pop-body">
-  <textarea id="prdTa" spellcheck="false">${d.text}</textarea>
-</div>
-<div class="prd-pop-foot">
-  <button class="prd-btn-cancel" onclick="closePrd()">取消</button>
-  <button class="prd-btn-save" onclick="savePrd(${id})">保存</button>
-</div>`;
-
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10, appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){
-    top=rect.bottom+8;
-    arrowTop=-6;arrowDir='top';
-  } else {
-    top=rect.top-popH-8;
-    arrowTop=popH-6;arrowDir='bottom';
-  }
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom') arrow.style.transform='rotate(45deg)';
-}
-
-function closePrd(){
-  const ov=document.querySelector('.prd-overlay');
-  const pop=document.getElementById('prdPop');
-  if(ov)ov.remove();
-  if(pop)pop.remove();
-  _curPrdId=null;
-}
-
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_fenxibaogao';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 
 render();
 </script>

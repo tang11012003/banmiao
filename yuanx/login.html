@@ -352,64 +352,7 @@ function saveChildAndGoStep4(){
   }, 600);
 }
 
-const prdData={
-  1:{title:'标记 1 · 短信验证码规则',badge:'交互规范',badgeType:'interaction',
-     text:'获取验证码按钮规则：\n• 初始 disabled（手机号未满 11 位）\n• phoneInput input 事件实时格式化 3-4-4\n• getRawPhone().length===11 且 countdown===0 → 启用\n\n发送后（sendSms）：\n• countdown=60，每秒递减\n• 按钮文字变为 "{n}s 后重发"\n• 倒计时归零 → 若手机号仍 11 位则重新启用\n\n测试验证码：888888（hardcode）\n• 输入 888888 → 进入新用户引导（Step 2）\n• 其他任意 4+ 位 → 直接登录 → 跳转 fenxi.html'},
-  2:{title:'标记 2 · 引导流程概览',badge:'业务规则',badgeType:'',
-     text:'Step 1（登录）：手机号 + 验证码\n• 888888 触发新用户建档流程（Step 2 -> Step 3）\n\nStep 2（产品介绍）：\n• 展现 3 大核心价值，点击后进入孩子信息录入页。'},
-  3:{title:'标记 3 · 孩子档案收集规则',badge:'数据规范',badgeType:'data',
-     text:'表单包含字段：\n• 姓名：必填，未填点击保存弹出 Toast 提示\n• 年级：下拉菜单，默认"高三"\n• 学校：选填，可输入学校简称\n• 学习科目：多选胶囊，选中后打亮并高亮存储\n\n数据持久化：\n• 提交后通过 localStorage 存储为 `child_info` 对象，可供主页和个人中心调用。'}
-};
 
-let _curPrdId=null;
-(function(){const prdK='prd_login';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_login';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

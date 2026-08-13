@@ -263,33 +263,8 @@ function confirmChange(){
 }
 
 /* ─── PRD 标注逻辑保持同步 ─── */
-const prdData={
-  1:{title:'标记 1 · 原手机校验规范',badge:'交互规范',badgeType:'interaction',
-     text:'发送条件：点击即可发送验证码。\n\n倒计时：60s 倒计时，归零后恢复点击。\n\n校验规则：验证码输入 ≥4 位时激活【下一步】按钮。'},
-  2:{title:'标记 2 · 新绑定与校验规则',badge:'业务规则',badgeType:'',
-     text:'手机号格式：11位数字，自动格式化 3-4-4。\n\n校验规则：\n1. 新号码不能等于原绑定号码（138****8888）。\n2. 手机号满 11 位且验证码 ≥4 位激活【确认更换】。'}
-};
 
-function openPrd(e,id){
-  e.stopPropagation();closePrd();
-  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
-  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
-  const popW=290,popH=260;const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
-  let top=rect.bottom+8;
-  if(window.innerHeight-rect.bottom < popH) top=rect.top-popH-8;
-  pop.style.left=left+'px';pop.style.top=top+'px';
-}
 
-function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;
-  closePrd();showToast('PRD 规则更新');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

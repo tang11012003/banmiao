@@ -181,31 +181,7 @@ render();
 
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15)';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
 
-const prdData={
-  1:{title:'标记 1 · 认证状态徽章规则',badge:'业务规则',badgeType:'',
-     text:'user.verified 控制显示：\n• true → 绿色 badge：<verified> 已认证家长\n• false → 橙色 badge：<warning> 未认证\n\n认证入口：jiazhangrenzheng.html'},
-  2:{title:'标记 2 · 分析次数配额规则',badge:'数据规范',badgeType:'data',
-     text:'quota 配额格式：\n"免费 {free} 次 + 奖励 {bonus} 次 · 剩余 {totalRemain} 次"\n\n规则：每月 1 号自动刷新 free 次数。'},
-  3:{title:'标记 3 · 社区互动记录规则',badge:'交互规范',badgeType:'interaction',
-     text:'包含 3 项精简互动入口：\n1. 我的发帖：查看与管理自己发布的所有帖子/高二\n2. 有用：快速浏览个人点有用的社区内容\n3. 评论：查看历史评论与收到的回复'}
-};
 
-let _curPrdId=null;
-function openPrd(e,id){
-  e.stopPropagation();closePrd();
-  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
-  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
-  const popW=290,popH=260;const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
-  let top=rect.bottom+8;if(window.innerHeight-rect.bottom < popH) top=rect.top-popH-8;
-  pop.style.left=left+'px';pop.style.top=top+'px';
-}
-function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
-function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();showToast('PRD 已更新');}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

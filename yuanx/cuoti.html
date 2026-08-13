@@ -209,34 +209,6 @@ function filterSubject(s){selectedSubject=s;render()}
 renderStudentTab();
 render();
 
-const prdData={
-  1:{title:'标记 1 · 学情统计规则',badge:'数据规范',badgeType:'data',
-     text:'统计范围：当前选中学生 + 当前科目筛选下的试卷。\n\n指标定义：\n• 试卷总数：符合筛选条件的试卷数量\n• 累计错题：所有试卷 wrongQ 之和\n• 平均得分率：scoreRate 平均值，保留 1 位小数\n\n数据来源：本地 papers 数组（原型 mock 数据）'},
- //:{title:'标记 2 · 科目筛选规则',badge:'交互规范',badgeType:'interaction',
-    //ext:'筛选项：全部 / 数学 / 英语 / 物理 / 化学 / 语文 / 生物。\n\n行为：\n• 点击切换 selectedSubject，重新调用 render()\n• 同时联动统计数值和试卷列表\n• 默认选中"全部"\n• 横向滚动，超出不换行'},
-  3:{title:'标记 2 · 试卷列表项规则',badge:'业务规则',badgeType:'',
-     text:'排序：按 date 倒序（新→旧）。\n\n颜色编码：每个科目对应固定图标色（数学红、英语蓝、物理紫…）。\n\n点击行为：跳转 fenxibaogao.html。\n\n分析中状态：若 localStorage.reportTask.status === generating，在列表顶部插入进行中卡片；completed 则显示报告就绪卡片。\n\n空状态：无匹配试卷时显示空状态插画 + 提示文案。'}
-};
-function openPrd(e,id){
-  e.stopPropagation();closePrd();
-  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
-  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
-  const popW=290,popH=280,appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top=spaceBelow>=popH?rect.bottom+8:rect.top-popH-8;
-  let arrowTop=spaceBelow>=popH?-6:popH-6;
-  pop.style.left=left+'px';pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';arrow.style.top=arrowTop+'px';
-  if(spaceBelow<popH)arrow.style.transform='rotate(45deg)';
-}
-function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
-function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();if(typeof showToast==='function')showToast('产品规则已保存');}
 </script>
 <script src="prd-runtime.js"></script>
 </body>

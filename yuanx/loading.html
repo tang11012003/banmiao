@@ -202,61 +202,6 @@ if (taskInfo && taskInfo.status === 'completed') {
 
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
 
-const prdData={
-  1:{title:'标记 1 · 进度模拟规则',badge:'业务规则',badgeType:'',
-     text:'进度条模拟（startProgress）：\n• 每 500ms 增加 random()*8+4（约 4~12%）\n• 到达 100% 时停止 interval\n• 同时调用 updateTaskState("completed")\n• 600ms 后渲染完成态 renderComplete()\n\n步骤文案按 progress/20 分档（0/20/40/60/80）：\n① 提取错题知识点\n② 匹配考纲知识图谱\n③ 跨学科关联分析\n④ 生成提分建议\n⑤ 合成诊断报告\n\nbgMode=true 时 interval 立即停止（后台模式）'},
-  2:{title:'标记 2 · 状态机与后台模式',badge:'交互规范',badgeType:'interaction',
-     text:'reportTask 状态机（localStorage "reportTask"）：\n• generating：分析中，后台运行\n• completed：分析完成，可查看\n• read：用户已阅读报告\n\n后台模式（bgMode）：\n• 点击"继续上传其它科目"→ setBgMode() → 跳转 xuanzhexingzhi.html\n• 点击"返回首页"→ setBgMode() → 跳转 fenxi.html\n• setBgMode 仅在未完成时写 generating 状态\n\n返回此页时：\n• taskInfo.status==="completed" → 直接渲染完成态，不重跑进度\n• 否则从头运行 renderLoading()'}
-};
-let _curPrdId=null;
-(function(){const prdK='prd_loading';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
-function openPrd(e,id){
-  e.stopPropagation();
-  closePrd();
-  const d=prdData[id];
-  const mark=e.currentTarget;
-  const rect=mark.getBoundingClientRect();
-  const overlay=document.createElement('div');
-  overlay.className='prd-overlay';
-  overlay.onclick=closePrd;
-  document.body.appendChild(overlay);
-  const pop=document.createElement('div');
-  pop.className='prd-popover';
-  pop.id='prdPop';
-  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
-  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
-  const arrow=document.createElement('div');
-  arrow.className='prd-popover-arrow';
-  pop.appendChild(arrow);
-  document.body.appendChild(pop);
-  const popW=290,popH=280;
-  const appRect=document.getElementById('app').getBoundingClientRect();
-  let left=Math.min(rect.left-10,appRect.right-popW-8);
-  left=Math.max(appRect.left+8,left);
-  const spaceBelow=window.innerHeight-rect.bottom-12;
-  let top,arrowTop,arrowDir;
-  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
-  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
-  pop.style.left=left+'px';
-  pop.style.top=top+'px';
-  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
-  arrow.style.left=arrowLeft+'px';
-  arrow.style.top=arrowTop+'px';
-  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
-  _curPrdId=id;
-}
-function closePrd(){
-  document.querySelector('.prd-overlay')?.remove();
-  document.getElementById('prdPop')?.remove();
-  _curPrdId=null;
-}
-function savePrd(id){
-  const ta=document.getElementById('prdTa');
-  if(ta)prdData[id].text=ta.value;
-  const prdK='prd_loading';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
-  closePrd();
-  showToast('产品规则已更新并保存');
-}
 </script>
 <script src="prd-runtime.js"></script>
 </body>
