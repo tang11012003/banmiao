@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>消息 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 16px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10;justify-content:space-between}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1}
+.toggle-demo-btn{font-size:12px;color:var(--primary);background:rgba(230,67,26,.08);border:none;padding:5px 10px;border-radius:12px;cursor:pointer;font-weight:500;transition:background .15s}
+.toggle-demo-btn:active{background:rgba(230,67,26,.18)}
+.page-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint);transition:color .2s}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px;transition:color .2s}
+.nav-item.active .material-icons{color:var(--primary)}
+.nav-item.active .nav-label{color:var(--primary);font-weight:500}
+
+/* Social interaction shortcuts */
+.social-strip{display:flex;justify-content:space-around;padding:16px 12px;background:var(--surface);border-bottom:1px solid var(--divider)}
+.social-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;min-width:60px}
+.social-item .si-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:6px;transition:background .12s}
+.social-item:active .si-icon{opacity:.8}
+.social-item .si-icon .material-icons{font-size:22px}
+.social-item .si-label{font-size:11px;color:var(--text2);font-weight:500}
+.social-item .si-badge{position:absolute;top:-2px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--primary);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+/* Channel list */
+.channel-section{padding:12px 16px 4px}
+.channel-section-title{font-size:12px;color:var(--hint);font-weight:500;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.channel-item{display:flex;align-items:center;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--divider);cursor:pointer;transition:background .12s}
+.channel-item:active{background:#fafafa}
+.channel-item:first-child{border-radius:var(--r-card) var(--r-card) 0 0}
+.channel-item:last-child{border-radius:0 0 var(--r-card) var(--r-card);border-bottom:none}
+.channel-item .ch-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
+.channel-item .ch-icon .material-icons{font-size:22px}
+.channel-item .ch-body{flex:1;min-width:0}
+.channel-item .ch-title{font-size:14px;font-weight:600;color:var(--text1);margin-bottom:2px}
+.channel-item .ch-desc{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.channel-item .ch-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;margin-left:8px}
+.channel-item .ch-time{font-size:11px;color:var(--hint)}
+.channel-item .ch-badge{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--primary);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+/* Detail list */
+.detail-list{background:var(--surface);flex:1}
+.detail-item{display:flex;align-items:flex-start;padding:14px 16px;border-bottom:1px solid var(--divider);cursor:pointer}
+.detail-item:active{background:#fafafa}
+.detail-item .di-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600;margin-right:10px;flex-shrink:0}
+.detail-item .di-body{flex:1;min-width:0}
+.detail-item .di-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.detail-item .di-name{font-size:13px;font-weight:600;color:var(--text1)}
+.detail-item .di-time{font-size:11px;color:var(--hint)}
+.detail-item .di-content{font-size:13px;color:var(--text3);line-height:1.5}
+.detail-item .di-ref{margin-top:6px;padding:6px 10px;background:#f8f8f8;border-radius:6px;font-size:12px;color:var(--text3);border-left:2px solid var(--divider)}
+
+/* ── 空状态 (Empty State) 核心组件样式 ── */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;animation:fadeIn .3s ease}
+.empty-icon-wrap{width:96px;height:96px;border-radius:50%;background:rgba(0,0,0,.03);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--hint)}
+.empty-icon-wrap .material-icons{font-size:48px;opacity:.7}
+.empty-title{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.empty-desc{font-size:13px;color:var(--hint);max-width:240px;line-height:1.5;margin-bottom:20px}
+.empty-btn{padding:9px 20px;border-radius:20px;background:var(--primary);color:#fff;font-size:13px;font-weight:500;border:none;cursor:pointer;box-shadow:0 3px 10px rgba(230,67,26,.25);transition:transform .12s,background .12s}
+.empty-btn:active{transform:scale(.96);background:var(--secondary)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar" id="mainAppBar">
+  <span class="title">消息</span>
+  <button class="toggle-demo-btn" onclick="toggleDataState()">清空数据演示</button>
+</div>
+<div class="page-body" id="pageBody"></div>
+<div class="bottom-nav">
+  <a class="nav-item" href="fenxi.html"><span class="material-icons">insights</span><span class="nav-label">分析</span></a>
+  <a class="nav-item" href="shequ.html"><span class="material-icons">forum</span><span class="nav-label">社区</span></a>
+  <a class="nav-item active" href="xiaoxi.html"><span class="material-icons">notifications</span><span class="nav-label">消息</span></a>
+  <a class="nav-item" href="wode.html"><span class="material-icons">person</span><span class="nav-label">我的</span></a>
+</div>
+</div>
+<script>
+// Mock Raw Data
+const defaultSocialData = {
+  likes: [
+    {id:1,user:'张妈妈',avatar:'#9C27B0',action:'赞了你的帖子',ref:'错题整理方法分享',time:'07-22 09:30'},
+    {id:2,user:'张妈妈',avatar:'#1565C0',action:'赞了你的评论',ref:'建议先把基础公式背熟再做题',time:'07-21 18:20'},
+    {id:3,user:'陈妈妈',avatar:'#FF6D00',action:'赞了你的帖子',ref:'数学期中考试分析报告分享',time:'07-21 14:10'}
+  ],
+  followers: [
+    {id:1,user:'陈妈妈',avatar:'#FF6D00',time:'07-22 08:15',followed:false},
+    {id:2,user:'赵妈妈',avatar:'#00838F',time:'07-21 20:30',followed:true}
+  ],
+  comments: [
+    {id:1,user:'张妈妈',avatar:'#1565C0',action:'回复了你',content:'我家也是这个问题，后来给孩子报了一个网课。',ref:'孩子三角函数老出错怎么办？',time:'07-22 10:15'},
+    {id:2,user:'赵妈妈',avatar:'#00838F',action:'评论了你的帖子',content:'谢谢分享！确实很有用。',ref:'错题整理方法分享',time:'07-21 20:10'}
+  ]
+};
+
+const defaultChannels = {
+  system: [{id:1,title:'系统更新通知',content:'陪读社区 v2.1 已更新：新增确认错题功能',time:'07-20'}],
+  study: [{id:1,title:'分析报告已生成',content:'「数学期中考试」试卷分析已完成，点击查看',time:'07-22'}],
+  chat: [{id:1,name:'张妈妈',avatar:'李',lastMsg:'好的，我把那个网课链接发给你',time:'10:30',unread:2}]
+};
+
+// State Data Container (Supports Clearing for Demo)
+let socialData = JSON.parse(JSON.stringify(defaultSocialData));
+let channels = JSON.parse(JSON.stringify(defaultChannels));
+let unreadCounts = {likes:3, followers:1, comments:2, system:1, study:1, chat:2};
+
+let isDemoEmpty = false;
+let currentView = 'main'; // main | likes | followers | comments
+
+// Function to generate standard empty HTML
+function getEmptyHtml(icon, title, desc, btnText, btnAction) {
+  return `
+    <div class="empty-state">
+      <div class="empty-icon-wrap">
+        <span class="material-icons">${icon}</span>
+      </div>
+      <div class="empty-title">${title}</div>
+      <div class="empty-desc">${desc}</div>
+      ${btnText ? `<button class="empty-btn" onclick="${btnAction}">${btnText}</button>` : ''}
+    </div>
+  `;
+}
+
+// Global state toggle for demonstration
+function toggleDataState() {
+  isDemoEmpty = !isDemoEmpty;
+  const toggleBtn = document.querySelector('.toggle-demo-btn');
+
+  if (isDemoEmpty) {
+    if (toggleBtn) toggleBtn.textContent = '恢复数据演示';
+    socialData = { likes: [], followers: [], comments: [] };
+    channels = { system: [], study: [], chat: [] };
+    unreadCounts = { likes: 0, followers: 0, comments: 0, system: 0, study: 0, chat: 0 };
+    showToast('已切换至空状态');
+  } else {
+    if (toggleBtn) toggleBtn.textContent = '清空数据演示';
+    socialData = JSON.parse(JSON.stringify(defaultSocialData));
+    channels = JSON.parse(JSON.stringify(defaultChannels));
+    unreadCounts = { likes: 3, followers: 1, comments: 2, system: 1, study: 1, chat: 2 };
+    showToast('已恢复正常数据');
+  }
+
+  // Refresh view
+  if (currentView === 'main') renderMain();
+  else openView(currentView);
+}
+
+function renderMain() {
+  currentView = 'main';
+  const appBar = document.getElementById('mainAppBar');
+  appBar.style.display = 'flex';
+  appBar.innerHTML = `
+    <span class="title">消息</span>
+    <button class="toggle-demo-btn" onclick="toggleDataState()">${isDemoEmpty ? '恢复数据演示' : '清空数据演示'}</button>
+  `;
+
+  const hasChannels = (channels.system && channels.system.length > 0) ||
+                      (channels.study && channels.study.length > 0) ||
+                      (channels.chat && channels.chat.length > 0);
+
+  let html = `
+    <div class="social-strip" style="position:relative">
+      <span class="prd-mark" onclick="openPrd(event,1)" style="position:absolute;top:8px;right:8px">1</span>
+      <div class="social-item" onclick="openView('likes')">
+        <div class="si-icon" style="background:rgba(233,30,99,.1)"><span class="material-icons" style="color:#E91E63">favorite</span></div>
+        ${unreadCounts.likes > 0 ? `<span class="si-badge">${unreadCounts.likes}</span>` : ''}
+        <span class="si-label">赞</span>
+      </div>
+      <div class="social-item" onclick="openView('followers')">
+        <div class="si-icon" style="background:rgba(21,101,194,.1)"><span class="material-icons" style="color:#1565C0">person_add</span></div>
+        ${unreadCounts.followers > 0 ? `<span class="si-badge">${unreadCounts.followers}</span>` : ''}
+        <span class="si-label">新增粉丝</span>
+      </div>
+      <div class="social-item" onclick="openView('comments')">
+        <div class="si-icon" style="background:rgba(67,160,71,.1)"><span class="material-icons" style="color:#43A047">chat</span></div>
+        ${unreadCounts.comments > 0 ? `<span class="si-badge">${unreadCounts.comments}</span>` : ''}
+        <span class="si-label">评论和回复</span>
+      </div>
+    </div>
+
+    <div class="channel-section">
+      <div class="channel-section-title" style="display:flex;align-items:center">消息频道<span class="prd-mark" onclick="openPrd(event,2)">2</span></div>
+    </div>
+  `;
+
+  if (hasChannels) {
+    if (channels.system && channels.system.length > 0) {
+      html += `
+        <div class="channel-item" onclick="showToast('查看系统通知详情')">
+          <div class="ch-icon" style="background:rgba(21,101,194,.08)"><span class="material-icons" style="color:#1565C0">campaign</span></div>
+          <div class="ch-body">
+            <div class="ch-title">系统通知</div>
+            <div class="ch-desc">${channels.system[0].content}</div>
+          </div>
+          <div class="ch-right">
+            <span class="ch-time">${channels.system[0].time}</span>
+            ${unreadCounts.system > 0 ? `<span class="ch-badge">${unreadCounts.system}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    if (channels.study && channels.study.length > 0) {
+      html += `
+        <div class="channel-item" onclick="showToast('查看学情诊断提醒')">
+          <div class="ch-icon" style="background:rgba(230,67,26,.08)"><span class="material-icons" style="color:var(--primary)">analytics</span></div>
+          <div class="ch-body">
+            <div class="ch-title">学情诊断提醒</div>
+            <div class="ch-desc">${channels.study[0].content}</div>
+          </div>
+          <div class="ch-right">
+            <span class="ch-time">${channels.study[0].time}</span>
+            ${unreadCounts.study > 0 ? `<span class="ch-badge">${unreadCounts.study}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    if (channels.chat && channels.chat.length > 0) {
+      html += `
+        <div class="channel-item" onclick="showToast('进入私信列表')">
+          <div class="ch-icon" style="background:rgba(156,39,176,.08)"><span class="material-icons" style="color:#9C27B0">mail</span></div>
+          <div class="ch-body">
+            <div class="ch-title">私信</div>
+            <div class="ch-desc">${channels.chat[0].name}：${channels.chat[0].lastMsg}</div>
+          </div>
+          <div class="ch-right">
+            <span class="ch-time">${channels.chat[0].time}</span>
+            ${unreadCounts.chat > 0 ? `<span class="ch-badge">${unreadCounts.chat}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    // 频道列表空状态
+    html += getEmptyHtml(
+      'notifications_off',
+      '暂无频道通知消息',
+      '当有系统更新、学情诊断生成或家长私信时，将会在这里提醒您。',
+      '去社区逛逛',
+      "window.location.href='shequ.html'"
+    );
+  }
+
+  document.getElementById('pageBody').innerHTML = html;
+}
+
+function openView(view) {
+  currentView = view;
+  if (view === 'likes') renderLikes();
+  else if (view === 'followers') renderFollowers();
+  else if (view === 'comments') renderComments();
+}
+
+function goBack() {
+  renderMain();
+}
+
+function setSubViewHeader(title) {
+  document.getElementById('mainAppBar').innerHTML = `
+    <div style="display:flex;align-items:center">
+      <button class="back-btn" onclick="goBack()" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)"><span class="material-icons">arrow_back</span></button>
+      <span class="title" style="margin-left:4px">${title}</span>
+    </div>
+  `;
+}
+
+function renderLikes() {
+  unreadCounts.likes = 0;
+  setSubViewHeader('赞');
+
+  if (socialData.likes && socialData.likes.length > 0) {
+    document.getElementById('pageBody').innerHTML = `<div class="detail-list">${socialData.likes.map(item => `
+      <div class="detail-item">
+        <div class="di-avatar" style="background:${item.avatar}">${item.user[0]}</div>
+        <div class="di-body">
+          <div class="di-header"><span class="di-name">${item.user}</span><span class="di-time">${item.time}</span></div>
+          <div class="di-content">${item.action}</div>
+          <div class="di-ref">${item.ref}</div>
+        </div>
+      </div>`).join('')}</div>`;
+  } else {
+    document.getElementById('pageBody').innerHTML = getEmptyHtml(
+      'favorite_border',
+      '暂无收到的点赞',
+      '发布帖子或分享陪读心得，与其他家长互动吧！',
+      '发布动态',
+      "showToast('跳转社区发布页')"
+    );
+  }
+}
+
+function renderFollowers() {
+  unreadCounts.followers = 0;
+  setSubViewHeader('新增粉丝');
+
+  if (socialData.followers && socialData.followers.length > 0) {
+    document.getElementById('pageBody').innerHTML = `<div class="detail-list">${socialData.followers.map(item => `
+      <div class="detail-item">
+        <div class="di-avatar" style="background:${item.avatar}">${item.user[0]}</div>
+        <div class="di-body">
+          <div class="di-header"><span class="di-name">${item.user}</span><span class="di-time">${item.time}</span></div>
+          <div class="di-content">关注了你</div>
+        </div>
+        <button style="padding:5px 14px;border-radius:14px;font-size:12px;font-weight:500;cursor:pointer;flex-shrink:0;margin-left:8px;${item.followed ? 'background:none;border:1px solid var(--divider);color:var(--text3)' : 'background:var(--primary);border:none;color:#fff'}">${item.followed ? '已关注' : '回关'}</button>
+      </div>`).join('')}</div>`;
+  } else {
+    document.getElementById('pageBody').innerHTML = getEmptyHtml(
+      'person_add_disabled',
+      '还没有新粉丝',
+      '保持活跃并解答其他家长的教育疑惑，可以吸引更多关注哦。',
+      '前往社区',
+      "window.location.href='shequ.html'"
+    );
+  }
+}
+
+function renderComments() {
+  unreadCounts.comments = 0;
+  setSubViewHeader('评论和回复');
+
+  if (socialData.comments && socialData.comments.length > 0) {
+    document.getElementById('pageBody').innerHTML = `<div class="detail-list">${socialData.comments.map(item => `
+      <div class="detail-item">
+        <div class="di-avatar" style="background:${item.avatar}">${item.user[0]}</div>
+        <div class="di-body">
+          <div class="di-header"><span class="di-name">${item.user} <span style="font-weight:400;color:var(--text3)">${item.action}</span></span><span class="di-time">${item.time}</span></div>
+          <div class="di-content">${item.content}</div>
+          <div class="di-ref">${item.ref}</div>
+        </div>
+      </div>`).join('')}</div>`;
+  } else {
+    document.getElementById('pageBody').innerHTML = getEmptyHtml(
+      'chat_bubble_outline',
+      '暂无评论与@互动',
+      '参与热门教育话题讨论，与同城家长交流育儿经验。',
+      '查看热门讨论',
+      "window.location.href='shequ.html'"
+    );
+  }
+}
+
+renderMain();
+
+function showToast(msg){
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+
+const prdData={
+  1:{title:'标记 1 · 社交互动与空状态规则',badge:'交互规范',badgeType:'interaction',
+     text:'social-strip 有 3 个入口：赞/新增粉丝/评论和回复\n• 点击切换至子视图\n• 若数组为空，渲染定制化 empty-state 结构（含引导Icon、提示文本及 CTA 操作按钮）\n\n测试操作：\n右上角点击“清空数据演示”可一键切换全局空状态展示。'},
+  2:{title:'标记 2 · 频道列表空状态处理',badge:'数据规范',badgeType:'data',
+     text:'消息频道包含系统通知、诊断提醒及私信：\n• 频道列表为空时整体展示空状态布局。\n• 引导按钮可直达社区或诊断工具。'}
+};
+
+let _curPrdId=null;
+(function(){const prdK='prd_xiaoxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_xiaoxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

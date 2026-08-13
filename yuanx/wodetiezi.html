@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我的发帖 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--urgent:#E53935;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
+.post-item{background:var(--surface);border-radius:var(--r-card);padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;position:relative}
+.post-item:active{opacity:.9}
+.post-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#FDE8E8;color:#C62828;margin-bottom:8px}
+.post-content{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.post-footer{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--hint)}
+.post-footer .fi{display:flex;align-items:center;gap:3px}
+.post-footer .material-icons{font-size:15px}
+.post-time{margin-left:auto}
+.empty{text-align:center;padding:60px 20px;color:var(--hint)}
+.empty .material-icons{font-size:48px;color:#e0e0e0;display:block;margin-bottom:10px}
+.post-menu-btn{position:absolute;top:10px;right:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;border-radius:50%;color:var(--hint);z-index:2}
+.post-menu-btn:active{background:#f0f0f0}
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .15s ease}
+.sheet-panel{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:390px;padding:8px 0 24px;overflow:hidden;animation:slideUp .2s ease}
+.sheet-item{padding:14px 20px;font-size:15px;color:var(--text1);display:flex;align-items:center;gap:12px;cursor:pointer;border-bottom:1px solid #f5f5f5}
+.sheet-item:active{background:#f9f9f9}
+.sheet-item .material-icons{font-size:20px;color:var(--text3)}
+.sheet-item.danger{color:var(--urgent)}
+.sheet-item.danger .material-icons{color:var(--urgent)}
+.sheet-cancel{padding:14px 20px;font-size:15px;color:var(--hint);text-align:center;cursor:pointer;margin-top:6px;border-top:6px solid #f5f5f5}
+.confirm-panel{background:#fff;border-radius:16px;width:90%;max-width:340px;padding:24px 20px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);animation:scaleIn .15s ease}
+.confirm-title{font-size:16px;font-weight:700;color:var(--text1);margin-bottom:8px}
+.confirm-desc{font-size:13px;color:var(--text3);margin-bottom:20px}
+.confirm-actions{display:flex;gap:10px}
+.confirm-actions button{flex:1;padding:11px;border-radius:var(--r-btn);font-size:14px;font-weight:600;cursor:pointer;border:none}
+.confirm-actions button:active{transform:scale(.97)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes scaleIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">我的发帖</span>
+    <button id="toggleBtn" onclick="toggleEmpty()" style="margin-left:auto;border:none;background:none;color:#9E9E9E;font-size:12px;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid #e0e0e0">空状态</button>
+  </div>
+  <div class="page-body" id="pageBody"></div>
+</div>
+<script>
+const posts=[
+  {id:1,tag:'其它',content:'分享一个数学错题整理方法：按知识点分类，每周复盘一次，效果非常好！坚持了两个月，孩子数学提了15分。',likes:32,comments:8,time:'昨天'},
+  {id:2,tag:'高二',content:'高三家长加油！熬过这一年，一切都值得。和孩子一起坚持，是最好的陪伴。',likes:28,comments:14,time:'3天前'},
+  {id:3,tag:'高一',content:'英语长难句拆解技巧：先找主干（主谓宾），再看修饰成分。推荐孩子每天精读一篇，坚持21天见效。',likes:19,comments:5,time:'07-20 '},
+  {id:4,tag:'高二',content:'孩子物理一直在60分左右徘徊，有没有好的提分方法推荐？主要是力学和电学这两块。',likes:6,comments:23,time:'07-20 '},
+  {id:5,tag:'高二',content:'孩子月考退步了，别急着批评，先问问哪里没做好，一起分析原因，比责骂有效得多。',likes:41,comments:19,time:'07-17'},
+];
+let showEmpty=false;
+function toggleEmpty(){
+  showEmpty=!showEmpty;
+  var btn=document.getElementById('toggleBtn');
+  if(btn) btn.textContent=showEmpty?'有数据':'空状态';
+  render();
+}
+function render(){
+  if(!posts.length||showEmpty){
+    document.getElementById('pageBody').innerHTML='<div class="empty"><span class="material-icons">rate_review</span>还没有发过帖子</div>';
+    return;
+  }
+  document.getElementById('pageBody').innerHTML=posts.map(p=>`
+<div class="post-item" onclick="window.location.href='tiezidetail.html'">
+  <button class="post-menu-btn" onclick="event.stopPropagation();openPostMenu(${p.id})"><span class="material-icons">more_vert</span></button>
+  <span class="post-tag">${p.tag}</span>
+  <div class="post-content">${p.content}</div>
+  <div class="post-footer">
+    <span class="fi"><span class="material-icons">favorite_border</span>${p.likes}</span>
+    <span class="fi"><span class="material-icons">chat_bubble_outline</span>${p.comments}</span>
+    <span class="post-time">${p.time}</span>
+  </div>
+</div>`).join('');
+}
+render();
+
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+
+function openPostMenu(id){
+  const mask=document.createElement('div');
+  mask.className='modal-mask';mask.id='postMenuModal';
+  mask.onclick=(e)=>{if(e.target===mask)mask.remove();};
+  mask.innerHTML=`<div class="sheet-panel">
+    <div class="sheet-item danger" onclick="document.getElementById('postMenuModal').remove();showDeleteConfirm(${id})"><span class="material-icons">delete_outline</span> 删除帖子</div>
+    <div class="sheet-cancel" onclick="document.getElementById('postMenuModal').remove()">取消</div>
+  </div>`;
+  document.body.appendChild(mask);
+}
+
+function showDeleteConfirm(id){
+  const mask=document.createElement('div');
+  mask.className='modal-mask';mask.style.alignItems='center';mask.id='deleteConfirmModal';
+  mask.onclick=(e)=>{if(e.target===mask)mask.remove();};
+  mask.innerHTML=`<div class="confirm-panel">
+    <div class="confirm-title">删除帖子</div>
+    <div class="confirm-desc">确定要删除这篇帖子吗？删除后无法恢复。</div>
+    <div class="confirm-actions">
+      <button style="background:var(--bg);color:var(--text2)" onclick="document.getElementById('deleteConfirmModal').remove()">取消</button>
+      <button style="background:var(--urgent);color:#fff" onclick="deletePost(${id})">确定删除</button>
+    </div>
+  </div>`;
+  document.body.appendChild(mask);
+}
+
+function deletePost(id){
+  document.getElementById('deleteConfirmModal')?.remove();
+  const idx=posts.findIndex(p=>p.id===id);
+  if(idx!==-1)posts.splice(idx,1);
+  render();
+  showToast('帖子已删除');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

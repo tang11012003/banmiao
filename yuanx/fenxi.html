@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>学习分析 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--orange:#FF6D00;--r-card:14px;--urgent:#E53935;--keep:#43A047}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+/* Header 布局 */
+.app-bar {
+  background: var(--surface);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 0.5px 2px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  z-index: 10;
+}
+.app-bar .header-left { display: flex; align-items: center; gap: 8px; }
+.app-bar .page-title { font-size: 17px; font-weight: 700; color: var(--text1); }
+.app-bar .student-picker-btn { display: inline-flex; align-items: center; gap: 2px; background: rgba(230,67,26,0.08); color: var(--primary); padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.app-bar .upload-action-btn { display: inline-flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(230,67,26,0.3); color: var(--primary); padding: 4px 10px; border-radius: 14px; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+
+/* 备考日程挂件 */
+.analysis-schedule-widget {
+  background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.22);
+  cursor: pointer;
+}
+.asw-top-row { display: flex; align-items: center; gap: 12px; }
+.asw-countdown-box { background: #ffffff; color: #E6431A; border-radius: 12px; padding: 6px 10px; text-align: center; flex-shrink: 0; min-width: 58px; }
+.asw-countdown-box .num { font-size: 20px; font-weight: 800; line-height: 1; }
+.asw-countdown-box .unit { font-size: 10px; color: var(--text3); font-weight: 600; margin-top: 2px; }
+.asw-content { flex: 1; min-width: 0; }
+.asw-tag-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.asw-tag { background: rgba(255, 255, 255, 0.25); font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+.asw-date-str { font-size: 11px; opacity: 0.88; }
+.asw-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.asw-action-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35); color: #fff; font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+
+.asw-ai-tip {
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.asw-ai-tip .material-icons { font-size: 14px; color: #FFD54F; margin-top: 1px; flex-shrink: 0; }
+.asw-ai-tip strong { color: #FFD54F; font-weight: 600; }
+
+/* 🌟 新增：学情复盘专属大卡片入口 */
+.fupan-entry-card {
+  background: var(--surface);
+  border-radius: var(--r-card);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .15s;
+}
+.fupan-entry-card:active {
+  border-color: rgba(230, 67, 26, 0.3);
+  background: #FFF9F8;
+}
+.fec-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.fec-title-box { display: flex; align-items: center; gap: 8px; }
+.fec-icon-wrap { width: 36px; height: 36px; border-radius: 10px; background: rgba(230, 67, 26, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; }
+.fec-title { font-size: 16px; font-weight: 700; color: var(--text1); }
+.fec-arrow { display: flex; align-items: center; font-size: 12px; font-weight: 600; color: var(--primary); }
+
+.fec-stats-row { display: flex; justify-content: space-around; background: #FAF9F8; padding: 10px 0; border-radius: 10px; }
+.fec-stat-item { text-align: center; }
+.fec-stat-val { font-size: 16px; font-weight: 800; color: var(--text1); }
+.fec-stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* Report status banner */
+.report-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;transition:background .12s;margin-bottom:12px;border-radius:12px}
+.report-banner.generating{background:linear-gradient(90deg,#FFF8E1,#FFF3E0);border:1px solid rgba(251,192,45,0.4)}
+.report-banner.completed{background:linear-gradient(90deg,#E8F5E9,#F1F8E9);border:1px solid rgba(67,160,71,0.3)}
+.rb-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.report-banner.generating .rb-icon{background:rgba(251,192,45,.15)}
+.report-banner.completed .rb-icon{background:rgba(67,160,71,.15)}
+.report-banner.generating .rb-icon .material-icons{color:var(--attention);font-size:18px;animation:spin 1.5s linear infinite}
+.report-banner.completed .rb-icon .material-icons{color:var(--keep);font-size:18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rb-text{flex:1;min-width:0}
+.rb-title{font-size:13px;font-weight:600;color:var(--text1)}
+.rb-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.rb-action{font-size:12px;font-weight:600;color:var(--primary);white-space:nowrap;display:flex;align-items:center}
+
+/* 底部导航 (只留 4 项，去掉了原来的学情复盘 Tab) */
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint)}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px}
+.nav-item.active .material-icons,.nav-item.active .nav-label{color:var(--primary);font-weight:500}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <div class="header-left">
+      <span class="page-title">学习分析</span>
+      <select class="student-picker-btn" onchange="switchStudent(this.value)" style="border:none;outline:none;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23E6431A'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 6px center;padding-right:20px">
+        <option value="1">张小明（高三）</option>
+        <option value="2">刘小五（高三）</option>
+      </select>
+    </div>
+    <button class="upload-action-btn" onclick="window.location.href='xuanzhexingzhi.html'">
+      <span class="material-icons" style="font-size:16px">add_a_photo</span>考试诊断
+    </button>
+  </div>
+
+  <!-- Report status banner -->
+  <div class="report-banner" id="reportBanner" title="PRD mark 1" style="display:none" onclick="handleBannerClick()"><span class="prd-mark" style="position:fixed;top:60px;right:16px;z-index:50" onclick="openPrd(event,1)">1</span></div>
+
+  <div class="page-body">
+    <!-- 1. 备考日程挂件 (点击可跳转 rili.html) -->
+    <div class="analysis-schedule-widget" onclick="window.location.href='rili.html'">
+      <div class="asw-top-row">
+        <div class="asw-countdown-box">
+          <div class="num">2</div>
+          <div class="unit">天后</div>
+        </div>
+        <div class="asw-content">
+          <div class="asw-tag-row">
+            <span class="asw-tag">备考日程</span>
+            <span class="asw-date-str">11-05 周四</span>
+          </div>
+          <div class="asw-title">期中综合考试</div><span class="prd-mark" onclick="openPrd(event,2)" style="vertical-align:middle">2</span>
+        </div>
+        <div class="asw-action-btn">
+          日历 <span class="material-icons" style="font-size:14px">chevron_right</span>
+        </div>
+      </div>
+      <div class="asw-ai-tip">
+        <span class="material-icons">tips_and_updates</span>
+        <div>
+          <strong>临考冲刺提示：</strong>综合近 <strong>张小明 </strong>8 次考试，建议重点抓<strong>【数学二次函数最值】</strong>与<strong>【物理受力分析图】</strong>，此板块性价比最高！
+        </div>
+      </div>
+    </div>
+
+    <!-- 🌟 2. 新增：学情复盘入口卡片 (点击跳转至 cuoti.html) -->
+    <div class="fupan-entry-card" style="position:relative" onclick="window.location.href='cuoti.html'">
+      <div class="fec-header">
+        <div class="fec-title-box">
+          <div class="fec-icon-wrap">
+            <span class="material-icons" style="font-size:22px">menu_book</span>
+          </div>
+          <div>
+            <div class="fec-title">学情复盘</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:1px">查看历史试卷与错题归因</div>
+          </div>
+        </div>
+        <div class="fec-arrow">
+          <span>进入复盘</span>
+          <span class="material-icons" style="font-size:16px">chevron_right</span>
+        </div>
+      </div>
+      <div class="fec-stats-row"><span class="prd-mark" style="position:absolute;top:12px;right:12px" onclick="openPrd(event,3)">3</span>
+        <div class="fec-stat-item">
+          <div class="fec-stat-val">7</div>
+          <div class="fec-stat-lbl">历史试卷</div>
+        </div>
+        <div class="fec-stat-item">
+          <div class="fec-stat-val" style="color:var(--urgent)">27</div>
+          <div class="fec-stat-lbl">累计错题</div>
+        </div>
+        <div class="fec-stat-item">
+          <div class="fec-stat-val" style="color:var(--keep)">76.2%</div>
+          <div class="fec-stat-lbl">平均得分率</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🌟 3. 底部 Tab 栏 (已删除【学情复盘】Tab，只保留 4 个页面入口) -->
+  <div class="bottom-nav">
+    <a class="nav-item active" href="fenxi.html"><span class="material-icons">insights</span><span class="nav-label">分析</span></a>
+    <a class="nav-item" href="shequ.html"><span class="material-icons">forum</span><span class="nav-label">社区</span></a>
+    <a class="nav-item" href="xiaoxi.html"><span class="material-icons">notifications</span><span class="nav-label">消息</span></a>
+    <a class="nav-item" href="wode.html"><span class="material-icons">person</span><span class="nav-label">我的</span></a>
+  </div>
+</div>
+
+<script>
+function checkReportBanner(){
+  const task=JSON.parse(localStorage.getItem('reportTask')||'null');
+  const banner=document.getElementById('reportBanner');
+  if(!task||task.status==='read'){banner.style.display='none';return;}
+  banner.style.display='flex';
+  if(task.status==='generating'){
+    banner.className='report-banner generating';
+    banner.innerHTML=`
+      <div class="rb-icon"><span class="material-icons">sync</span></div>
+      <div class="rb-text">
+        <div class="rb-title">${task.subject||'试卷'} 报告生成中...</div>
+        <div class="rb-sub">AI 正在深度分析，完成后将通知您</div>
+      </div>
+      <span class="rb-action">查看进度<span class="material-icons" style="font-size:14px">chevron_right</span></span>`;
+    setTimeout(()=>{
+      task.status='completed';task.updatedAt=Date.now();
+      localStorage.setItem('reportTask',JSON.stringify(task));
+      checkReportBanner();
+    },8000);
+  }else if(task.status==='completed'){
+    banner.className='report-banner completed';
+    banner.innerHTML=`
+      <div class="rb-icon"><span class="material-icons">check_circle</span></div>
+      <div class="rb-text">
+        <div class="rb-title">${task.subject||'试卷'} 诊断报告已就绪</div>
+        <div class="rb-sub">点击查看完整分析结果</div>
+      </div>
+      <span class="rb-action">立即查看<span class="material-icons" style="font-size:14px">chevron_right</span></span>`;
+  }
+}
+function handleBannerClick(){
+  const task=JSON.parse(localStorage.getItem('reportTask')||'null');
+  if(!task)return;
+  if(task.status==='generating'){window.location.href='loading.html';}
+  else if(task.status==='completed'){
+    task.status='read';task.updatedAt=Date.now();
+    localStorage.setItem('reportTask',JSON.stringify(task));
+    window.location.href='fenxibaogao.html';
+  }
+}
+checkReportBanner();
+
+const prdData={
+  1:{title:'标记 1 · 报告 Banner 状态机',badge:'业务规则',badgeType:'',
+     text:'reportBanner 读 localStorage "reportTask"：\n• null 或 status==="read" → display:none\n• status==="generating" → 黄色 banner + 旋转图标\n  8秒后自动升级为 completed 并重渲染\n• status==="completed" → 绿色 banner + 勾选图标\n\n点击 handleBannerClick()：\n• generating → 跳转 loading.html\n• completed → 写 status="read" → 跳转 fenxibaogao.html\n\n⚠️ generating 时 setTimeout 8000ms 自动升级不可取消'},
+  2:{title:'标记 2 · 备考日程挂件数据规则',badge:'数据规范',badgeType:'data',
+     text:'挂件数据来自 rili.html mockEvents 中最近一条 type===mock_exam\n当前 hardcode：\n• 倒计时：2（天后）\n• 日期：11-05 周四\n• 考试名：期中综合考试\n\nAI tip 文案：hardcode，提及"数学二次函数最值"和"物理受力分析"\n\n点击整个挂件 → 跳转 rili.html'},
+  3:{title:'标记 3 · 学情复盘入口数据规则',badge:'数据规范',badgeType:'data',
+     text:'fec-stats-row 显示三项汇总数据：\n• 历史试卷：7（hardcode，对应 cuoti.html cuotiRecords 数组长度）\n• 累计错题：27（hardcode）\n• 平均得分率：76.2%（hardcode）\n\n这些数字应从 localStorage 实际错题记录聚合计算\n当前均为 mock 静态值，与 cuoti.html 数据不同步\n\n点击整个 fec 卡片 → 跳转 cuoti.html'}
+};
+let _curPrdId=null;
+(function(){const prdK='prd_fenxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_fenxi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';
+  t.textContent='产品规则已更新并保存';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+function switchStudent(v){ location.reload(); }
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>
+
+
+

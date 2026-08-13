@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>有用 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
+.post-item{background:var(--surface);border-radius:var(--r-card);padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer}
+.post-item:active{opacity:.9}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.poster-name{font-size:13px;font-weight:600;color:var(--text1)}
+.post-time{font-size:11px;color:var(--hint)}
+.post-tag{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:6px;background:#FDE8E8;color:#C62828}
+.post-content{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.post-footer{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--hint)}
+.post-footer .fi{display:flex;align-items:center;gap:3px}
+.post-footer .material-icons{font-size:15px}
+.liked-icon{color:var(--primary)}
+.empty{text-align:center;padding:60px 20px;color:var(--hint)}
+.empty .material-icons{font-size:48px;color:#e0e0e0;display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">有用</span>
+    <button id="toggleBtn" onclick="toggleEmpty()" style="margin-left:auto;border:none;background:none;color:#9E9E9E;font-size:12px;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid #e0e0e0">空状态</button>
+  </div>
+  <div class="page-body" id="pageBody"></div>
+</div>
+<script>
+const colors=['#E6431A','#1565C0','#43A047','#9C27B0','#FF6D00','#00838F'];
+let showEmpty=false;
+function toggleEmpty(){
+  showEmpty=!showEmpty;
+  var btn=document.getElementById('toggleBtn');
+  if(btn) btn.textContent=showEmpty?'有数据':'空状态';
+  render();
+}
+const posts=[
+  {id:1,poster:'陈老师',color:2,time:'3天前',tag:'高一',content:'英语长难句拆解：先找主干再看修饰，每天精读一篇，坚持21天见效。',likes:57,comments:12},
+  {id:2,poster:'张妈妈',color:0,time:'07-20 ',tag:'其它',content:'错题本用活的方法：不只是抄题，要写下当时做错的原因，下次复盘时对照。',likes:43,comments:9},
+  {id:3,poster:'高考研究员',color:5,time:'07-20 ',tag:'高一',content:'高三冲刺阶段不要盲目刷题，要精做精析，一道题搞透比做十道题更有价值。',likes:88,comments:31},
+  {id:4,poster:'张妈妈',color:1,time:'07-17',tag:'高二',content:'孩子考前焦虑怎么办？试试这个：每天睡前让孩子说三件今天做好的小事，逐渐建立自信。',likes:36,comments:17},
+  {id:5,poster:'赵爸爸',color:3,time:'3周前',tag:'高二',content:'物理受力分析口诀：重力必有，接触找弹力，运动找摩擦，画图比想象更清晰。',likes:29,comments:8},
+];
+function render(){
+  if(!posts.length||showEmpty){
+    document.getElementById('pageBody').innerHTML='<div class="empty"><span class="material-icons">favorite_border</span>还没有标记有用的帖子</div>';
+    return;
+  }
+  document.getElementById('pageBody').innerHTML=posts.map(p=>`
+<div class="post-item" onclick="window.location.href='tiezidetail.html'">
+  <div class="post-head">
+    <div class="avatar" style="background:${colors[p.color]}">${p.poster[0]}</div>
+    <div>
+      <div class="poster-name">${p.poster}</div>
+      <div class="post-time">${p.time}</div>
+    </div>
+    <span class="post-tag">${p.tag}</span>
+  </div>
+  <div class="post-content">${p.content}</div>
+  <div class="post-footer">
+    <span class="fi liked-icon"><span class="material-icons">favorite</span>${p.likes}</span>
+    <span class="fi"><span class="material-icons">chat_bubble_outline</span>${p.comments}</span>
+  </div>
+</div>`).join('');
+}
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

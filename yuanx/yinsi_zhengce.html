@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>隐私政策 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.row{display:flex;padding:12px 16px;border-bottom:1px solid var(--divider);gap:8px;align-items:flex-start}
+.row:last-child{border-bottom:none}
+.row-label{font-size:13px;font-weight:600;color:var(--text1);width:88px;flex-shrink:0;padding-top:1px}
+.row-val{flex:1;font-size:13px;color:var(--text2);line-height:1.6}
+.section-title{font-size:12px;color:var(--hint);padding:14px 16px 6px;font-weight:500}
+.prose{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.prose h3{font-size:14px;font-weight:700;color:var(--text1);margin:14px 0 6px}
+.prose h3:first-child{margin-top:0}
+.prose p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:8px}
+.prose p:last-child{margin-bottom:0}
+.update-date{font-size:12px;color:var(--hint);padding:0 16px 14px}</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">隐私政策</span>
+  </div>
+  <div class="page-body">
+    <div class="update-date">更新日期：2026年7月1日 &nbsp;｜&nbsp; 生效日期：2026年7月1日</div>
+    <div class="prose">
+      <h3>一、我们收集哪些信息</h3>
+      <p>我们收集你主动提供的信息（手机号、昵称、孩子信息、试卷数据）以及设备基本信息（型号、系统版本）。详见「个人信息收集清单」。</p>
+      <h3>二、我们如何使用信息</h3>
+      <p>收集的信息仅用于：提供和改进产品功能、生成学情分析报告、保障账号安全、推荐相关社区内容。我们不会将你的信息用于与上述目的无关的场景。</p>
+      <h3>三、信息存储与保护</h3>
+      <p>你的数据存储在中国境内的加密服务器中。我们采用传输加密（TLS）和存储加密（AES-256）保护数据安全。账号注销后，我们将在30天内删除你的个人数据。</p>
+      <h3>四、你的权利</h3>
+      <p>你有权随时：查看和修改个人信息、导出学情数据、删除发布的内容、注销账号（30天内数据清除）。相关操作入口均在"我的 → 设置"中。</p>
+      <h3>五、未成年人保护</h3>
+      <p>本平台面向家长用户，不主动收集未成年人的个人信息。孩子的学情数据由家长账号管理，仅用于学情分析，不对外展示。</p>
+      <h3>六、Cookie 与本地存储</h3>
+      <p>我们使用 localStorage 存储你的偏好设置和离线数据，不使用跨站追踪 Cookie。</p>
+      <h3>七、联系我们</h3>
+      <p>隐私相关问题请通过应用内"意见反馈"联系我们，我们将在5个工作日内回复。</p>
+    </div>
+  </div>
+</div>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我的粉丝 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.user-item{display:flex;align-items:center;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--divider);gap:12px}
+.avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#fff;flex-shrink:0}
+.info{flex:1;min-width:0}
+.uname{font-size:14px;font-weight:600;color:var(--text1)}
+.udesc{font-size:12px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.follow-btn{padding:6px 16px;border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;border:none;flex-shrink:0;transition:all .15s}
+.follow-btn.following{background:#f0f0f0;color:var(--text2)}
+.follow-btn.follow{background:var(--primary);color:#fff}
+.empty{text-align:center;padding:60px 20px;color:var(--hint)}
+.empty .material-icons{font-size:48px;color:#e0e0e0;display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">我的粉丝</span>
+    <button id="toggleBtn" onclick="toggleEmpty()" style="margin-left:auto;border:none;background:none;color:#9E9E9E;font-size:12px;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid #e0e0e0">空状态</button>
+  </div>
+  <div class="page-body" id="pageBody"></div>
+</div>
+<script>
+const colors=['#E6431A','#1565C0','#43A047','#9C27B0','#FF6D00','#00838F','#F57C00','#AD1457'];
+let showEmpty=false;
+function toggleEmpty(){
+  showEmpty=!showEmpty;
+  var btn=document.getElementById('toggleBtn');
+  if(btn) btn.textContent=showEmpty?'有数据':'空状态';
+  render();
+}
+const users=[
+  {id:1,name:'孙妈妈',desc:'刚开始陪读，向大家学习',color:0,following:false},
+  {id:2,name:'周爸爸',desc:'孩子高二，数学还需加强',color:1,following:true},
+  {id:3,name:'吴妈妈',desc:'三年陪读老兵，经验丰富',color:2,following:false},
+  {id:4,name:'郑同学家长',desc:'关注英语提升方法',color:3,following:true},
+  {id:5,name:'冯爸爸',desc:'工科背景，喜欢理科题',color:4,following:false},
+  {id:6,name:'陈妈妈',desc:'双胞胎妈妈，经验加倍',color:5,following:false},
+  {id:7,name:'杨爸爸',desc:'高考过来人，分享备考经验',color:6,following:true},
+  {id:8,name:'蒋妈妈',desc:'注重孩子心理健康',color:7,following:false},
+];
+function render(){
+  if(users.length===0||showEmpty){
+    document.getElementById('pageBody').innerHTML='<div class="empty"><span class="material-icons">people_outline</span>还没有粉丝</div>';
+    return;
+  }
+  document.getElementById('pageBody').innerHTML=users.map(u=>`
+<div class="user-item">
+  <div class="avatar" style="background:${colors[u.color]}">${u.name[0]}</div>
+  <div class="info">
+    <div class="uname">${u.name}</div>
+    
+  </div>
+  <button class="follow-btn ${u.following?'following':'follow'}" onclick="toggleFollow(${u.id})">${u.following?'已关注':'回关'}</button>
+</div>`).join('');
+}
+function toggleFollow(id){
+  const u=users.find(x=>x.id===id);
+  if(!u)return;
+  u.following=!u.following;
+  render();
+}
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

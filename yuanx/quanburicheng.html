@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>全部日程 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+/* 顶部 Bar 带返回按钮 */
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+.app-bar .actions button{background:none;border:none;color:var(--primary);cursor:pointer;padding:6px 10px;border-radius:6px;display:flex;align-items:center;gap:2px;font-size:14px;font-weight:500}
+
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+
+/* 分类 Filter */
+.filter-strip{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
+.filter-strip::-webkit-scrollbar{display:none}
+.filter-chip{padding:6px 12px;border-radius:16px;font-size:12px;background:#fff;border:1px solid #e0e0e0;color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.filter-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* 日程卡片列表 */
+.schedule-card{background:var(--surface);border-radius:var(--r-card);padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .12s}
+.schedule-card:active{transform:scale(.98)}
+.sc-icon-box{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-icon-box .material-icons{font-size:20px;color:#fff}
+.sc-content{flex:1;min-width:0}
+.sc-title{font-size:15px;font-weight:600;color:var(--text1);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-meta{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:8px}
+.sc-tag{padding:1px 6px;border-radius:4px;font-size:10px;background:#f0f0f0;color:var(--text2)}
+.sc-time{text-align:right;flex-shrink:0}
+.sc-days{font-size:14px;font-weight:700;color:var(--primary)}
+.sc-date{font-size:11px;color:var(--hint);margin-top:2px}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="title">我的全部日程</span>
+    
+  </div>
+
+  <div class="page-body">
+    <!-- 类型 Filter -->
+    <div class="filter-strip" id="filterStrip"><span class="prd-mark" onclick="openPrd(event,1)" style="flex-shrink:0;align-self:center">1</span>
+      <button class="filter-chip active" onclick="filterType('all', this)">全部 (6)</button>
+      <button class="filter-chip" onclick="filterType('mock_exam', this)">考试安排</button>
+      <button class="filter-chip" onclick="filterType('registration', class)">报名/招考</button>
+      <button class="filter-chip" onclick="filterType('custom', this)">家长会/活动</button>
+    </div>
+
+    <!-- 全量日程列表 -->
+    <span class="prd-mark" onclick="openPrd(event,2)" style="display:inline-flex;margin-bottom:8px">2</span><div id="scheduleList"></div>
+  </div>
+</div>
+
+<script>
+const typeConfig = {
+  mock_exam: { name: '考试', color: '#FF6D00', icon: 'assignment' },
+  registration: { name: '招考', color: '#1565C0', icon: 'how_to_reg' },
+  physical_exam: { name: '体检', color: '#43A047', icon: 'local_hospital' },
+  custom: { name: '活动', color: '#9C27B0', icon: 'event' },
+  gaokao: { name: '高考', color: '#E53935', icon: 'flag' }
+};
+
+const allSchedules = [
+  { id: 1, title: '期中综合考试', date: '2026-11-05', daysLeft: '2天后', type: 'mock_exam', subject: '全科' },
+  { id: 2, title: '期中考前家长会', date: '2026-11-08', daysLeft: '5天后', type: 'custom', subject: '校级' },
+  { id: 3, title: '新高考选科意向预填报', date: '2026-11-11', daysLeft: '8天后', type: 'registration', subject: '系统' },
+  { id: 4, title: '数学专项模考', date: '2026-11-18', daysLeft: '15天后', type: 'mock_exam', subject: '数学' },
+  { id: 5, title: '高一学业水平诊断', date: '2026-12-05', daysLeft: '32天后', type: 'mock_exam', subject: '全科' },
+  { id: 6, title: '高一期末考试', date: '2027-01-15', daysLeft: '73天后', type: 'mock_exam', subject: '全科' }
+];
+
+let currentFilter = 'all';
+
+let filteredCache = [];
+
+function renderList() {
+  const filtered = currentFilter === 'all'
+    ? allSchedules
+    : allSchedules.filter(s => s.type === currentFilter);
+  filteredCache = filtered;
+
+  const container = document.getElementById('scheduleList');
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--hint);font-size:13px">暂无相关日程</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((item, idx) => {
+    const cfg = typeConfig[item.type] || typeConfig.custom;
+    return `
+      <div class="schedule-card" onclick="showEventDetail(${idx})">
+        <div class="sc-icon-box" style="background:${cfg.color}">
+          <span class="material-icons">${cfg.icon}</span>
+        </div>
+        <div class="sc-content">
+          <div class="sc-title">${item.title}</div>
+          <div class="sc-meta">
+            <span class="sc-tag">${cfg.name}</span>
+            ${item.subject ? `<span>${item.subject}</span>` : ''}
+          </div>
+        </div>
+        <div class="sc-time">
+          <div class="sc-days">${item.daysLeft}</div>
+          <div class="sc-date">${item.date}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterType(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+function addEvent() {
+  const title = prompt('请输入新日程标题（如：英语听力模考）：');
+  if (title) {
+    allSchedules.unshift({
+      id: Date.now(),
+      title: title,
+      date: '2026-11-20',
+      daysLeft: '近期',
+      type: 'custom',
+      subject: '个人'
+    });
+    renderList();
+  }
+}
+
+function showEventDetail(idx){
+  const ev=filteredCache[idx];
+  if(!ev)return;
+  const cfg=typeConfig[ev.type]||typeConfig.custom;
+  const modal=document.createElement('div');
+  modal.id='eventDetailModal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:flex-end;justify-content:center';
+  modal.innerHTML=`<div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:390px">
+<div style="width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 20px"></div>
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+<div style="width:48px;height:48px;border-radius:14px;background:${cfg.color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<span class="material-icons" style="color:${cfg.color};font-size:26px">${cfg.icon}</span>
+</div>
+<div>
+<div style="font-size:18px;font-weight:700;color:#1A1A1A">${ev.title}</div>
+<div style="font-size:13px;color:#9E9E9E;margin-top:3px">${cfg.name}</div>
+</div>
+</div>
+<div style="background:#f7f7f7;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+<div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#616161">日期</span><span style="font-weight:500">${ev.date}</span></div>
+<div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#616161">距今</span><span style="font-weight:500;color:var(--primary)">${ev.daysLeft}</span></div>
+${ev.subject?`<div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#616161">备注</span><span style="font-weight:500">${ev.subject}</span></div>`:''}
+</div>
+<div style="display:flex;gap:10px">
+<button onclick="deleteEvent(${idx})" style="flex:1;padding:12px 0;border-radius:10px;border:1px solid #e0e0e0;background:#fff;font-size:14px;color:#E53935;cursor:pointer">删除</button>
+<button onclick="closeEventDetail()" style="flex:2;padding:12px 0;border-radius:10px;border:none;background:#E6431A;color:#fff;font-size:14px;font-weight:500;cursor:pointer">关闭</button>
+</div>
+</div>`;
+  modal.addEventListener('click',function(e){if(e.target===modal)closeEventDetail()});
+  document.body.appendChild(modal);
+}
+
+function closeEventDetail(){const m=document.getElementById('eventDetailModal');if(m)m.remove()}
+
+function deleteEvent(idx){
+  const ev=filteredCache[idx];
+  const realIdx=allSchedules.indexOf(ev);
+  if(realIdx>-1)allSchedules.splice(realIdx,1);
+  closeEventDetail();
+  renderList();
+}
+
+renderList();
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+const prdData={
+  1:{title:'标记 1 · 类型筛选规则',badge:'交互规范',badgeType:'interaction',
+     text:'filter-strip 4 个筛选芯片：\n全部(all) / 考试安排(mock_exam) / 报名招考(registration) / 家长会/活动(custom)\n\nfilterType(type, btn)：\n• 更新 currentFilter\n• 移除所有 .active，给当前 btn 添加\n• 重新 renderList()\n\n筛选逻辑：type="all" → 显示全量\n否则 allSchedules.filter(s => s.type === type)\n\n⚠️ 已知 Bug：\n报名/招考 芯片的 onclick="filterType(\'registration\', class)"\n"class" 是 JS 保留字，传入 btn 参数为 undefined\n→ querySelectorAll 后的 btn.classList.add() 抛出 TypeError\n→ 筛选功能崩溃，active 样式无法切换'},
+  2:{title:'标记 2 · 日程列表数据规则',badge:'数据规范',badgeType:'data',
+     text:'allSchedules 数组（6条）：\n• id, title, date(YYYY-MM-DD), daysLeft(文字), type, subject\n\ntypeConfig 映射（5种）：\n• mock_exam → 考试 / 橙色 / assignment\n• registration → 招考 / 蓝色 / how_to_reg\n• physical_exam → 体检 / 绿色 / local_hospital\n• custom → 活动 / 紫色 / event\n• gaokao → 高考 / 红色 / flag\n\n点击卡片 → showEventDetail(idx)：\n• idx 是 filteredCache 中的下标\n• 渲染 bottom sheet modal\n• 删除按钮 → deleteEvent(idx) → 从 allSchedules splice 后重渲\n\n新建日程 → addEvent()：prompt 输入标题，硬写 date=2026-11-20, type=custom'}
+};
+let _curPrdId=null;
+(function(){const prdK='prd_quanburicheng';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_quanburicheng';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>
+
+
+

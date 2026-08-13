@@ -1,0 +1,589 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>备考日程 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 16px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1}
+.app-bar .actions{display:flex;gap:4px;align-items:center}
+.app-bar .actions button{background:none;border:none;color:var(--text2);cursor:pointer;padding:6px;border-radius:50%;display:flex;align-items:center}
+.app-bar .actions button:active{background:#f0f0f0}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.section-title{font-size:15px;font-weight:600;margin-bottom:10px;color:var(--text1);display:flex;align-items:center;justify-content:space-between}
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint);transition:color .2s}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px;transition:color .2s}
+.nav-item.active .material-icons{color:var(--primary)}
+.nav-item.active .nav-label{color:var(--primary);font-weight:500}
+
+/* 顶部综合日程卡片 */
+.schedule-hero-card{background:linear-gradient(135deg,#FF5722,#FF7043);color:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 6px 18px rgba(255,87,34,.22)}
+.shc-header{display:flex;align-items:center;justify-content:space-between;font-size:11px;margin-bottom:10px;opacity:.95}
+.shc-header-left{display:flex;align-items:center;gap:6px;font-weight:600}
+.shc-add-btn{background:rgba(255,255,255,.25);border:none;color:#fff;width:18px;height:18px;border-radius:50%;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.shc-header-right{display:flex;align-items:center;gap:8px}
+.shc-user-tag{opacity:.85;cursor:pointer}
+.shc-all-btn{color:#fff;text-decoration:none;font-weight:600;display:flex;align-items:center;background:rgba(255,255,255,.2);padding:2px 6px;border-radius:10px;font-size:10px;cursor:pointer}
+.shc-all-btn .material-icons{font-size:12px}
+
+.shc-main-event{background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border:1px solid rgba(255,255,255,.25);cursor:pointer}
+.shc-main-title{font-size:16px;font-weight:700}
+.shc-main-sub{font-size:11px;opacity:.85;margin-top:2px}
+.shc-main-badge{background:#fff;color:#E6431A;padding:4px 10px;border-radius:14px;font-size:12px;font-weight:700;box-shadow:0 2px 5px rgba(0,0,0,.08)}
+
+.shc-sub-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.shc-sub-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;cursor:pointer}
+.shc-sub-left{display:flex;align-items:center;gap:4px}
+.shc-tag-todo{background:rgba(255,255,255,.25);padding:1px 4px;border-radius:3px;font-size:9px}
+.shc-sub-right{display:flex;align-items:center;gap:6px}
+.shc-date{opacity:.9}
+.shc-days{font-weight:600;background:rgba(0,0,0,.1);padding:1px 5px;border-radius:4px;font-size:10px}
+
+.shc-tip{background:rgba(0,0,0,.1);border-radius:6px;padding:6px 8px;font-size:11px;line-height:1.35;display:flex;align-items:center;gap:4px;opacity:.95}
+.shc-tip .material-icons{font-size:13px;color:#FFE082;flex-shrink:0}
+
+/* 日历组件样式 */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav button{background:none;border:none;cursor:pointer;padding:6px;border-radius:50%;color:var(--text2);display:flex;align-items:center}
+.cal-nav button:active{background:#f0f0f0}
+.cal-nav .month-label{font-size:15px;font-weight:600}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-header{font-size:11px;color:var(--hint);padding:6px 0;font-weight:500}
+.cal-day{padding:6px 2px;border-radius:8px;cursor:pointer;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:background .15s}
+.cal-day:hover{background:#f5f5f5}
+.cal-day.today{border:1.5px solid var(--primary)}
+.cal-day.selected{background:var(--primary);color:#fff}
+.cal-day.selected .day-num{color:#fff}
+.cal-day .day-num{font-size:13px;font-weight:500;margin-bottom:2px}
+.cal-day .dots{display:flex;gap:2px;margin-top:2px}
+.cal-day .dot{width:5px;height:5px;border-radius:50%}
+.cal-day.other-month .day-num{color:var(--hint)}
+
+/* 日程列表样式 */
+.event-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--divider);cursor:pointer}
+.event-item:last-child{border-bottom:none}
+.event-item .material-icons{font-size:22px;margin-right:12px}
+.event-item .ev-content{flex:1}
+.event-item .ev-title{font-size:14px;font-weight:500;color:var(--text1)}
+.event-item .ev-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.template-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.template-chip{padding:6px 14px;border-radius:16px;border:1px solid var(--divider);background:#fff;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:4px}
+.template-chip:active{background:#f5f5f5}
+.template-chip .material-icons{font-size:14px;color:var(--primary)}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+
+.section-title{display:flex;align-items:center}
+.add-sub-btn{margin-left:auto;display:inline-flex;align-items:center;gap:2px;padding:4px 10px;border-radius:14px;border:1px solid var(--primary);background:none;color:var(--primary);font-size:12px;font-weight:500;cursor:pointer;line-height:1}
+.add-sub-btn .material-icons{font-size:14px}
+.add-sub-btn:active{background:rgba(230,67,26,.07)}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+<span class="title">您的日程</span>
+<div class="actions"><button onclick="addEvent()"><span class="material-icons">add</span></button></div>
+</div>
+<div class="page-body" id="pageBody"></div>
+<div class="bottom-nav">
+<a class="nav-item" href="fenxi.html"><span class="material-icons">insights</span><span class="nav-label">分析</span></a>
+<a class="nav-item" href="shequ.html"><span class="material-icons">forum</span><span class="nav-label">社区</span></a>
+<a class="nav-item" href="xiaoxi.html"><span class="material-icons">notifications</span><span class="nav-label">消息</span></a>
+<a class="nav-item" href="wode.html"><span class="material-icons">person</span><span class="nav-label">我的</span></a>
+</div>
+</div>
+
+<script>
+const typeColors={gaokao:'#E53935',mock_exam:'#FF6D00',registration:'#1565C0',physical_exam:'#43A047',custom:'#9C27B0',volunteer:'#FBC02D'};
+const today=new Date();
+let focusedYear=today.getFullYear(),focusedMonth=today.getMonth();
+let selectedDate=new Date(today);
+let pickerYear=today.getFullYear();
+let modalPickerYear=today.getFullYear(),modalPickerMonth=today.getMonth(),modalPickerDate=null,modalYearPickerOpen=false,modalYearPickerBase=today.getFullYear();
+
+const childList=[{id:'1',name:'张小明'},{id:'2',name:'张小红'}];
+const mockEvents=[
+{title:'期中综合考试',date:`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()+2).padStart(2,'0')}`,type:'mock_exam',subject:'全科'},
+{title:'考前家长会',date:`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()+5).padStart(2,'0')}`,type:'custom',subject:''},
+{title:'选科意向预填报',date:`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()+8).padStart(2,'0')}`,type:'registration',subject:''},
+{title:'数学专项模考',date:`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()+12).padStart(2,'0')}`,type:'mock_exam',subject:'数学'},
+];
+
+const templates=[
+
+];
+
+function getEventsForDate(d){
+const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+return mockEvents.filter(e=>e.date===ds);
+}
+
+function renderCalendar(){
+const firstDay=new Date(focusedYear,focusedMonth,1);
+const lastDay=new Date(focusedYear,focusedMonth+1,0);
+let startDow=firstDay.getDay();if(startDow===0)startDow=7;
+startDow--;
+const daysInMonth=lastDay.getDate();
+const prevMonth=new Date(focusedYear,focusedMonth,0);
+const prevDays=prevMonth.getDate();
+
+let cells='';
+for(let i=startDow-1;i>=0;i--){
+cells+=`<div class="cal-day other-month"><span class="day-num">${prevDays-i}</span></div>`;
+}
+for(let d=1;d<=daysInMonth;d++){
+const date=new Date(focusedYear,focusedMonth,d);
+const isToday=date.toDateString()===today.toDateString();
+const isSelected=date.toDateString()===selectedDate.toDateString();
+const evts=getEventsForDate(date);
+let dotsHtml='';
+if(evts.length>0){
+const dots=evts.slice(0,3).map(e=>`<span class="dot" style="background:${typeColors[e.type]||'#9E9E9E'}"></span>`).join('');
+dotsHtml=`<div class="dots">${dots}</div>`;
+}
+const cls=['cal-day'];
+if(isToday)cls.push('today');
+if(isSelected)cls.push('selected');
+cells+=`<div class="${cls.join(' ')}" onclick="selectDay(${d})"><span class="day-num">${d}</span>${dotsHtml}</div>`;
+}
+const totalCells=startDow+daysInMonth;
+const remaining=totalCells%7===0?0:7-totalCells%7;
+for(let i=1;i<=remaining;i++){
+cells+=`<div class="cal-day other-month"><span class="day-num">${i}</span></div>`;
+}
+return cells;
+}
+
+function selectDay(d){
+selectedDate=new Date(focusedYear,focusedMonth,d);
+render();
+}
+
+function prevMonth(){
+focusedMonth--;
+if(focusedMonth<0){focusedMonth=11;focusedYear--}
+render();
+}
+function nextMonth(){
+focusedMonth++;
+if(focusedMonth>11){focusedMonth=0;focusedYear++}
+render();
+}
+
+// 跳转到”全部日程”独立页面
+function goToAllSchedule(){
+  window.location.href = 'quanburicheng.html';
+}
+
+// 点击橘红卡片事件 → 日历跳转到对应日期
+function jumpToEventDate(idx){
+  const ev=mockEvents[idx];
+  if(!ev)return;
+  const d=new Date(ev.date);
+  selectedDate=d;
+  focusedYear=d.getFullYear();
+  focusedMonth=d.getMonth();
+  render();
+  setTimeout(()=>{
+    const cal=document.getElementById('calendarCard');
+    if(cal)cal.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+
+function render(){
+const dayEvents=getEventsForDate(selectedDate);
+const curSelFormatted=`${selectedDate.getFullYear()}-${String(selectedDate.getMonth()+1).padStart(2,'0')}-${String(selectedDate.getDate()).padStart(2,'0')}`;
+const selLabel=`${selectedDate.getMonth()+1}月${selectedDate.getDate()}日`;
+const monthLabel=`${focusedYear} 年 ${focusedMonth+1} 月`;
+
+let html=`
+<div class="schedule-hero-card">
+  <div class="shc-header">
+   
+    <div class="shc-header-right">
+      <span class="shc-user-tag">张小明 · 高一 ▾</span>
+      <a href="javascript:void(0)" onclick="goToAllSchedule()" class="shc-all-btn">全部日程 <span class="material-icons">chevron_right</span></a>
+    </div>
+  </div>
+
+  <div class="shc-main-event" onclick="jumpToEventDate(0)">
+    <div>
+      <div class="shc-main-title">期中综合考试</div><span class="prd-mark" onclick="openPrd(event,4)" style="vertical-align:middle">4</span>
+      <div class="shc-main-sub">11月05日 周四 · 距离考试</div>
+    </div>
+    <div class="shc-main-badge">2 天后</div>
+  </div>
+
+  <div class="shc-sub-list">
+    <div class="shc-sub-item" onclick="jumpToEventDate(1)">
+      <div class="shc-sub-left">
+        <span>📌</span>
+        <span>期中考前家长会</span>
+      </div>
+      <div class="shc-sub-right">
+        <span class="shc-date">11-08 周日</span>
+        <span class="shc-days">5天后</span>
+      </div>
+    </div>
+    <div class="shc-sub-item" onclick="jumpToEventDate(2)">
+      <div class="shc-sub-left">
+        <span>📋</span>
+        <span>选科意向预填报</span>
+        <span class="shc-tag-todo">待办</span>
+      </div>
+      <div class="shc-sub-right">
+        <span class="shc-date">11-11 周三</span>
+        <span class="shc-days">8天后</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shc-tip">
+    <span class="material-icons">tips_and_updates</span>
+    <span>考试临近，建议多关注孩子作息与心态调节，避免过分强调分数。</span>
+  </div>
+</div>
+
+<div class="card" id="calendarCard">
+<div class="cal-nav">
+<button onclick="prevMonth()"><span class="material-icons">chevron_left</span></button>
+<span class="month-label" onclick="openMonthPicker()" style="cursor:pointer;user-select:none">${monthLabel}</span><span class="prd-mark" onclick="openPrd(event,1)" style="display:inline-flex">1</span>
+<button onclick="nextMonth()"><span class="material-icons">chevron_right</span></button>
+</div>
+<div class="cal-grid">
+<div class="cal-header">一</div><div class="cal-header">二</div><div class="cal-header">三</div><div class="cal-header">四</div><div class="cal-header">五</div><div class="cal-header">六</div><div class="cal-header">日</div>
+${renderCalendar()}
+</div>
+</div>
+
+<div class="card">
+<div class="section-title">
+  <span>${selLabel} 日程 · 共 ${dayEvents.length} 件</span><span class="prd-mark" onclick="openPrd(event,2)" style="margin-left:6px">2</span>
+  ${dayEvents.length>0?`<button class="add-sub-btn" onclick="addEvent('','${curSelFormatted}')"><span class="material-icons">add</span>添加</button>`:''}
+</div>
+${dayEvents.length===0?`<div style="font-size:13px;color:var(--hint);text-align:center;padding:12px 0">当天暂无日程</div><div style="text-align:center;padding:4px 0 8px"><button onclick="addEvent('','${curSelFormatted}')" style="display:inline-flex;align-items:center;gap:4px;padding:8px 20px;border-radius:20px;border:1.5px dashed var(--primary);background:none;color:var(--primary);font-size:14px;font-weight:500;cursor:pointer"><span class="material-icons" style="font-size:16px">add</span>添加日程</button></div><span class="prd-mark" onclick="openPrd(event,3)">3</span>`:dayEvents.map(ev=>{const idx=mockEvents.indexOf(ev);return`<div class="event-item" onclick="showEventDetail(${idx})"><span class="material-icons" style="color:${typeColors[ev.type]||'var(--hint)'}">${ev.type==='mock_exam'?'assignment':ev.type==='gaokao'?'flag':ev.type==='physical_exam'?'local_hospital':'event'}</span><div class="ev-content"><div class="ev-title">${ev.title}</div><div class="ev-sub">${ev.date}${ev.subject?' · '+ev.subject:''}</div></div><span class="material-icons" style="font-size:18px;color:var(--hint)">chevron_right</span></div>`}).join('')}
+</div>
+
+<div class="template-chips">
+${templates.map(t=>`<div class="template-chip" onclick="addEvent('${t.name}')"><span class="material-icons">${t.icon}</span>${t.name}</div>`).join('')}
+</div>
+
+
+`;
+document.getElementById('pageBody').innerHTML=html;
+}
+
+// ── 仅修改新增日程弹窗部分：根据是否有预选日期 preDate，呈现不同的极简/完整弹窗 ──
+function addEvent(tpl,preDate){
+const tplName=tpl||'';
+const modal=document.createElement('div');
+modal.id='eventModal';
+modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center';
+
+if(preDate){
+  // 底部【选中日期后点击】：无日期选择器，直接锁死已选日期
+  modalPickerDate=preDate;
+  const selLabelText=`${selectedDate.getMonth()+1}月${selectedDate.getDate()}日`;
+  modal.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;width:88%;max-width:330px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h3 style="font-size:17px;font-weight:600">添加日程</h3>
+    <span style="background:rgba(230,67,26,.1);color:var(--primary);font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px">${selLabelText}</span>
+  </div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:13px;color:#424242;margin-bottom:6px">标题</label><input id="evTitle" value="${tplName}" autofocus style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none" placeholder="如：期末考试"></div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:13px;color:#424242;margin-bottom:6px">关联孩子（可选）</label><select id="evChild" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none;background:#fff"><option value=""></option>${childList.map(ch=>`<option value="${ch.id}">${ch.name}</option>`).join('')}</select></div>
+  <div style="margin-bottom:20px"><label style="display:block;font-size:13px;color:#424242;margin-bottom:6px">备注（可填）</label><input id="evSubject" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none" placeholder="请输入..."></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end">
+  <button onclick="closeEventModal()" style="padding:8px 18px;border-radius:8px;border:none;background:none;font-size:14px;color:#424242;cursor:pointer">取消</button>
+  <button onclick="saveEvent()" style="padding:8px 18px;border-radius:8px;border:none;background:#E6431A;color:#fff;font-size:14px;font-weight:500;cursor:pointer">保存</button>
+  </div></div>`;
+} else {
+  // 右上角【+全局新建】：带完整日期选择组件
+  const d=new Date();d.setDate(d.getDate()+1);
+  modalPickerYear=d.getFullYear();modalPickerMonth=d.getMonth();
+  modalPickerDate=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const title=tplName?`添加：${tplName}`:'新建日程';
+
+  modal.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;width:88%;max-width:340px">
+  <h3 style="font-size:17px;font-weight:600;margin-bottom:16px">${title}</h3>
+  <div style="margin-bottom:12px"><label style="display:block;font-size:13px;color:#424242;margin-bottom:4px">标题</label><input id="evTitle" value="${tplName}" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none" placeholder="如：期末考试"></div>
+  <div style="margin-bottom:12px">
+  <label style="display:block;font-size:13px;color:#424242;margin-bottom:6px">日期 <span id="evDateLabel" style="color:var(--primary);font-weight:600">${modalPickerDate}</span></label>
+  <div id="modalCalWrap" style="border:1px solid #e0e0e0;border-radius:10px;padding:8px 6px"></div>
+  </div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:13px;color:#424242;margin-bottom:6px">关联孩子（可选）</label><select id="evChild" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none;background:#fff"><option value=""></option>${childList.map(ch=>`<option value="${ch.id}">${ch.name}</option>`).join('')}</select></div>
+  <div style="margin-bottom:16px"><label style="display:block;font-size:13px;color:#424242;margin-bottom:4px">备注（可填）</label><input id="evSubject" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none" placeholder="请输入..."></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end">
+  <button onclick="closeEventModal()" style="padding:8px 18px;border-radius:8px;border:none;background:none;font-size:14px;color:#424242;cursor:pointer">取消</button>
+  <button onclick="saveEvent()" style="padding:8px 18px;border-radius:8px;border:none;background:#E6431A;color:#fff;font-size:14px;font-weight:500;cursor:pointer">保存</button>
+  </div></div>`;
+}
+
+modal.addEventListener('click',function(e){if(e.target===modal)closeEventModal()});
+document.body.appendChild(modal);
+if(!preDate) renderModalCal();
+}
+
+function closeEventModal(){const m=document.getElementById('eventModal');if(m)m.remove()}
+
+function renderModalCal(){
+const wrap=document.getElementById('modalCalWrap');
+if(!wrap)return;
+
+if(modalYearPickerOpen){
+const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const startY=modalYearPickerBase;
+let yearBtns='';
+for(let y=startY;y<startY+12;y++){
+const isSel=y===modalPickerYear;
+yearBtns+=`<button onclick="pickModalYear(${y})" style="padding:8px 0;border-radius:8px;border:none;cursor:pointer;font-size:13px;background:${isSel?'#E6431A':'#f5f5f5'};color:${isSel?'#fff':'#1A1A1A'};font-weight:${isSel?600:400}">${y}</button>`;
+}
+let monthBtns=months.map((mn,i)=>{
+const isSel=i===modalPickerMonth&&modalPickerYear===modalPickerYear;
+return`<button onclick="pickModalMonth(${i})" style="padding:8px 0;border-radius:8px;border:none;cursor:pointer;font-size:13px;background:${modalPickerMonth===i?'#E6431A':'#f5f5f5'};color:${modalPickerMonth===i?'#fff':'#1A1A1A'};font-weight:${modalPickerMonth===i?600:400}">${mn}</button>`;
+}).join('');
+wrap.innerHTML=`
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+<button onclick="modalYearBase(-1)" style="background:none;border:none;cursor:pointer;display:flex;align-items:center"><span class="material-icons" style="font-size:18px;color:#616161">chevron_left</span></button>
+<span style="font-size:13px;font-weight:600">${startY} – ${startY+11}</span>
+<button onclick="modalYearBase(1)" style="background:none;border:none;cursor:pointer;display:flex;align-items:center"><span class="material-icons" style="font-size:18px;color:#616161">chevron_right</span></button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">${yearBtns}</div>
+<div style="height:1px;background:#eee;margin-bottom:10px"></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${monthBtns}</div>`;
+return;
+}
+
+const firstDay=new Date(modalPickerYear,modalPickerMonth,1);
+const lastDay=new Date(modalPickerYear,modalPickerMonth+1,0);
+let startDow=firstDay.getDay();if(startDow===0)startDow=7;startDow--;
+const daysInMonth=lastDay.getDate();
+const prevDays=new Date(modalPickerYear,modalPickerMonth,0).getDate();
+const monthLabel=`${modalPickerYear}年${modalPickerMonth+1}月`;
+let cells='';
+for(let i=startDow-1;i>=0;i--) cells+=`<div style="padding:4px 0;text-align:center;font-size:12px;color:#ccc">${prevDays-i}</div>`;
+for(let d=1;d<=daysInMonth;d++){
+const ds=`${modalPickerYear}-${String(modalPickerMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const isSel=ds===modalPickerDate;
+const isToday=ds===`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+const bg=isSel?'#E6431A':isToday?'rgba(230,67,26,.12)':'transparent';
+const color=isSel?'#fff':isToday?'#E6431A':'#1A1A1A';
+const border=isToday&&!isSel?'1.5px solid #E6431A':'none';
+cells+=`<div onclick="pickModalDay('${ds}')" style="padding:4px 0;text-align:center;font-size:13px;font-weight:${isSel?600:400};cursor:pointer;border-radius:6px;background:${bg};color:${color};border:${border}">${d}</div>`;
+}
+const total=startDow+daysInMonth;const rem=total%7===0?0:7-total%7;
+for(let i=1;i<=rem;i++) cells+=`<div style="padding:4px 0;text-align:center;font-size:12px;color:#ccc">${i}</div>`;
+wrap.innerHTML=`
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+<button onclick="modalCalPrev()" style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center"><span class="material-icons" style="font-size:18px;color:#616161">chevron_left</span></button>
+<span onclick="openModalYearPicker()" style="font-size:13px;font-weight:600;cursor:pointer;user-select:none;display:flex;align-items:center;gap:2px">${monthLabel}<span class="material-icons" style="font-size:14px;color:#9E9E9E">expand_more</span></span>
+<button onclick="modalCalNext()" style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center"><span class="material-icons" style="font-size:18px;color:#616161">chevron_right</span></button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center;margin-bottom:4px">
+<div style="font-size:10px;color:#9E9E9E;padding:2px 0">一</div><div style="font-size:10px;color:#9E9E9E;padding:2px 0">二</div><div style="font-size:10px;color:#9E9E9E;padding:2px 0">三</div><div style="font-size:10px;color:#9E9E9E;padding:2px 0">四</div><div style="font-size:10px;color:#9E9E9E;padding:2px 0">五</div><div style="font-size:10px;color:#9E9E9E;padding:2px 0">六</div><div style="font-size:10px;color:#9E9E9E;padding:2px 0">日</div>
+${cells}
+</div>`;
+}
+
+function pickModalDay(ds){
+modalPickerDate=ds;
+const label=document.getElementById('evDateLabel');
+if(label)label.textContent=ds;
+renderModalCal();
+}
+function modalCalPrev(){modalPickerMonth--;if(modalPickerMonth<0){modalPickerMonth=11;modalPickerYear--}renderModalCal()}
+function modalCalNext(){modalPickerMonth++;if(modalPickerMonth>11){modalPickerMonth=0;modalPickerYear++}renderModalCal()}
+function openModalYearPicker(){modalYearPickerOpen=true;modalYearPickerBase=modalPickerYear-modalPickerYear%12;renderModalCal()}
+function modalYearBase(dir){modalYearPickerBase+=dir*12;renderModalCal()}
+function pickModalYear(y){modalPickerYear=y;renderModalCal()}
+function pickModalMonth(m){modalPickerMonth=m;modalYearPickerOpen=false;renderModalCal()}
+
+function saveEvent(){
+const title=document.getElementById('evTitle').value.trim();
+const subject=document.getElementById('evSubject').value.trim();
+if(!title){showToast('请输入标题');return}
+if(!modalPickerDate){showToast('请选择日期');return}
+const child=document.getElementById('evChild').value;
+mockEvents.push({title,date:modalPickerDate,type:'custom',subject:subject||'',child:child||''});
+closeEventModal();
+render();
+}
+
+function openMonthPicker(){
+pickerYear=focusedYear;
+renderMonthPicker();
+}
+
+function renderMonthPicker(){
+const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+let modal=document.getElementById('monthPickerModal');
+if(!modal){
+modal=document.createElement('div');
+modal.id='monthPickerModal';
+modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center';
+modal.addEventListener('click',function(e){if(e.target===modal)closeMonthPicker()});
+document.body.appendChild(modal);
+}
+modal.innerHTML=`<div style="background:#fff;border-radius:16px;padding:22px;width:80%;max-width:310px">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+<button onclick="pickerPrevYear()" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center"><span class="material-icons">chevron_left</span></button>
+<span style="font-size:17px;font-weight:600">${pickerYear}年</span>
+<button onclick="pickerNextYear()" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center"><span class="material-icons">chevron_right</span></button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+${months.map((mn,i)=>`<button onclick="pickMonth(${i})" style="padding:10px 0;border-radius:10px;border:none;cursor:pointer;font-size:14px;background:${focusedYear===pickerYear&&focusedMonth===i?'#E6431A':'#f5f5f5'};color:${focusedYear===pickerYear&&focusedMonth===i?'#fff':'#1A1A1A'};font-weight:${focusedYear===pickerYear&&focusedMonth===i?600:400}">${mn}</button>`).join('')}
+</div>
+<div style="margin-top:16px;text-align:right">
+<button onclick="closeMonthPicker()" style="padding:8px 18px;border-radius:8px;border:none;background:none;font-size:14px;color:#424242;cursor:pointer">取消</button>
+</div>
+</div>`;
+}
+
+function pickerPrevYear(){pickerYear--;renderMonthPicker()}
+function pickerNextYear(){pickerYear++;renderMonthPicker()}
+function pickMonth(m){focusedYear=pickerYear;focusedMonth=m;closeMonthPicker();render()}
+function closeMonthPicker(){const m=document.getElementById('monthPickerModal');if(m)m.remove()}
+
+const typeLabels={gaokao:'高考',mock_exam:'模拟考试',registration:'报名/填报',physical_exam:'体检',custom:'自定义',volunteer:'志愿填报'};
+const typeIcons={mock_exam:'assignment',gaokao:'flag',physical_exam:'local_hospital',registration:'edit_note',volunteer:'how_to_vote',custom:'event'};
+
+function showEventDetail(idx){
+const ev=mockEvents[idx];
+if(!ev)return;
+const color=typeColors[ev.type]||'#9E9E9E';
+const icon=typeIcons[ev.type]||'event';
+const typeLabel=typeLabels[ev.type]||'日程';
+const modal=document.createElement('div');
+modal.id='eventDetailModal';
+modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:flex-end;justify-content:center';
+modal.innerHTML=`<div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:390px">
+<div style="width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 20px"></div>
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+<div style="width:48px;height:48px;border-radius:14px;background:${color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<span class="material-icons" style="color:${color};font-size:26px">${icon}</span>
+</div>
+<div>
+<div style="font-size:18px;font-weight:700;color:#1A1A1A">${ev.title}</div>
+<div style="font-size:13px;color:#9E9E9E;margin-top:3px">${typeLabel}</div>
+</div>
+</div>
+<div style="background:#f7f7f7;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+<div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#616161">日期</span><span style="font-weight:500">${ev.date}</span></div>
+${ev.subject?`<div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#616161">备注</span><span style="font-weight:500">${ev.subject}</span></div>`:''}
+</div>
+<div style="display:flex;gap:10px">
+<button onclick="deleteEvent(${idx})" style="flex:1;padding:12px 0;border-radius:10px;border:1px solid #e0e0e0;background:#fff;font-size:14px;color:#E53935;cursor:pointer">删除</button>
+<button onclick="closeEventDetail()" style="flex:2;padding:12px 0;border-radius:10px;border:none;background:#E6431A;color:#fff;font-size:14px;font-weight:500;cursor:pointer">关闭</button>
+</div>
+</div>`;
+modal.addEventListener('click',function(e){if(e.target===modal)closeEventDetail()});
+document.body.appendChild(modal);
+}
+
+function closeEventDetail(){const m=document.getElementById('eventDetailModal');if(m)m.remove()}
+
+function deleteEvent(idx){
+mockEvents.splice(idx,1);
+closeEventDetail();
+render();
+}
+
+render();
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+
+/* ─── PRD 标注系统 ─── */
+const prdData={
+1:{title:'标记 1 · 年月选择器规则',badge:'交互规范',badgeType:'interaction',
+text:'点击月份标签（如"2026 年 7 月"）触发 openMonthPicker()。\n\n弹窗规则：\n• 居中白底卡片弹窗，遮罩层点击关闭\n• 顶部年份导航：pickerYear ± 1年，左右箭头\n• 3×4月份按钮网格（1月–12月）\n• 当前 focusedYear+focusedMonth 高亮主色\n• 点击月份：更新 focusedYear/focusedMonth → 关闭弹窗 → 重渲染日历\n• 不改变已选中的 selectedDate\n• "取消"按钮仅关闭弹窗'},
+2:{title:'标记 2 · 日期点击交互规则',badge:'交互规范',badgeType:'interaction',
+text:'点击日期格子仅改变 selectedDate，不自动弹出任何表单。\n\n日期格子状态：\n• today：主色圆圈边框（border 1.5px）\n• selected：主色背景填充，白色文字\n• other-month：灰色文字（非当月日期）\n• 有事件：格子下方最多3个彩色小圆点\n\n点击非当月日期：仅视觉高亮，不切换月份视图\n周起始：周一为第一列（startDow===0 映射为 7）'},
+3:{title:'标记 3 · 空日期状态与新增入口',badge:'PRD业务规则',badgeType:'',
+text:'所选日期无事件时的展示规则：\n• 灰色文字"当天暂无日程"（居中）\n• 下方虚线按钮"+ 添加日程"（主色虚线边框，主色文字）\n• 点击该按钮调用 addEvent() 并 pre-fill 所选日期\n• 不在点击空白日期格时自动弹出表单\n\n新增事件后 type 默认为 custom，颜色 #9C27B0'},
+4:{title:'标记 4 · 综合日程挂件规则',badge:'PRD业务规则',badgeType:'',
+text:'顶部橙红渐变卡片（schedule-hero-card）固定展示：\n\n主事件大卡：\n• shc-main-title：最近一次考试名称\n• shc-main-badge：倒计时"X 天后"白底红字\n• 点击：日历跳转到对应日期（jumpToEventDate）\n\n次要事件列表（2条）：\n• 表情图标 + 事件名 + 日期 + 天数标签\n• 点击同样 jumpToEventDate\n\nAI 冲刺提示：固定文案，黑色半透明底条\n\n注意：挂件内容为静态 Mock，不随 mockEvents 数组动态更新'}
+};
+let _curPrdId=null;
+(function(){const prdK='prd_rili';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+function openPrd(e,id){
+e.stopPropagation();
+closePrd();
+_curPrdId=id;
+const d=prdData[id];
+const mark=e.currentTarget;
+const rect=mark.getBoundingClientRect();
+const overlay=document.createElement('div');
+overlay.className='prd-overlay';
+overlay.onclick=closePrd;
+document.body.appendChild(overlay);
+const pop=document.createElement('div');
+pop.className='prd-popover';
+pop.id='prdPop';
+const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+const arrow=document.createElement('div');
+arrow.className='prd-popover-arrow';
+pop.appendChild(arrow);
+document.body.appendChild(pop);
+const popW=290,popH=280;
+const appRect=document.getElementById('app').getBoundingClientRect();
+let left=Math.min(rect.left-10,appRect.right-popW-8);
+left=Math.max(appRect.left+8,left);
+const spaceBelow=window.innerHeight-rect.bottom-12;
+let top,arrowTop,arrowDir;
+if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+pop.style.left=left+'px';
+pop.style.top=top+'px';
+const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+arrow.style.left=arrowLeft+'px';
+arrow.style.top=arrowTop+'px';
+if(arrowDir==='bottom')arrow.style.transform='rotate(45deg)';
+}
+function closePrd(){
+const ov=document.querySelector('.prd-overlay');
+const pop=document.getElementById('prdPop');
+if(ov)ov.remove();
+if(pop)pop.remove();
+_curPrdId=null;
+}
+function savePrd(id){
+const ta=document.getElementById('prdTa');
+if(ta)prdData[id].text=ta.value;
+  const prdK='prd_rili';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+closePrd();
+showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>录入试卷 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#FF6D00;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--urgent:#E53935;--keep:#43A047;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden;position:relative}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0;z-index:10}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center}
+.bar-action{padding:6px 12px;border:none;background:none;color:var(--primary);font-size:14px;font-weight:600;cursor:pointer;border-radius:8px}
+.bar-action:active{background:#fde8e8}
+.page-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px}
+
+/* 模式选择 */
+.mode-card{background:var(--surface);border-radius:var(--r-card);padding:20px 16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.mode-label{font-size:13px;color:var(--text3);margin-bottom:12px;font-weight:500}
+.mode-row{display:flex;gap:10px}
+.mode-btn{flex:1;padding:14px 10px;border-radius:12px;border:2px solid var(--divider);background:#fff;cursor:pointer;text-align:center;transition:all .18s}
+.mode-btn.active{border-color:var(--primary);background:#fff8f6}
+.mode-btn .mode-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;background:#f5f5f5}
+.mode-btn.active .mode-icon{background:#fde8e8}
+.mode-btn .mode-icon .material-icons{font-size:22px;color:var(--hint)}
+.mode-btn.active .mode-icon .material-icons{color:var(--primary)}
+.mode-btn .mode-name{font-size:13px;font-weight:600;color:var(--text2)}
+.mode-btn.active .mode-name{color:var(--primary)}
+.mode-btn .mode-desc{font-size:11px;color:var(--hint);margin-top:3px;line-height:1.4}
+
+/* 表单卡片 */
+.form-card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.form-card-title{font-size:14px;font-weight:700;color:var(--text1);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.form-item{margin-bottom:14px}
+.form-item:last-child{margin-bottom:0}
+.form-item label{display:block;font-size:12px;color:var(--text3);margin-bottom:6px;font-weight:500}
+.form-input{width:100%;padding:11px 12px;border:1.5px solid var(--divider);border-radius:10px;font-size:14px;outline:none;background:#fafafa;color:var(--text1);font-family:inherit;transition:border .18s}
+.form-input:focus{border-color:var(--primary);background:#fff}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:#fafafa}
+
+/* 科目标签选择 */
+.chip-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--divider);background:#fff;color:var(--text2);transition:all .15s;user-select:none}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* 提交按钮 */
+.submit-btn{width:100%;height:50px;border-radius:var(--r-btn);border:none;background:var(--primary);color:#fff;font-size:16px;font-weight:600;cursor:pointer;margin-top:4px;transition:opacity .15s}
+.submit-btn:active{opacity:.85}
+.submit-btn:disabled{background:#e0e0e0;color:#9e9e9e;cursor:not-allowed}
+
+/* PRD */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4)}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;resize:vertical;outline:none;background:#fafafa}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">录入试卷</span>
+    <button class="bar-action" onclick="handleSubmit()">下一步</button>
+  </div>
+  <div class="page-body" id="pageBody"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let mode = 'small'; // small | big
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function setMode(m){
+  mode=m;
+  render();
+}
+
+const subjects=['语文','数学','英语','物理','化学','生物','政治','历史','地理'];
+let selectedSubjects=new Set(['数学']);
+
+function toggleSubject(s){
+  if(mode==='small') return;
+  if(selectedSubjects.has(s)) selectedSubjects.delete(s);
+  else selectedSubjects.add(s);
+  render();
+}
+
+function render(){
+  const smallActive = mode==='small';
+  const bigActive = mode==='big';
+
+  let html = `
+<div class="mode-card">
+  <div class="mode-label">选择考试类型 <span class="prd-mark" onclick="openPrd(event,1)">1</span></div>
+  <div class="mode-row">
+    <div class="mode-btn${smallActive?' active':''}" onclick="setMode('small')">
+      <div class="mode-icon"><span class="material-icons">description</span></div>
+      <div class="mode-name">小考 · 单科</div>
+      <div class="mode-desc">单张试卷<br>一次录一科</div>
+    </div>
+    <div class="mode-btn${bigActive?' active':''}" onclick="setMode('big')">
+      <div class="mode-icon"><span class="material-icons">library_books</span></div>
+      <div class="mode-name">大考 · 全科</div>
+      <div class="mode-desc">多张试卷<br>同时录多科</div>
+    </div>
+  </div>
+</div>
+
+<div class="form-card">
+  <div class="form-card-title">考试信息 <span class="prd-mark" onclick="openPrd(event,2)">2</span></div>
+  <div class="form-item">
+    <label>考试名称</label>
+    <input class="form-input" id="examName" type="text" placeholder="如：数学期中考试" value="">
+  </div>
+  <div class="form-item">
+    <label>孩子</label>
+    <select class="form-input" id="studentSel">
+      <option>张小明（高三）</option>
+      <option>刘小五（高三）</option>
+    </select>
+  </div>
+  <div class="form-item">
+    <label>考试日期</label>
+    <input class="form-input" id="examDate" type="date" value="2026-07-29">
+  </div>
+</div>`;
+
+  if(smallActive){
+    html += `
+<div class="form-card">
+  <div class="form-card-title">科目 <span class="prd-mark" onclick="openPrd(event,3)">3</span></div>
+  <div class="form-item">
+    <select class="form-input" id="subjectSel">
+      ${subjects.map(s=>`<option${s==='数学'?' selected':''}>${s}</option>`).join('')}
+    </select>
+  </div>
+  <div class="form-item">
+    <label>总题数</label>
+    <input class="form-input" id="totalQ" type="number" placeholder="如：20" min="1" max="100">
+  </div>
+</div>`;
+  } else {
+    html += `
+<div class="form-card">
+  <div class="form-card-title">选择科目（可多选）<span class="prd-mark" onclick="openPrd(event,3)">3</span></div>
+  <div class="chip-wrap">
+    ${subjects.map(s=>`<span class="chip${selectedSubjects.has(s)?' active':''}" onclick="toggleSubject('${s}')">${s}</span>`).join('')}
+  </div>
+</div>`;
+  }
+
+  html += `<button class="submit-btn" onclick="handleSubmit()">下一步：确认错题</button>`;
+  document.getElementById('pageBody').innerHTML = html;
+}
+
+function handleSubmit(){
+  const name = document.getElementById('examName')?.value.trim();
+  if(!name){ showToast('请填写考试名称'); return; }
+  if(mode==='big' && selectedSubjects.size===0){ showToast('请至少选择一个科目'); return; }
+  const subject = mode==='small'
+    ? document.getElementById('subjectSel')?.value
+    : [...selectedSubjects].join(',');
+  const totalQ = mode==='small' ? (document.getElementById('totalQ')?.value||20) : 0;
+  localStorage.setItem('reportTask', JSON.stringify({
+    status:'pending', examName:name, subject, totalQ:Number(totalQ),
+    mode, subjects: mode==='big'?[...selectedSubjects]:null,
+    date: document.getElementById('examDate')?.value
+  }));
+  window.location.href = mode==='small' ? 'gouxuancuoti.html' : 'queren_dacuoti.html';
+}
+
+const prdData={
+  1:{title:'标记 1 · 考试类型选择',badge:'业务规则',badgeType:'',
+     text:'小考·单科：一张试卷，录入一个科目，跳转单科错题勾选页（gouxuancuoti.html）。\n\n大考·全科：多张试卷，可选多科，跳转多科错题确认页（queren_dacuoti.html），顶部含吸顶科目 Tab。\n\n默认选中：小考·单科。'},
+  2:{title:'标记 2 · 考试信息字段',badge:'数据规范',badgeType:'data',
+     text:'考试名称：必填，不可为空。\n孩子：下拉选择，数据来源 bianjixs.html 的 students 数组。\n考试日期：date 选择器，默认今日。\n\n提交后写入 localStorage.reportTask，字段包含 status/examName/subject/totalQ/mode/date。'},
+  3:{title:'标记 3 · 科目选择规则',badge:'交互规范',badgeType:'interaction',
+     text:'小考模式：单选下拉，选一个科目 + 填总题数。\n\n大考模式：多选 Chip，至少选 1 个科目，不需要填总题数（每科单独录入）。\n\n大考模式科目 Chip 点击切换 active 状态，选中高亮为主色。'}
+};
+
+function openPrd(e,id){
+  e.stopPropagation();closePrd();
+  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
+  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
+  const popW=290,popH=280,appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top=spaceBelow>=popH?rect.bottom+8:rect.top-popH-8;
+  let arrowTop=spaceBelow>=popH?-6:popH-6;
+  pop.style.left=left+'px';pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';arrow.style.top=arrowTop+'px';
+  if(spaceBelow<popH)arrow.style.transform='rotate(45deg)';
+}
+function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
+function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();showToast('产品规则已保存');}
+
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

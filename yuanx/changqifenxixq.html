@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>成长趋势分析 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{background:none;border:none;color:var(--text1);cursor:pointer;padding:6px;display:flex;align-items:center;border-radius:50%}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .page-title{font-size:17px;font-weight:700;color:var(--text1);margin-left:4px;flex:1}
+
+.sub-tab-bar{display:flex;gap:0;overflow-x:auto;background:var(--surface);padding:0 16px;border-bottom:1px solid var(--divider);position:sticky;top:0;z-index:99;-webkit-overflow-scrolling:touch}
+.sub-tab-bar::-webkit-scrollbar{display:none}
+.sub-tab-item{padding:10px 12px;font-size:12px;font-weight:600;color:var(--text3);white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;flex-shrink:0}
+.sub-tab-item.active{color:var(--primary);border-bottom-color:var(--primary)}
+
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.section-anchor{scroll-margin-top:60px}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.filter-picker-btn{display:inline-flex;align-items:center;gap:4px;background:#FFF;border:1px solid var(--divider);padding:5px 12px;border-radius:16px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer}
+
+.diag-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.diag-title-box{display:flex;align-items:center;gap:6px}
+.diag-title-icon{width:24px;height:24px;background:var(--primary);border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center}
+.diag-title-text{font-size:16px;font-weight:700;color:var(--text1)}
+.diag-count{font-size:12px;color:var(--text3)}
+
+.stats-row{display:flex;justify-content:space-around;padding:8px 0 14px;margin-bottom:12px;border-bottom:1px solid var(--divider)}
+.stat-item{text-align:center}
+.stat-item .stat-val{font-size:22px;font-weight:800;color:var(--primary);line-height:1.1}
+.stat-item .stat-label{font-size:11px;color:var(--text3);margin-top:4px}
+
+.diag-summary-text{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+
+.tier-section-title{font-size:13px;font-weight:700;color:var(--text1);margin-bottom:10px}
+.tier-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tier-bar-row .tier-label{font-size:12px;width:48px;font-weight:600}
+.tier-bar-row .tier-track{flex:1;height:8px;border-radius:4px;background:#F0F0F0;overflow:hidden}
+.tier-bar-row .tier-fill{height:100%;border-radius:4px}
+.tier-bar-row .tier-count{font-size:12px;width:20px;text-align:right;color:var(--text3);font-weight:600}
+
+.advice-box{background:#FFF7F5;border:1px solid rgba(230,67,26,.2);border-radius:12px;padding:12px 14px;margin-top:14px}
+.advice-title{font-size:13px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:4px;margin-bottom:8px}
+.advice-list{font-size:12px;color:var(--text2);line-height:1.6}
+.advice-item{position:relative;padding-left:12px;margin-bottom:6px}
+.advice-item:last-child{margin-bottom:0}
+.advice-item::before{content:"•";position:absolute;left:0;color:var(--primary);font-weight:bold}
+
+.chart-legend-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.legend-item{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text2);font-weight:500}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+.chip-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.choice-chip{padding:5px 14px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--divider);background:#fff;color:var(--text2);transition:all .2s}
+.choice-chip.active{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600}
+
+.kp-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5F5F5}
+.kp-item:last-child{border-bottom:none}
+.kp-left{flex:1;padding-right:12px}
+.kp-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.kp-name{font-size:13px;font-weight:600;color:var(--text1)}
+.kp-score-text{font-size:12px;font-weight:700;color:var(--text2)}
+.kp-bar-track{width:100%;height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden}
+.kp-bar-inner{height:100%;border-radius:3px}
+
+/* 顽疾清单 */
+.chronic-item{padding:14px;background:var(--surface);border-radius:12px;margin-bottom:10px;border-left:3px solid var(--urgent);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.chronic-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.chronic-title{font-size:13px;font-weight:700;color:var(--text1)}
+.chronic-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(229,57,53,.1);color:var(--urgent)}
+.chronic-meta{font-size:11px;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.chronic-exams{display:flex;gap:4px;flex-wrap:wrap}
+.chronic-exam-dot{width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.chronic-trend{display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:var(--text3)}
+.chronic-trend .material-icons{font-size:14px}
+.chronic-suggestion{margin-top:8px;padding:8px 10px;background:#FFF7F5;border-radius:6px;font-size:11px;color:var(--text2);line-height:1.5;display:flex;align-items:flex-start;gap:4px}
+.chronic-suggestion .material-icons{font-size:14px;color:var(--primary);margin-top:1px;flex-shrink:0}
+
+.mastered-item{padding:12px 14px;background:var(--surface);border-radius:12px;margin-bottom:8px;border-left:3px solid var(--keep);box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;align-items:center;justify-content:space-between}
+.mastered-left{display:flex;align-items:center;gap:8px}
+.mastered-icon{width:28px;height:28px;border-radius:50%;background:rgba(67,160,71,.1);display:flex;align-items:center;justify-content:center}
+.mastered-icon .material-icons{font-size:14px;color:var(--keep)}
+.mastered-title{font-size:13px;font-weight:600;color:var(--text1)}
+.mastered-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.mastered-rate{font-size:14px;font-weight:800;color:var(--keep)}
+
+.section-label{font-size:14px;font-weight:700;color:var(--text1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.section-label .material-icons{font-size:18px}
+
+/* Bottom Sheet */
+.sheet-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-mask.show{opacity:1;pointer-events:auto}
+.sheet-content{position:fixed;bottom:0;left:0;right:0;max-width:390px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;padding:20px 16px;z-index:101;transform:translateY(100%);transition:transform .25s}
+.sheet-mask.show .sheet-content{transform:translateY(0)}
+.sheet-title{font-size:16px;font-weight:700;margin-bottom:14px;text-align:center;color:var(--text1)}
+.option-item{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;background:var(--bg);margin-bottom:8px;cursor:pointer}
+.option-item.active{border:1px solid var(--primary);background:rgba(230,67,26,.05);color:var(--primary);font-weight:600}
+
+.share-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+.share-mask.show{opacity:1;pointer-events:auto}
+.share-sheet{position:fixed;bottom:0;left:0;right:0;max-width:390px;margin:0 auto;background:#fff;border-radius:16px 16px 0 0;padding:20px 16px 28px;z-index:201;transform:translateY(100%);transition:transform .25s;max-height:80vh;overflow-y:auto}
+.share-mask.show .share-sheet{transform:translateY(0)}
+.share-sheet-title{font-size:16px;font-weight:700;text-align:center;color:var(--text1);margin-bottom:14px}
+.share-preview{background:var(--bg);border-radius:12px;padding:14px;margin-bottom:16px}
+.share-preview .sp-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.share-preview .sp-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.share-preview .sp-name{font-size:12px;font-weight:600;color:var(--text1)}
+.share-preview .sp-tag{font-size:10px;color:var(--text3)}
+.share-preview .sp-body{font-size:12px;color:var(--text2);line-height:1.6}
+.share-preview .sp-scores{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.share-preview .sp-score-chip{padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600;background:rgba(230,67,26,.08);color:var(--primary)}
+.privacy-section{margin-bottom:16px}
+.privacy-title{font-size:13px;font-weight:600;color:var(--text1);margin-bottom:10px}
+.privacy-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5f5f5}
+.privacy-row:last-child{border-bottom:none}
+.privacy-row .pr-text{font-size:13px;color:var(--text2)}
+.privacy-row .pr-sub{font-size:11px;color:var(--hint);margin-top:2px}
+.pr-switch{position:relative;width:40px;height:22px;flex-shrink:0}
+.pr-switch input{opacity:0;width:0;height:0}
+.pr-switch-track{position:absolute;inset:0;border-radius:11px;background:#ccc;transition:background .2s;cursor:pointer}
+.pr-switch-track::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.pr-switch input:checked+.pr-switch-track{background:var(--primary)}
+.pr-switch input:checked+.pr-switch-track::after{transform:translateX(18px)}
+.tag-section{margin-bottom:18px}
+.tag-section-title{font-size:13px;font-weight:600;color:var(--text1);margin-bottom:8px}
+.tag-chips{display:flex;flex-wrap:wrap;gap:8px}
+.tag-chip{padding:6px 12px;border-radius:14px;font-size:12px;font-weight:500;border:1px solid var(--divider);background:#fff;color:var(--text2);cursor:pointer;transition:all .12s}
+.tag-chip:active{transform:scale(.96)}
+.tag-chip.selected{border-color:var(--primary);background:rgba(230,67,26,.06);color:var(--primary);font-weight:600}
+.share-submit-btn{width:100%;padding:14px;border:none;border-radius:var(--r-card);background:var(--primary);color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all .12s}
+.share-submit-btn:active{transform:scale(.97);opacity:.9}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,0,0,.82);color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;z-index:3000;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="page-title">成长趋势分析</span>
+    <button class="back-btn" onclick="openShareSheet()" style="margin-left:auto"><span class="material-icons">share</span></button>
+  </div>
+  <div class="sub-tab-bar" id="subTabBar"></div>
+  <div class="page-body" id="pageBody"></div>
+</div>
+
+<div class="sheet-mask" id="pickerSheet" onclick="closeSheet(event)">
+  <div class="sheet-content">
+    <div class="sheet-title">选择学年</div>
+    <div id="pickerOptions"></div>
+  </div>
+</div>
+
+<div class="share-mask" id="shareMask" onclick="closeShareSheet(event)">
+<div class="share-sheet">
+  <div class="share-sheet-title">一键分享至社区</div>
+  <div class="share-preview" id="sharePreview"></div>
+  <div class="privacy-section">
+    <div class="privacy-title">隐私脱敏设置</div>
+    <div class="privacy-row">
+      <div><div class="pr-text">隐藏具体分数</div><div class="pr-sub">分数显示为"优异""良好"等评级</div></div>
+      <label class="pr-switch"><input type="checkbox" id="hideScores" checked onchange="updateSharePreview()"><span class="pr-switch-track"></span></label>
+    </div>
+  </div>
+  <div class="tag-section">
+    <div class="tag-section-title">选择社区话题</div>
+    <div class="tag-chips" id="tagChips">
+      <span class="tag-chip selected" onclick="toggleTag(this)">#长期备考</span>
+      <span class="tag-chip" onclick="toggleTag(this)">#顽疾清单突破</span>
+      <span class="tag-chip" onclick="toggleTag(this)">#提分经验</span>
+       <span class="tag-chip" onclick="toggleTag(this)">其它</span>
+    </div>
+  </div>
+  <button class="share-submit-btn" onclick="doSharePost()">一键生成帖子并发布</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let activeTab = 'overview';
+let selectedYear = '2025-2026学年';
+let selectedSubject = '数学';
+
+const yearList = ['全部学年', '2025-2026学年 (高一)', '2024-2025学年 (初三)'];
+
+const tabs = [
+  {key:'overview', label:'总览'},
+  {key:'trend', label:'得分率走势'},
+  {key:'mastery', label:'知识点掌握'},
+  {key:'chronic', label:'顽疾清单'}
+];
+
+const mockOverallDiag = {
+  totalAnalyses: 8,
+  avgScoreRate: 76.2,
+  progress: 5.3,
+  kpCovered: 24,
+  summaryText: '本学期数学成绩稳步提升，二次函数和三角函数板块仍需重点突破，概率统计和向量运算已基本掌握。',
+  tiers: { urgent: 3, attention: 4, keep: 6 },
+  advices: [
+    '<strong>【学科攻坚】</strong> 建议重点协助孩子复盘二次函数错题，每天针对性练习 1-2 道变式题。',
+    '<strong>【陪读建议】</strong> 大考临近，孩子近期刷题较晚，建议多关注作息与心态，避免过分强调分数。'
+  ]
+};
+
+const subjectScores = {
+  '数学': {color: '#E6431A', trend: [62, 68, 72, 74, 78, 76], dates: ['3月','4月','5月','6月','6月末','7月']},
+  '语文': {color: '#1565C0', trend: [78, 79, 80, 81, 82, 82], dates: ['3月','4月','5月','6月','6月末','7月']},
+  '物理': {color: '#43A047', trend: [55, 58, 62, 65, 67, 68], dates: ['3月','4月','5月','6月','6月末','7月']}
+};
+
+const subjectKpsData = {
+  '数学': [
+    { name: '二次函数图像与性质', mastery: 40, level: 'urgent' },
+    { name: '三角函数诱导公式', mastery: 52, level: 'urgent' },
+    { name: '解三角形应用', mastery: 68, level: 'attention' },
+    { name: '平面向量数量积', mastery: 88, level: 'keep' },
+    { name: '概率与统计初步', mastery: 92, level: 'keep' }
+  ],
+  '语文': [
+    { name: '文言文实词推断', mastery: 62, level: 'attention' },
+    { name: '现代文阅读主旨概括', mastery: 78, level: 'keep' },
+    { name: '古诗词鉴赏表达技巧', mastery: 85, level: 'keep' }
+  ],
+  '物理': [
+    { name: '牛顿第二定律综合应用', mastery: 45, level: 'urgent' },
+    { name: '受力分析与图解法', mastery: 58, level: 'attention' },
+    { name: '平抛运动规律', mastery: 80, level: 'keep' }
+  ]
+};
+
+// 顽疾与高频错项数据
+const chronicData = {
+  '数学': {
+    chronic: [
+      {
+        name: '三角函数诱导公式与变换',
+        consecutiveExams: 5,
+        examResults: [{exam:'3月月考',wrong:true},{exam:'4月月考',wrong:true},{exam:'5月模考',wrong:true},{exam:'6月月考',wrong:false},{exam:'期中考',wrong:true}],
+        avgLoss: 6.2,
+        trendDir: 'flat',
+        suggestion: '连续5次考试中4次失分，属于典型"以为会了但一做就错"的知识点。建议回到课本从公式推导开始，每天1道诱导公式变式题，逐步建立条件反射。'
+      },
+      {
+        name: '二次函数最值与图像变换',
+        consecutiveExams: 4,
+        examResults: [{exam:'4月月考',wrong:true},{exam:'5月模考',wrong:true},{exam:'6月月考',wrong:true},{exam:'期中考',wrong:true}],
+        avgLoss: 8.5,
+        trendDir: 'up',
+        suggestion: '失分有加重趋势，近期从6分升至10分。核心问题是配方法不熟练导致顶点坐标判断出错。建议集中3天突破配方法，配合图像验证。'
+      },
+      {
+        name: '数列通项公式递推',
+        consecutiveExams: 3,
+        examResults: [{exam:'5月模考',wrong:true},{exam:'6月月考',wrong:true},{exam:'期中考',wrong:true}],
+        avgLoss: 4.0,
+        trendDir: 'flat',
+        suggestion: '连续3次在递推数列题扣分。核心卡点是"累加法/累乘法"的使用时机判断。建议整理3种递推类型的判别口诀。'
+      }
+    ],
+    mastered: [
+      {name: '概率与统计初步', rate: 92, streak: '连续6次满分'},
+      {name: '平面向量数量积', rate: 88, streak: '近5次平均失分<1分'},
+      {name: '集合与逻辑运算', rate: 95, streak: '连续8次满分'}
+    ]
+  },
+  '物理': {
+    chronic: [
+      {
+        name: '受力分析与力的分解',
+        consecutiveExams: 4,
+        examResults: [{exam:'4月月考',wrong:true},{exam:'5月模考',wrong:true},{exam:'6月月考',wrong:true},{exam:'期中考',wrong:true}],
+        avgLoss: 7.0,
+        trendDir: 'flat',
+        suggestion: '力的分解方向选取长期不稳定。建议使用"沿运动方向+垂直运动方向"的标准坐标选取策略，固定解题流程。'
+      },
+      {
+        name: '牛顿第二定律列式',
+        consecutiveExams: 3,
+        examResults: [{exam:'5月模考',wrong:true},{exam:'6月月考',wrong:false},{exam:'期中考',wrong:true}],
+        avgLoss: 5.5,
+        trendDir: 'down',
+        suggestion: '漏力是主要原因（尤其是摩擦力和绳拉力）。建议每次做题先画完整的隔离体受力图，标注所有力后再列方程。'
+      }
+    ],
+    mastered: [
+      {name: '平抛运动规律', rate: 80, streak: '近4次稳定在80%以上'},
+      {name: '匀变速直线运动公式', rate: 90, streak: '连续5次无失分'}
+    ]
+  }
+};
+
+function openSheet(){ document.getElementById('pickerSheet').classList.add('show'); }
+function closeSheet(e){ if(e.target.classList.contains('sheet-mask')) document.getElementById('pickerSheet').classList.remove('show'); }
+
+function openPicker(){
+  document.getElementById('pickerOptions').innerHTML = yearList.map(item => `
+    <div class="option-item${item===selectedYear?' active':''}" onclick="selectYear('${item}')">
+      <span>${item}</span>
+      <span class="material-icons" style="font-size:18px;display:${item===selectedYear?'block':'none'}">check</span>
+    </div>`).join('');
+  openSheet();
+}
+
+function selectYear(val){
+  selectedYear = val;
+  document.getElementById('pickerSheet').classList.remove('show');
+  render();
+}
+
+function drawPerfectLineChart() {
+  const subjectNames = Object.keys(subjectScores);
+  const dates = subjectScores[subjectNames[0]].dates;
+  const w = 320, h = 170;
+  const padL = 36, padR = 16, padT = 16, padB = 28;
+  const chartW = w - padL - padR;
+  const chartH = h - padT - padB;
+  const yTicks = [100, 75, 50];
+  let gridLines = '';
+  yTicks.forEach(val => {
+    const y = padT + (1 - val/100) * chartH;
+    gridLines += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="#EAEAEA" stroke-width="1" stroke-dasharray="3,3" /><text x="${padL - 6}" y="${y}" text-anchor="end" dominant-baseline="middle" font-size="10" fill="#9E9E9E">${val}%</text>`;
+  });
+  const stepX = chartW / (dates.length - 1);
+  let xLabels = '';
+  dates.forEach((d, i) => {
+    const x = padL + i * stepX;
+    xLabels += `<text x="${x}" y="${h - 8}" text-anchor="middle" font-size="10" fill="#9E9E9E">${d}</text>`;
+  });
+  let linesAndDots = '';
+  subjectNames.forEach(name => {
+    const item = subjectScores[name];
+    let path = '', dots = '';
+    item.trend.forEach((v, i) => {
+      const x = padL + i * stepX;
+      const y = padT + (1 - v/100) * chartH;
+      if (i === 0) path += `M${x},${y}`; else path += ` L${x},${y}`;
+      dots += `<circle cx="${x}" cy="${y}" r="4" fill="#FFFFFF" stroke="${item.color}" stroke-width="2"/><circle cx="${x}" cy="${y}" r="2" fill="${item.color}"/>`;
+    });
+    linesAndDots += `<path d="${path}" fill="none" stroke="${item.color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+  });
+  return `<div class="chart-legend-row">${subjectNames.map(s => `<div class="legend-item"><span class="legend-dot" style="background:${subjectScores[s].color}"></span><span>${s}</span></div>`).join('')}</div><svg viewBox="0 0 ${w} ${h}" style="width:100%;overflow:visible">${gridLines}${xLabels}${linesAndDots}</svg>`;
+}
+
+function drawOverallRadarSVG(){
+  const dimensions = ['基础固化', '中档攻坚', '拔高探索', '成绩稳定', '细心审题'];
+  const current = [85, 68, 40, 78, 72];
+  const initial = [60, 45, 25, 55, 50];
+  const n = dimensions.length;
+  const cx=140, cy=135, r=80;
+  const angles = dimensions.map((_,i)=>(-Math.PI/2)+(2*Math.PI*i/n));
+  let gridLines='', initialPoly='', currentPoly='', labels='';
+  [0.25, 0.5, 0.75, 1].forEach(pct=>{
+    let ring='';
+    angles.forEach(a=>{ ring+=`${cx+r*pct*Math.cos(a)},${cy+r*pct*Math.sin(a)} `; });
+    gridLines+=`<polygon points="${ring}" fill="none" stroke="#eee" stroke-width="${pct===1?'1.2':'0.6'}"/>`;
+  });
+  angles.forEach((a,i)=>{
+    const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+    gridLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#eee" stroke-width="0.6"/>`;
+    initialPoly+=`${cx+r*(initial[i]/100)*Math.cos(a)},${cy+r*(initial[i]/100)*Math.sin(a)} `;
+    currentPoly+=`${cx+r*(current[i]/100)*Math.cos(a)},${cy+r*(current[i]/100)*Math.sin(a)} `;
+    const lx=cx+(r+28)*Math.cos(a), ly=cy+(r+28)*Math.sin(a);
+    const scoreColor = current[i]>=80?'#43A047': current[i]>=65?'#FF6D00':'#E53935';
+    labels+=`<text x="${lx}" y="${ly-7}" text-anchor="middle" dominant-baseline="middle" font-size="11" font-weight="700" fill="#424242">${dimensions[i]}</text>`;
+    labels+=`<text x="${lx}" y="${ly+7}" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="700" fill="${scoreColor}">${current[i]}%</text>`;
+  });
+  return `<svg viewBox="0 0 280 280" style="width:100%;max-width:280px;display:block;margin:0 auto">
+    ${gridLines}
+    <polygon points="${initialPoly}" fill="rgba(158,158,158,.08)" stroke="#9E9E9E" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <polygon points="${currentPoly}" fill="rgba(230,67,26,.12)" stroke="#E6431A" stroke-width="2"/>
+    ${labels}
+  </svg>`;
+}
+
+function renderOverview(){
+  const d = mockOverallDiag;
+  return `
+  <div class="card">
+    <div class="diag-header">
+      <div class="diag-title-box">
+        <div class="diag-title-icon"><span class="material-icons" style="font-size:16px">bar_chart</span></div>
+        <span class="diag-title-text">综合能力总览</span>
+      </div>
+      <span class="diag-count">共 ${d.totalAnalyses} 次分析</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-val">${d.avgScoreRate}%</div><div class="stat-label">平均得分率</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:#1565C0">${d.totalAnalyses}</div><div class="stat-label">累计分析</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:#1565C0">${d.kpCovered}</div><div class="stat-label">覆盖知识点</div></div>
+    </div>
+    <div style="margin-bottom:8px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">长期成长能力模型</div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text3)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:16px;height:2px;background:#E6431A;border-radius:1px;display:inline-block"></span>当前水平</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:16px;height:2px;background:#9E9E9E;border-radius:1px;display:inline-block;border-top:1px dashed #9E9E9E"></span>首次诊断</span>
+      </div>
+    </div>
+    ${drawOverallRadarSVG()}
+    <div class="advice-box" style="margin-top:14px">
+      <div class="advice-title"><span class="material-icons" style="font-size:16px">psychology</span> AI 陪读建议</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">基础与稳定性显著提升，中档攻坚能力进步明显但仍有空间，建议近期集中突破中档解答题，拔高题可在稳固后再逐步推进。</div>
+    </div>
+  </div>`;
+}
+
+function renderTrend(){
+  return `
+  <div class="card">
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px">各科得分率走势</div>
+    ${drawPerfectLineChart()}
+  </div>
+  <div class="card" style="background:#FFF7F5;border:1px solid rgba(230,67,26,.15)">
+    <div style="font-size:13px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:4px;margin-bottom:6px"><span class="material-icons" style="font-size:16px">insights</span>趋势解读</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6">
+      <div style="margin-bottom:4px">• <strong>数学</strong>：3月至今提升14个百分点，近期略有回落（76%），二次函数板块拖累明显</div>
+      <div style="margin-bottom:4px">• <strong>语文</strong>：整体稳定在78-82%区间，波动小，属于稳健型科目</div>
+      <div>• <strong>物理</strong>：持续上升趋势（55%→68%），但与数学差距仍在收窄中</div>
+    </div>
+  </div>`;
+}
+
+function renderMastery(){
+  const curSubj = selectedSubject;
+  const curKps = subjectKpsData[curSubj] || subjectKpsData['数学'];
+  return `
+  <div class="card">
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px">科目能力（知识点掌握度）</div>
+    <div class="chip-wrap">
+      ${Object.keys(subjectKpsData).map(sub => `<span class="choice-chip${sub===curSubj?' active':''}" onclick="selectedSubject='${sub}';render()">${sub}</span>`).join('')}
+    </div>
+    <div>
+      ${curKps.map(kp => {
+        const color = kp.level === 'urgent' ? 'var(--urgent)' : kp.level === 'attention' ? 'var(--attention)' : 'var(--keep)';
+        return `<div class="kp-item"><div class="kp-left"><div class="kp-title-row"><span class="kp-name">${kp.name}</span><span class="kp-score-text" style="color:${color}">${kp.mastery}%</span></div><div class="kp-bar-track"><div class="kp-bar-inner" style="width:${kp.mastery}%;background:${color}"></div></div></div></div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function renderChronic(){
+  const subjs = Object.keys(chronicData);
+  const curSubj = subjs.includes(selectedSubject) ? selectedSubject : subjs[0];
+  const data = chronicData[curSubj];
+
+  const trendIcon = dir => dir === 'up' ? '<span class="material-icons" style="color:var(--urgent)">trending_up</span>失分加重' : dir === 'down' ? '<span class="material-icons" style="color:var(--keep)">trending_down</span>有所改善' : '<span class="material-icons" style="color:var(--attention)">trending_flat</span>未见好转';
+
+  return `
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px"><span class="material-icons" style="font-size:18px;color:var(--primary)">report_problem</span>顽疾与高频错项</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px">跨期抓出长期未解决的硬骨头，让复习更有针对性</div>
+    <div class="chip-wrap">${subjs.map(s=>`<span class="choice-chip${s===curSubj?' active':''}" onclick="selectedSubject='${s}';render()">${s}</span>`).join('')}</div>
+  </div>
+
+  <div class="section-label" style="color:var(--urgent)"><span class="material-icons">warning</span>长期未攻克顽疾（${data.chronic.length}项）</div>
+
+  ${data.chronic.map(item => `
+  <div class="chronic-item">
+    <div class="chronic-header">
+      <div class="chronic-title">${item.name}</div>
+      <div class="chronic-badge">连续${item.consecutiveExams}次</div>
+    </div>
+    <div class="chronic-meta">
+      <span>平均每次失分 <strong style="color:var(--urgent)">${item.avgLoss}</strong> 分</span>
+    </div>
+    <div class="chronic-exams">
+      ${item.examResults.map(r => `<div class="chronic-exam-dot" style="background:${r.wrong?'rgba(229,57,53,.15)':'rgba(67,160,71,.15)'};color:${r.wrong?'var(--urgent)':'var(--keep)'}" title="${r.exam}">${r.wrong?'✗':'✓'}</div>`).join('')}
+    </div>
+    <div class="chronic-trend">${trendIcon(item.trendDir)}</div>
+    <div class="chronic-suggestion"><span class="material-icons">tips_and_updates</span><span>${item.suggestion}</span></div>
+  </div>`).join('')}
+
+  <div class="section-label" style="color:var(--keep);margin-top:16px"><span class="material-icons">verified</span>已稳固知识点（${data.mastered.length}项）</div>
+
+  ${data.mastered.map(item => `
+  <div class="mastered-item">
+    <div class="mastered-left">
+      <div class="mastered-icon"><span class="material-icons">check</span></div>
+      <div>
+        <div class="mastered-title">${item.name}</div>
+        <div class="mastered-sub">${item.streak}</div>
+      </div>
+    </div>
+    <div class="mastered-rate">${item.rate}%</div>
+  </div>`).join('')}
+
+  <div class="card" style="background:#F0FFF4;border:1px solid rgba(67,160,71,.2);margin-top:12px">
+    <div style="font-size:13px;font-weight:700;color:var(--keep);display:flex;align-items:center;gap:4px;margin-bottom:6px"><span class="material-icons" style="font-size:16px">emoji_events</span>复习策略建议</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6">
+      已稳固的${data.mastered.length}个知识点可以<strong>降低复习频率</strong>，将精力集中在顽疾清单上。建议按"失分量 × 可突破性"排序，优先攻克平均失分最高且趋势未改善的知识点。
+    </div>
+  </div>`;
+}
+
+function render(){
+  const pageBody = document.getElementById('pageBody');
+  const scrollPos = pageBody.scrollTop;
+  document.getElementById('subTabBar').innerHTML = tabs.map(t=>`<div class="sub-tab-item${t.key===activeTab?' active':''}" data-tab="${t.key}" onclick="scrollToSection('${t.key}')">${t.label}</div>`).join('');
+
+  let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <span style="font-size:13px;color:var(--text3)">统计范围：</span>
+    <div class="filter-picker-btn" onclick="openPicker()"><span>${selectedYear}</span><span class="material-icons" style="font-size:16px">arrow_drop_down</span></div>
+  </div>`;
+
+  html += `<div id="sec-overview" class="section-anchor">${renderOverview()}</div>`;
+  html += `<div id="sec-trend" class="section-anchor">${renderTrend()}</div>`;
+  html += `<div id="sec-mastery" class="section-anchor">${renderMastery()}</div>`;
+  html += `<div id="sec-chronic" class="section-anchor">${renderChronic()}</div>`;
+
+  pageBody.innerHTML = html;
+  pageBody.scrollTop = scrollPos;
+}
+
+function scrollToSection(key){
+  const el = document.getElementById('sec-'+key);
+  if(el){
+    isScrolling = true;
+    el.scrollIntoView({behavior:'smooth'});
+    setActiveTab(key);
+    setTimeout(()=>{ isScrolling = false; }, 600);
+  }
+}
+
+function setActiveTab(key){
+  activeTab = key;
+  document.querySelectorAll('.sub-tab-item').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tab===key);
+  });
+}
+
+let isScrolling = false;
+function initScrollspy(){
+  const pageBody = document.getElementById('pageBody');
+  const sectionKeys = tabs.map(t=>t.key);
+  pageBody.addEventListener('scroll', ()=>{
+    if(isScrolling) return;
+    const offset = pageBody.scrollTop + 80;
+    let current = sectionKeys[0];
+    for(const key of sectionKeys){
+      const sec = document.getElementById('sec-'+key);
+      if(sec && sec.offsetTop <= offset){
+        current = key;
+      }
+    }
+    if(current !== activeTab){
+      setActiveTab(current);
+    }
+  });
+}
+
+render();
+initScrollspy();
+
+// Share feature
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show')},2200);
+}
+
+function openShareSheet(){
+  updateSharePreview();
+  document.getElementById('shareMask').classList.add('show');
+}
+
+function closeShareSheet(e){
+  if(e.target.classList.contains('share-mask')) document.getElementById('shareMask').classList.remove('show');
+}
+
+function scoreToLevel(score){
+  if(score>=85) return '优异';
+  if(score>=75) return '良好';
+  if(score>=60) return '稳步提升';
+  return '需加油';
+}
+
+function updateSharePreview(){
+  const hideScores=document.getElementById('hideScores').checked;
+  const name='张妈妈';
+  const avatar='张';
+
+  const subjects=Object.keys(subjectScores);
+  let scoresHtml='';
+  subjects.forEach(subj=>{
+    const trend=subjectScores[subj].trend;
+    const latest=trend[trend.length-1];
+    const val=hideScores?scoreToLevel(latest):(latest+'%');
+    scoresHtml+=`<span class="sp-score-chip">${subj} ${val}</span>`;
+  });
+
+  document.getElementById('sharePreview').innerHTML=`
+    <div class="sp-header">
+      <div class="sp-avatar">${avatar}</div>
+      <div><div class="sp-name">${name}</div><div class="sp-tag">成长趋势分析 · ${selectedYear}</div></div>
+    </div>
+    <div class="sp-body">长期学情趋势卡片 —— 各科最新得分率：</div>
+    <div class="sp-scores">${scoresHtml}</div>
+  `;
+}
+
+function toggleTag(el){
+  el.classList.toggle('selected');
+}
+
+function doSharePost(){
+  const hideScores=document.getElementById('hideScores').checked;
+  const tags=Array.from(document.querySelectorAll('#tagChips .tag-chip.selected')).map(t=>t.textContent);
+  const subjects=Object.keys(subjectScores);
+  const latestScores=subjects.map(s=>{
+    const trend=subjectScores[s].trend;
+    const latest=trend[trend.length-1];
+    return hideScores?scoreToLevel(latest):(latest+'%');
+  });
+
+  const shareData={
+    type:'growth_trend',
+    year:selectedYear,
+    subjects,
+    scores:latestScores,
+    hideScores,
+    anon:false,
+    tags,
+    author:'张妈妈',
+    createdAt:new Date().toISOString()
+  };
+  localStorage.setItem('sharePostDraft',JSON.stringify(shareData));
+  document.getElementById('shareMask').classList.remove('show');
+  showToast('正在跳转至社区发帖...');
+  setTimeout(()=>{window.location.href='shequ.html?from=share'},1000);
+}
+</script>
+</body>
+</html>

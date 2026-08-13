@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>确认错题 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--urgent:#E53935;--keep:#43A047;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden;position:relative}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0;z-index:20}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center}
+.bar-action{padding:6px 12px;border:none;background:none;color:var(--primary);font-size:14px;font-weight:600;cursor:pointer;border-radius:8px;flex-shrink:0}
+.bar-action:active{background:#fde8e8}
+
+/* 吸顶 Tab Bar */
+.sticky-tabs{position:sticky;top:0;z-index:15;background:var(--surface);border-bottom:1px solid var(--divider);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
+.sticky-tabs::-webkit-scrollbar{display:none}
+.tab-item{flex-shrink:0;padding:12px 16px;font-size:13px;font-weight:500;color:var(--hint);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-item.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+
+/* 滚动区 */
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.subject-section{padding:14px 16px}
+.section-header{display:flex;align-items:center;margin-bottom:12px;gap:8px}
+.section-dot{width:4px;height:18px;border-radius:2px;background:var(--primary);flex-shrink:0}
+.section-title{font-size:15px;font-weight:700;color:var(--text1);flex:1}
+.section-count{font-size:12px;color:var(--hint)}
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;user-select:none;vertical-align:middle;margin-left:4px;box-shadow:0 2px 6px rgba(21,101,194,.4)}
+
+/* 题目卡片 */
+.q-card{background:var(--surface);border-radius:var(--r-card);padding:14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:background .12s}
+.q-card:active{background:#fafafa}
+.q-card.wrong{border-left:3px solid var(--urgent)}
+.q-num{width:28px;height:28px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text3);flex-shrink:0;margin-top:1px}
+.q-card.wrong .q-num{background:#feecec;color:var(--urgent)}
+.q-body{flex:1}
+.q-text{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+.q-meta{font-size:11px;color:var(--hint)}
+.q-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--divider);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all .15s}
+.q-card.wrong .q-check{border-color:var(--urgent);background:var(--urgent)}
+.q-check .material-icons{font-size:14px;color:#fff;display:none}
+.q-card.wrong .q-check .material-icons{display:block}
+
+/* 底部提交栏 */
+.bottom-bar{background:var(--surface);padding:12px 16px;border-top:1px solid var(--divider);flex-shrink:0;display:flex;align-items:center;gap:12px}
+.wrong-summary{flex:1;font-size:13px;color:var(--text3)}
+.wrong-summary span{color:var(--urgent);font-weight:700;font-size:16px}
+.submit-btn{padding:12px 24px;border-radius:var(--r-card);border:none;background:var(--primary);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.submit-btn:active{opacity:.85}
+
+/* PRD */
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;resize:vertical;outline:none;background:#fafafa}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">确认错题</span>
+    <button class="bar-action" onclick="submitWrong()">提交</button>
+  </div>
+
+  <!-- 吸顶科目 Tab -->
+  <div class="sticky-tabs" id="tabBar"></div>
+
+  <!-- 滚动内容区 -->
+  <div class="scroll-body" id="scrollBody"></div>
+
+  <div class="bottom-bar">
+    <div class="wrong-summary">已勾选 <span id="wrongCount">0</span> 道错题</div>
+    <button class="submit-btn" onclick="submitWrong()">完成录入</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// Mock 数据：各科目题目
+const subjectData = {
+  '数学': [
+    {id:'m1',text:'已知函数 f(x) = x² - 2x + 3，求 f(x) 的最小值及对应的 x 值。',type:'解答题',wrong:true},
+    {id:'m2',text:'等差数列 {aₙ} 中，a₃ = 7，a₈ = 22，求公差 d 和首项 a₁。',type:'解答题',wrong:false},
+    {id:'m3',text:'sin²θ + cos²θ = 1，利用此恒等式化简 (sinθ + cosθ)²。',type:'填空题',wrong:true},
+    {id:'m4',text:'某工厂生产一批零件，次品率为 2%，随机抽取 5 个，恰好有 1 个次品的概率是？',type:'选择题',wrong:false},
+    {id:'m5',text:'直线 y = 2x + 1 与圆 x² + y² = 5 的位置关系，并求交点坐标（若有）。',type:'解答题',wrong:true},
+  ],
+  '英语': [
+    {id:'e1',text:'Complete the sentence: "She insisted that he ___ (come) to the party."',type:'语法填空',wrong:true},
+    {id:'e2',text:'阅读理解第 23 题：根据第三段，作者对 social media 的态度是？',type:'阅读理解',wrong:false},
+    {id:'e3',text:'单词拼写：这座建筑的 ______（建筑学）风格令人印象深刻。',type:'词汇运用',wrong:true},
+    {id:'e4',text:'改错题：第 5 行 "He suggested to go to the cinema" 中的错误是？',type:'改错',wrong:false},
+  ],
+  '物理': [
+    {id:'p1',text:'一物体从高 h = 20m 处自由落下，求落地速度和所用时间（g = 10 m/s²）。',type:'计算题',wrong:true},
+    {id:'p2',text:'两个电阻 R₁ = 6Ω，R₂ = 3Ω 并联后接 12V 电源，求总电流。',type:'计算题',wrong:false},
+    {id:'p3',text:'如图，物体在斜面上静止，画出其受力示意图并分析各力大小关系。',type:'受力分析',wrong:true},
+  ],
+  '化学': [
+    {id:'c1',text:'写出 Na 与 H₂O 反应的化学方程式，并说明反应类型。',type:'化学方程式',wrong:false},
+    {id:'c2',text:'苯环结构中碳碳键的键长和键能与单键、双键相比有何特点？',type:'有机化学',wrong:true},
+    {id:'c3',text:'Na₂CO₃ 溶液呈碱性的原因（用离子方程式解释）。',type:'离子方程式',wrong:true},
+  ]
+};
+
+// 从 localStorage 读取科目列表，没有则用默认
+let task = JSON.parse(localStorage.getItem('reportTask')||'null');
+let activeSubjects = (task && task.subjects) ? task.subjects : Object.keys(subjectData);
+// 只保留有数据的科目
+activeSubjects = activeSubjects.filter(s => subjectData[s]);
+if(!activeSubjects.length) activeSubjects = Object.keys(subjectData);
+
+let wrongMap = {}; // id -> bool
+// 初始化 wrongMap
+activeSubjects.forEach(s => {
+  subjectData[s].forEach(q => { wrongMap[q.id] = q.wrong; });
+});
+
+let activeTab = activeSubjects[0];
+
+// ── 渲染 Tab Bar ──
+function renderTabs(){
+  const tabBar = document.getElementById('tabBar');
+  tabBar.innerHTML = activeSubjects.map(s =>
+    `<div class="tab-item${s===activeTab?' active':''}" id="tab_${s}" onclick="clickTab('${s}')">${s}</div>`
+  ).join('');
+}
+
+// ── 渲染内容区 ──
+function renderBody(){
+  const scrollBody = document.getElementById('scrollBody');
+  scrollBody.innerHTML = activeSubjects.map((s,si) => {
+    const qs = subjectData[s];
+    const wrongCount = qs.filter(q=>wrongMap[q.id]).length;
+    const prdId = si+1 <= 3 ? si+1 : null;
+    return `
+<div class="subject-section" id="section_${s}">
+  <div class="section-header">
+    <div class="section-dot"></div>
+    <span class="section-title">${s}</span>
+    <span class="section-count">共${qs.length}题</span>
+    ${prdId?`<span class="prd-mark" onclick="openPrd(event,${prdId})">${prdId}</span>`:''}
+  </div>
+  ${qs.map(q=>`
+  <div class="q-card${wrongMap[q.id]?' wrong':''}" id="qcard_${q.id}" onclick="toggleWrong('${q.id}')">
+    <div class="q-num">${qs.indexOf(q)+1}</div>
+    <div class="q-body">
+      <div class="q-text">${q.text}</div>
+      <div class="q-meta">${q.type}</div>
+    </div>
+    <div class="q-check"><span class="material-icons">check</span></div>
+  </div>`).join('')}
+</div>`;
+  }).join('');
+
+  updateCount();
+  bindScrollSpy();
+}
+
+function toggleWrong(id){
+  wrongMap[id] = !wrongMap[id];
+  const card = document.getElementById('qcard_'+id);
+  if(card) card.className = 'q-card' + (wrongMap[id]?' wrong':'');
+  updateCount();
+}
+
+function updateCount(){
+  let total = 0;
+  activeSubjects.forEach(s => {
+    subjectData[s].forEach(q=>{ if(wrongMap[q.id]) total++; });
+  });
+  document.getElementById('wrongCount').textContent = total;
+}
+
+// ── 点击 Tab：平滑滚动到对应科目 ──
+function clickTab(s){
+  activeTab = s;
+  renderTabs();
+  const section = document.getElementById('section_'+s);
+  if(section) section.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Scroll-spy：滚动时高亮对应 Tab ──
+function bindScrollSpy(){
+  const scrollBody = document.getElementById('scrollBody');
+  scrollBody.addEventListener('scroll', function(){
+    const scrollTop = scrollBody.scrollTop;
+    let current = activeSubjects[0];
+    activeSubjects.forEach(s => {
+      const el = document.getElementById('section_'+s);
+      if(el && el.offsetTop - scrollBody.offsetTop - 60 <= scrollTop) current = s;
+    });
+    if(current !== activeTab){
+      activeTab = current;
+      // 更新 Tab 高亮
+      activeSubjects.forEach(s => {
+        const tab = document.getElementById('tab_'+s);
+        if(tab) tab.className = 'tab-item' + (s===activeTab?' active':'');
+      });
+      // 让活跃 Tab 滚入视口
+      const activeTabEl = document.getElementById('tab_'+activeTab);
+      if(activeTabEl) activeTabEl.scrollIntoView({behavior:'smooth', inline:'nearest', block:'nearest'});
+    }
+  }, {passive:true});
+}
+
+function submitWrong(){
+  const total = parseInt(document.getElementById('wrongCount').textContent);
+  if(total===0){ showToast('请至少勾选一道错题'); return; }
+  const wrongIds = Object.keys(wrongMap).filter(id=>wrongMap[id]);
+  if(task){
+    task.status='generating';
+    task.wrongCount=total;
+    task.wrongIds=wrongIds;
+    localStorage.setItem('reportTask', JSON.stringify(task));
+  }
+  showToast('录入成功，正在生成分析报告…');
+  setTimeout(()=>window.location.href='loading.html', 1000);
+}
+
+const prdData={
+  1:{title:'标记 1 · 吸顶 Tab 交互规范',badge:'交互规范',badgeType:'interaction',
+     text:'Tab 来源：由 localStorage.reportTask.subjects 决定，仅显示本次大考涉及的科目。\n\n点击 Tab：平滑滚动（scrollIntoView smooth）到对应科目区域。\n\nScroll-spy：手势滚动时，根据各科目 section 的 offsetTop 判断当前可见科目，自动高亮对应 Tab，并将 Tab 滚入可视范围（inline: nearest）。'},
+  2:{title:'标记 2 · 错题勾选规则',badge:'业务规则',badgeType:'',
+     text:'默认状态：根据 mock 数据中 wrong:true 的题目预选中（模拟 AI 识别结果）。\n\n点击题卡：切换该题错题状态，红色边框 + 红色圆形打勾 = 已标记为错题。\n\n底部计数：实时统计所有科目已勾选错题总数。\n\n提交条件：至少勾选 1 道错题，否则 Toast 提示。'},
+  3:{title:'标记 3 · 数据提交规范',badge:'数据规范',badgeType:'data',
+     text:'提交时更新 localStorage.reportTask：\n• status: generating\n• wrongCount: 勾选总数\n• wrongIds: 勾选题目 id 数组\n\n跳转：→ loading.html（模拟 AI 分析中）\n\nloading.html 完成后跳转 fenxibaogao.html 查看报告。'}
+};
+
+function openPrd(e,id){
+  e.stopPropagation();closePrd();
+  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
+  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
+  const popW=290,popH=280,appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top=spaceBelow>=popH?rect.bottom+8:rect.top-popH-8;
+  let arrowTop=spaceBelow>=popH?-6:popH-6;
+  pop.style.left=left+'px';pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';arrow.style.top=arrowTop+'px';
+  if(spaceBelow<popH)arrow.style.transform='rotate(45deg)';
+}
+function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
+function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();showToast('产品规则已保存');}
+
+renderTabs();
+renderBody();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

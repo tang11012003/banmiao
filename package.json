@@ -1,0 +1,17 @@
+{
+  "name": "peidu-community",
+  "version": "1.0.0",
+  "description": "高考陪读家长社区平台 — \"拍照知薄弱，折线看进步，社区不孤独\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^4.2.0"
+  }
+}

@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我的 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 16px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint);transition:color .2s}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px;transition:color .2s}
+.nav-item.active .material-icons{color:var(--primary)}
+.nav-item.active .nav-label{color:var(--primary);font-weight:500}
+
+/* User Card & Stats */
+.user-card{display:flex;align-items:center;gap:14px;padding:16px}
+.user-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.user-info .user-name{font-size:17px;font-weight:600;color:var(--text1)}
+.user-info .user-phone{font-size:12px;color:var(--text3);margin-top:2px}
+.user-info .user-badge{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:11px;color:var(--keep);background:rgba(67,160,71,.08);padding:2px 8px;border-radius:10px}
+.user-info .user-badge .material-icons{font-size:13px}
+
+.stats-card{display:flex;align-items:center;justify-content:space-around;padding:12px 10px}
+.stat-item{text-align:center;flex:1;cursor:pointer;padding:4px 0;border-radius:8px;transition:background .15s}
+.stat-item:active{background:#f5f5f5}
+.stat-num{font-size:17px;font-weight:700;color:var(--text1)}
+.stat-label{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* 社区互动：精准3列网格 */
+.interaction-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;padding:8px 0;text-align:center}
+.grid-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;gap:6px;padding:8px 0;border-radius:10px;transition:background .12s}
+.grid-item:active{background:#fafafa}
+.grid-item .gi-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.grid-item .gi-icon .material-icons{font-size:22px}
+.grid-item .gi-label{font-size:12px;color:var(--text1);font-weight:500}
+
+/* Menu List */
+.menu-list{padding:2px 0}
+.menu-item{display:flex;align-items:center;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--divider);transition:background .12s}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:#fafafa}
+.menu-item .mi-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
+.menu-item .mi-icon .material-icons{font-size:18px}
+.menu-item .mi-content{flex:1}
+.menu-item .mi-title{font-size:14px;font-weight:500;color:var(--text1)}
+.menu-item .mi-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.menu-item .mi-arrow{color:var(--hint)}
+.menu-item .mi-arrow .material-icons{font-size:18px}
+.card-header{font-size:13px;font-weight:700;color:var(--text3);padding:12px 16px 4px;display:flex;align-items:center;justify-content:space-between}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#1565C0;color:#fff;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 5px rgba(21,101,194,.3);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;resize:vertical;outline:none;background:#fafafa}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+  <span class="title">我的</span>
+</div>
+<div class="page-body" id="pageBody"></div>
+<div class="bottom-nav">
+  <a class="nav-item" href="fenxi.html"><span class="material-icons">insights</span><span class="nav-label">分析</span></a>
+  <a class="nav-item" href="shequ.html"><span class="material-icons">forum</span><span class="nav-label">社区</span></a>
+  <a class="nav-item" href="xiaoxi.html"><span class="material-icons">notifications</span><span class="nav-label">消息</span></a>
+  <a class="nav-item active" href="wode.html"><span class="material-icons">person</span><span class="nav-label">我的</span></a>
+</div>
+</div>
+
+<script>
+const user={name:'张妈妈',phone:'138****8888',verified:true,following:23,followers:56,likes:128};
+const quota={free:3,used:0,bonus:0,totalRemain:3};
+
+function render(){
+document.getElementById('pageBody').innerHTML=`
+<!-- 个人信息卡片 -->
+<div class="card user-card" onclick="window.location.href='bianjijiazhang.html'" style="cursor:pointer">
+  <div class="user-avatar">张</div>
+  <div class="user-info">
+    <div class="user-name">${user.name}</div>
+    <div class="user-phone">${user.phone}</div>
+    ${user.verified?'<div class="user-badge"><span class="material-icons">verified</span>已认证家长</div>':'<div class="user-badge" style="color:var(--attention);background:rgba(251,192,45,.08)"><span class="material-icons">warning</span>未认证</div>'}
+  </div>
+  <span class="material-icons" style="color:var(--hint);font-size:20px;margin-left:auto;align-self:center">chevron_right</span>
+</div>
+
+<!-- 关注/粉丝/获赞 数据统计栏 -->
+<div class="card stats-card">
+  <div class="stat-item" onclick="window.location.href='guanzhu.html'">
+    <div class="stat-num">${user.following}</div>
+    <div class="stat-label">关注</div>
+  </div>
+  <div class="stat-item" onclick="window.location.href='fensi.html'">
+    <div class="stat-num">${user.followers}</div>
+    <div class="stat-label">粉丝</div>
+  </div>
+  <div class="stat-item" >
+    <div class="stat-num">${user.likes}</div>
+    <div class="stat-label">获赞</div>
+  </div>
+</div>
+
+<!-- 社区互动板块：仅包含“我的发帖”、“有用”、“评论” -->
+<div class="card" style="padding:12px 16px 16px">
+  <div class="card-header" style="padding:0 0 10px 0">
+    <span>社区互动记录</span>
+    <span class="prd-mark" onclick="openPrd(event,3)">3</span>
+  </div>
+  <div class="interaction-grid">
+    <div class="grid-item" onclick="window.location.href='wodetiezi.html'">
+      <div class="gi-icon" style="background:#FFF3E0;color:#E65100"><span class="material-icons">rate_review</span></div>
+      <div class="gi-label">我的发帖</div>
+    </div>
+    <div class="grid-item" onclick="window.location.href='youyong.html'">
+      <div class="gi-icon" style="background:#FFEBEE;color:#C62828"><span class="material-icons">favorite</span></div>
+      <div class="gi-label">有用</div>
+    </div>
+    <div class="grid-item" onclick="window.location.href='wodepinglun.html'">
+      <div class="gi-icon" style="background:#E3F2FD;color:#1565C0"><span class="material-icons">mode_comment</span></div>
+      <div class="gi-label">评论</div>
+    </div>
+  </div>
+</div>
+
+<!-- 服务与权益 -->
+<div class="card menu-list">
+  <div class="menu-item" onclick="window.location.href='jiazhangrenzheng.html'">
+    <div class="mi-icon" style="background:rgba(67,160,71,.1)"><span class="material-icons" style="color:var(--keep)">verified_user</span></div>
+    <div class="mi-content"><div class="mi-title">家长认证</div><div class="mi-sub">${user.verified?'已完成认证':'点击进行认证'}</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+
+  <div class="menu-item" >
+    <div class="mi-icon" style="background:rgba(21,101,194,.1)"><span class="material-icons" style="color:#1565C0">confirmation_number</span></div>
+    <div class="mi-content"><div class="mi-title">本月剩余分析次数</div><div class="mi-sub">免费 ${quota.free} 次 + 奖励 ${quota.bonus} 次 · 剩余 ${quota.totalRemain} 次</div></div>
+    <span class="prd-mark" onclick="openPrd(event,2)">2</span>
+  </div>
+</div>
+
+<!-- 账号与学生设置 -->
+<div class="card menu-list">
+  <div class="menu-item" onclick="window.location.href='bianjixs.html'">
+    <div class="mi-icon" style="background:rgba(156,39,176,.1)"><span class="material-icons" style="color:#9C27B0">face</span></div>
+    <div class="mi-content"><div class="mi-title">我的孩子</div><div class="mi-sub">张小明 · 高三</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item" onclick="window.location.href='shezhi.html'">
+    <div class="mi-icon" style="background:#f5f5f5"><span class="material-icons" style="color:var(--text3)">settings</span></div>
+    <div class="mi-content"><div class="mi-title">设置</div><div class="mi-sub">账号与隐私</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+</div>
+`;
+}
+
+render();
+
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15)';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+
+const prdData={
+  1:{title:'标记 1 · 认证状态徽章规则',badge:'业务规则',badgeType:'',
+     text:'user.verified 控制显示：\n• true → 绿色 badge：<verified> 已认证家长\n• false → 橙色 badge：<warning> 未认证\n\n认证入口：jiazhangrenzheng.html'},
+  2:{title:'标记 2 · 分析次数配额规则',badge:'数据规范',badgeType:'data',
+     text:'quota 配额格式：\n"免费 {free} 次 + 奖励 {bonus} 次 · 剩余 {totalRemain} 次"\n\n规则：每月 1 号自动刷新 free 次数。'},
+  3:{title:'标记 3 · 社区互动记录规则',badge:'交互规范',badgeType:'interaction',
+     text:'包含 3 项精简互动入口：\n1. 我的发帖：查看与管理自己发布的所有帖子/高二\n2. 有用：快速浏览个人点有用的社区内容\n3. 评论：查看历史评论与收到的回复'}
+};
+
+let _curPrdId=null;
+function openPrd(e,id){
+  e.stopPropagation();closePrd();
+  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
+  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
+  const popW=290,popH=260;const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
+  let top=rect.bottom+8;if(window.innerHeight-rect.bottom < popH) top=rect.top-popH-8;
+  pop.style.left=left+'px';pop.style.top=top+'px';
+}
+function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
+function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();showToast('PRD 已更新');}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

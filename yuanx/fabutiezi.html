@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>发布帖子 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+.app-bar .actions button{border:none;background:var(--primary);color:#fff;padding:7px 16px;border-radius:var(--r-btn);font-size:13px;font-weight:500;cursor:pointer}
+
+.page-body{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+
+.input-group{margin-bottom:16px}
+.input-group label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.input-field{width:100%;padding:11px 14px;border:1px solid #e0e0e0;border-radius:var(--r-btn);font-size:14px;background:#fafafa;outline:none;transition:border .2s;font-family:inherit}
+.input-field:focus{border-color:var(--primary)}
+textarea.input-field{resize:none;min-height:90px;line-height:1.6}
+
+/* 图片上传区 */
+.upload-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-top:6px}
+.upload-btn{aspect-ratio:1;border:1px dashed #ccc;border-radius:var(--r-btn);background:#fafafa;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--hint);cursor:pointer}
+.upload-btn .material-icons{font-size:24px;margin-bottom:2px}
+.upload-btn span{font-size:11px}
+
+/* 嵌入式诊断报告卡片 */
+.report-inline-card{background:linear-gradient(135deg,#FFFFFF 0%,#FFF8F6 100%);border:1px solid #FFE0B2;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(230,67,26,.05);margin-bottom:16px;transition:all .2s ease}
+
+.rc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rc-exam-title{font-size:14px;font-weight:700;color:var(--text1)}
+.rc-subject-badge{background:var(--primary);color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px}
+
+.rc-score-row{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+.rc-score-num{font-size:24px;font-weight:800;color:var(--primary);line-height:1}
+.rc-score-unit{font-size:12px;color:var(--hint)}
+
+/* 折叠时简要弱点 */
+.rc-summary-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.rc-tag{font-size:11px;padding:2px 6px;border-radius:4px;font-weight:500}
+.rc-tag.urgent{background:#FDE8E8;color:#C62828}
+
+/* 展开区域：从 /fenxibaogao.html 原版复刻的完整三档模块 */
+.rc-expand-content{display:none;padding-top:12px;border-top:1px dashed #FFE0B2;margin-top:10px}
+.rc-expand-content.show{display:block;animation:fadeIn .2s ease}
+
+.tier-bar{display:flex;gap:3px;height:10px;border-radius:5px;overflow:hidden;margin:8px 0 4px}
+.tier-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:12px}
+
+.sec-head{font-size:12px;font-weight:700;margin:10px 0 6px;display:flex;align-items:center;gap:4px}
+.kp-card{background:#fff;border-radius:8px;padding:8px 10px;margin-bottom:6px;border:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between}
+.kp-name{font-size:12px;font-weight:600;color:var(--text1)}
+.kp-badge{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap}
+
+/* 展开/收起按钮 */
+.rc-toggle-btn{display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--primary);font-weight:600;padding-top:8px;cursor:pointer;user-select:none}
+.rc-toggle-btn .material-icons{font-size:16px;transition:transform .2s}
+.rc-toggle-btn.expanded .material-icons{transform:rotate(180deg)}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;display:none;white-space:nowrap}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+  <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+  <span class="title">发布社区帖子</span>
+  <div class="actions"><button onclick="publish()">发布</button></div>
+</div>
+
+<div class="page-body">
+  <div class="input-group">
+    <label>标题 <span style="font-size:11px;color:#9E9E9E;font-weight:400">（选填）</span></label>
+    <input class="input-field" id="postTitle" type="text" maxlength="50" placeholder="给帖子起个标题…">
+  </div>
+
+  <div class="input-group">
+    <label>内容</label>
+    <textarea class="input-field" id="postContent" placeholder="分享你的陪读经验或困惑…"></textarea>
+  </div>
+
+  <!-- 原版复刻的学情诊断卡片 -->
+  <div id="reportCardWrap"></div>
+
+  <!-- 图片上传区 -->
+  <div class="input-group">
+    <label>添加图片</label>
+    <div class="upload-grid">
+      <div class="upload-btn" onclick="showToast('选择图片功能')">
+        <span class="material-icons">add_a_photo</span>
+        <span>上传图片</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2000)}
+
+let sharedReport = null;
+let isExpanded = false;
+
+function loadSharedReport(){
+  const raw = sessionStorage.getItem('shareReport');
+  const r = raw ? JSON.parse(raw) : {
+    examName: '期中综合考试',
+    subject: '数学',
+    scoreRate: 78.5,
+    kpResults: [
+      {name:'二次函数平移与顶点计算', level:'urgent', errorRate: 0.6},
+      {name:'三角函数诱导公式', level:'urgent', errorRate: 0.5},
+      {name:'条件概率计算', level:'attention', errorRate: 0.35},
+      {name:'等比数列求和', level:'keep', errorRate: 0.1}
+    ]
+  };
+
+  sharedReport = r;
+  const urgents = r.kpResults.filter(k => k.level === 'urgent');
+  const attentions = r.kpResults.filter(k => k.level === 'attention');
+  const keeps = r.kpResults.filter(k => k.level === 'keep');
+
+  // 1. 预填文案
+  const contentInput = document.getElementById('postContent');
+  contentInput.value = `孩子【${r.examName}·${r.subject}】得分率 ${r.scoreRate}%。薄弱点主要在【${urgents.map(k=>k.name).join('、')}】，大家有什么专项刷题的好建议吗？`;
+
+  // 2. 直接渲染与 /fenxibaogao.html 一致的三档结构
+  const wrap = document.getElementById('reportCardWrap');
+  wrap.innerHTML = `
+    <div class="report-inline-card">
+      <div class="rc-head">
+        <span class="rc-exam-title">${r.examName}</span>
+        <span class="rc-subject-badge">${r.subject}</span>
+      </div>
+      
+      <div class="rc-score-row">
+        <span class="rc-score-num">${r.scoreRate}%</span>
+        <span class="rc-score-unit">得分率</span>
+      </div>
+
+      <!-- 折叠状态摘要 -->
+      <div class="rc-summary-tags" id="summaryTags">
+        ${urgents.map(k => `<span class="rc-tag urgent">待改进: ${k.name}</span>`).join('')}
+      </div>
+
+      <!-- 展开状态：完整搬移原版分析报告的三档分布与列表 -->
+      <div class="rc-expand-content" id="expandContent">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:2px">知识点掌握三档分布：</div>
+        <div class="tier-bar">
+          <div style="flex:${urgents.length || 1};background:var(--urgent)"></div>
+          <div style="flex:${attentions.length || 1};background:var(--attention)"></div>
+          <div style="flex:${keeps.length || 1};background:var(--keep)"></div>
+        </div>
+        <div class="tier-legend">
+          <span style="color:var(--urgent)">待改进 ${urgents.length}</span>
+          <span style="color:#F57F17">需关注 ${attentions.length}</span>
+          <span style="color:var(--keep)">继续保持 ${keeps.length}</span>
+        </div>
+
+        <!-- 1. 待改进 -->
+        ${urgents.length ? `
+          <div class="sec-head" style="color:var(--urgent)">
+            <span class="material-icons" style="font-size:14px">error_outline</span> 待改进
+          </div>
+          ${urgents.map(k => `
+            <div class="kp-card" style="border-left: 3px solid var(--urgent)">
+              <span class="kp-name">${k.name}</span>
+              <span class="kp-badge" style="background:#FDE8E8;color:#C62828">错误率 ${(k.errorRate*100).toFixed(0)}%</span>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        <!-- 2. 需关注 -->
+        ${attentions.length ? `
+          <div class="sec-head" style="color:#F57F17">
+            <span class="material-icons" style="font-size:14px">warning_amber</span> 需关注
+          </div>
+          ${attentions.map(k => `
+            <div class="kp-card" style="border-left: 3px solid var(--attention)">
+              <span class="kp-name">${k.name}</span>
+              <span class="kp-badge" style="background:#FFF8E1;color:#F57F17">错误率 ${(k.errorRate*100).toFixed(0)}%</span>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        <!-- 3. 继续保持 -->
+        ${keeps.length ? `
+          <div class="sec-head" style="color:var(--keep)">
+            <span class="material-icons" style="font-size:14px">check_circle_outline</span> 继续保持
+          </div>
+          ${keeps.map(k => `
+            <div class="kp-card" style="border-left: 3px solid var(--keep)">
+              <span class="kp-name">${k.name}</span>
+              <span class="kp-badge" style="background:#E8F5E9;color:#2E7D32">错误率 ${(k.errorRate*100).toFixed(0)}%</span>
+            </div>
+          `).join('')}
+        ` : ''}
+      </div>
+
+      <!-- 展开/收起按钮 -->
+      <div class="rc-toggle-btn" id="toggleBtn" onclick="toggleExpand()">
+        <span id="toggleText">展开完整诊断报告</span>
+        <span class="material-icons">expand_more</span>
+      </div>
+    </div>
+  `;
+}
+
+function toggleExpand(){
+  isExpanded = !isExpanded;
+  const content = document.getElementById('expandContent');
+  const btn = document.getElementById('toggleBtn');
+  const text = document.getElementById('toggleText');
+  const summaryTags = document.getElementById('summaryTags');
+
+  if(isExpanded){
+    content.classList.add('show');
+    btn.classList.add('expanded');
+    text.innerText = '收起诊断报告';
+    summaryTags.style.display = 'none';
+  } else {
+    content.classList.remove('show');
+    btn.classList.remove('expanded');
+    text.innerText = '展开完整诊断报告';
+    summaryTags.style.display = 'flex';
+  }
+}
+
+function publish(){
+  showToast('发布成功！');
+  setTimeout(() => { history.back(); }, 800);
+}
+
+loadSharedReport();
+</script>
+</body>
+</html>

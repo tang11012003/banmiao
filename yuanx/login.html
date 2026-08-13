@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>登录 / 注册 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--input-bg:#FAFAFA;--input-border:#E0E0E0;--keep:#43A047;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--surface);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+.step{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;transform:translateX(30px)}
+.step.active{opacity:1;pointer-events:auto;transform:translateX(0)}
+.step.exit-left{opacity:0;transform:translateX(-30px)}
+
+/* Step 1 */
+.s1-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 24px}
+.logo-icon{font-size:64px;color:#3F51B5}
+.app-name{margin:14px 0 4px;font-size:22px;font-weight:700;color:var(--text1)}
+.app-desc{color:var(--text3);margin-bottom:28px;font-size:13px}
+.form-wrap{width:100%}
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:13px;color:var(--text2);margin-bottom:5px;font-weight:500}
+.input-row{display:flex;gap:10px;align-items:center}
+.input-row>.material-icons{color:var(--hint);flex-shrink:0}
+.input-field{width:100%;padding:11px 14px;border:1px solid var(--input-border);border-radius:var(--r-btn);font-size:15px;background:var(--input-bg);outline:none;transition:border .2s;flex:1}
+.input-field:focus{border-color:var(--primary)}
+.select-field{width:100%;padding:11px 14px;border:1px solid var(--input-border);border-radius:var(--r-btn);font-size:15px;background:var(--input-bg);outline:none;appearance:none;-webkit-appearance:none;color:var(--text1);cursor:pointer}
+.select-field:focus{border-color:var(--primary)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:var(--r-btn);font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-block{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;background:var(--divider);color:var(--hint);border-color:var(--divider)}
+.auto-reg-tip{font-size:12px;color:var(--hint);margin-top:10px;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}
+.auto-reg-tip .material-icons{font-size:14px;color:#4CAF50}
+.agreement{margin-top:20px;text-align:center;font-size:11px;color:var(--hint);line-height:1.6}
+.agreement a{color:var(--primary);text-decoration:none}
+
+/* Step 2 Header & Cards */
+.s2-wrap{flex:1;display:flex;flex-direction:column;padding:0}
+.s2-header{padding:20px 24px 0;text-align:center}
+.s2-progress{font-size:12px;color:var(--hint);margin-bottom:6px}
+.s2-title{font-size:20px;font-weight:700;color:var(--text1)}
+.s2-sub{font-size:13px;color:var(--text3);margin-top:4px}
+.s2-cards{flex:1;overflow-y:auto;padding:20px 24px;-webkit-overflow-scrolling:touch}
+.value-card{background:var(--bg);border-radius:var(--r-card);padding:20px;margin-bottom:14px;display:flex;align-items:flex-start;gap:14px}
+.vc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vc-icon .material-icons{font-size:24px;color:#fff}
+.vc-content{flex:1}
+.vc-title{font-size:14px;font-weight:700;color:var(--text1);margin-bottom:4px}
+.vc-desc{font-size:12px;color:var(--text3);line-height:1.5}
+.s2-bottom{padding:16px 24px 32px;flex-shrink:0}
+
+/* Step 3: Add Child Form UI */
+.s3-wrap{flex:1;display:flex;flex-direction:column;background:var(--bg)}
+.s3-header{padding:20px 24px 10px;text-align:center;background:#fff;border-bottom:1px solid rgba(0,0,0,.04)}
+.s3-body{flex:1;overflow-y:auto;padding:20px;-webkit-overflow-scrolling:touch}
+.form-card{background:#fff;border-radius:var(--r-card);padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+.form-card .card-title{font-size:18px;font-weight:700;color:var(--text1);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.subject-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.subject-tag{padding:7px 16px;border-radius:20px;border:1px solid #E0E0E0;background:#fff;font-size:13px;color:var(--text2);cursor:pointer;transition:all .15s;user-select:none}
+.subject-tag.selected{border-color:var(--primary);background:rgba(230,67,26,.06);color:var(--primary);font-weight:600}
+
+/* Toast */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,0,0,.82);color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;z-index:3000;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- Step 1: Login -->
+<div class="step active" id="step1">
+<div class="s1-wrap">
+<span class="material-icons logo-icon">school</span>
+<h2 class="app-name">陪读社区</h2>
+<p class="app-desc">家长的智能教育助手</p>
+<div class="form-wrap">
+  <div class="input-group">
+    <label>手机号</label>
+    <div class="input-row">
+      <span class="material-icons">phone</span>
+      <input class="input-field" placeholder="请输入手机号" id="loginPhone" type="tel" maxlength="13">
+    </div>
+  </div>
+  <div class="input-group">
+    <label>验证码</label>
+    <div class="input-row">
+      <span class="material-icons">lock</span>
+      <input class="input-field" placeholder="输入 6 位验证码" id="loginCode" maxlength="6" inputmode="numeric">
+      <span class="prd-mark" onclick="openPrd(event,1)" style="flex-shrink:0">1</span>
+      <button class="btn btn-outline" id="smsBtn" style="padding:10px 14px;font-size:13px;white-space:nowrap" onclick="sendSms()" disabled>获取验证码</button>
+    </div>
+  </div>
+  <button class="btn btn-primary btn-block" style="margin-top:18px" onclick="doLogin()">登录 / 注册</button>
+  <div class="auto-reg-tip">
+    <span class="material-icons">verified_user</span>
+    未注册的手机号验证后将自动创建新账号
+  </div>
+</div>
+<div class="agreement">
+  未注册手机号将自动注册<br>
+  登录即表示同意 <a href="#">用户协议</a> 和 <a href="#">隐私政策</a>
+</div>
+</div>
+</div>
+
+<!-- Step 2: Product Intro -->
+<div class="step" id="step2">
+<div class="s2-wrap">
+<div class="s2-header">
+  <div class="s2-progress">1 / 2· 了解社区</div>
+  <div class="s2-title">欢迎加入陪读社区</div>
+  <div class="s2-sub">1分钟了解我们能为您做什么</div>
+</div>
+<div class="s2-cards">
+  <div class="value-card">
+    <div class="vc-icon" style="background:linear-gradient(135deg,#E6431A,#FF6D00)"><span class="material-icons">auto_awesome</span></div>
+    <div class="vc-content">
+      <div class="vc-title">AI 试卷诊断</div>
+      <div class="vc-desc">拍照上传试卷，AI 秒出知识点归因与个性化提分建议，帮孩子精准补短板。</div>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="vc-icon" style="background:linear-gradient(135deg,#1565C0,#42A5F5)"><span class="material-icons">trending_up</span></div>
+    <div class="vc-content">
+      <div class="vc-title">成长趋势追踪</div>
+      <div class="vc-desc">跨学期积累学情数据，精准定位长期未攻克顽疾，让复习有方向不盲目。</div>
+    </div>
+  </div>
+  <div class="value-card">
+    <div class="vc-icon" style="background:linear-gradient(135deg,#43A047,#66BB6A)"><span class="material-icons">groups</span></div>
+    <div class="vc-content">
+      <div class="vc-title">同频家长圈子</div>
+      <div class="vc-desc">按年级智能匹配同频家长，交流育儿经验与升学策略，互助不孤单。</div>
+    </div>
+  </div>
+</div>
+<div class="s2-bottom">
+  <span class="prd-mark" onclick="openPrd(event,2)" style="display:block;margin-bottom:8px">2</span>
+  <button class="btn btn-primary btn-block" id="step2NextBtn" onclick="goStep3()">下一步：填写孩子学情</button>
+</div>
+</div>
+</div>
+
+<!-- Step 3: Add Child Info -->
+<div class="step" id="step3">
+<div class="s3-wrap">
+  <div class="s3-header">
+    <div class="s2-progress">2 / 2· 建立学情档案</div>
+    <div class="s2-title" style="font-size:18px">添加孩子信息</div>
+  </div>
+  <div class="s3-body">
+    <div class="form-card">
+      <div class="card-title">
+        <span>基本信息</span>
+        <span class="prd-mark" onclick="openPrd(event,3)">3</span>
+      </div>
+      
+      <div class="input-group">
+        <label>姓名</label>
+        <input class="input-field" placeholder="孩子姓名" id="childName">
+      </div>
+
+      <div class="input-group">
+        <label>年级</label>
+        <div style="position:relative">
+          <select class="select-field" id="childGrade">
+            <option value="高三" selected>高三</option>
+            <option value="高二">高二</option>
+            <option value="高一">高一</option>
+            <option value="初三">初三</option>
+            <option value="初二">初二</option>
+            <option value="初一">初一</option>
+            <option value="小学">小学</option>
+          </select>
+          <span class="material-icons" style="position:absolute;right:12px;top:12px;color:var(--hint);pointer-events:none">arrow_drop_down</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>学校 (可选)</label>
+        <input class="input-field" placeholder="如：第一中学" id="childSchool">
+      </div>
+
+      <div class="input-group" style="margin-bottom:0">
+        <label>学习科目</label>
+        <div class="subject-grid" id="subjectGrid">
+          <div class="subject-tag selected" onclick="toggleSubject(this,'语文')">语文</div>
+          <div class="subject-tag selected" onclick="toggleSubject(this,'数学')">数学</div>
+          <div class="subject-tag selected" onclick="toggleSubject(this,'英语')">英语</div>
+          <div class="subject-tag" onclick="toggleSubject(this,'物理')">物理</div>
+          <div class="subject-tag" onclick="toggleSubject(this,'化学')">化学</div>
+          <div class="subject-tag" onclick="toggleSubject(this,'生物')">生物</div>
+          <div class="subject-tag" onclick="toggleSubject(this,'政治')">政治</div>
+          <div class="subject-tag" onclick="toggleSubject(this,'历史')">历史</div>
+          <div class="subject-tag" onclick="toggleSubject(this,'地理')">地理</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="s2-bottom" style="background:#fff">
+    <button class="btn btn-primary btn-block" onclick="saveChildAndGoStep4()">保存并继续</button>
+  </div>
+</div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let countdown = 0;
+let currentStep = 1;
+const phoneInput = document.getElementById('loginPhone');
+const codeInput = document.getElementById('loginCode');
+const smsBtn = document.getElementById('smsBtn');
+
+// Child Form Subjects State
+let selectedSubjects = ['语文', '数学', '英语'];
+
+function toggleSubject(el, sub){
+  if(el.classList.contains('selected')){
+    el.classList.remove('selected');
+    selectedSubjects = selectedSubjects.filter(s => s !== sub);
+  } else {
+    el.classList.add('selected');
+    selectedSubjects.push(sub);
+  }
+}
+
+// Phone formatting 3-4-4
+function getRawPhone(){
+  return phoneInput.value.replace(/\D/g,'');
+}
+
+phoneInput.addEventListener('input', ()=>{
+  let val = getRawPhone();
+  if(val.length>11) val=val.slice(0,11);
+  if(val.length>7) val=val.replace(/^(\d{3})(\d{4})(\d{1,4})$/,'$1 $2 $3');
+  else if(val.length>3) val=val.replace(/^(\d{3})(\d{1,4})$/,'$1 $2');
+  phoneInput.value=val;
+  smsBtn.disabled = !(getRawPhone().length===11 && countdown===0);
+});
+
+// Toast
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show')},2200);
+}
+
+// SMS countdown
+function sendSms(){
+  if(countdown>0)return;
+  if(getRawPhone().length<11){showToast('请输入正确的11位手机号');return}
+  showToast('验证码已发送（测试码: 888888）');
+  countdown=60;
+  smsBtn.disabled=true;
+  const timer=setInterval(()=>{
+    countdown--;
+    smsBtn.textContent=`${countdown}s 后重发`;
+    if(countdown<=0){
+      clearInterval(timer);
+      smsBtn.textContent='获取验证码';
+      if(getRawPhone().length===11) smsBtn.disabled=false;
+    }
+  },1000);
+}
+
+// Step transitions
+function goToStep(n){
+  const prev=document.getElementById('step'+currentStep);
+  const next=document.getElementById('step'+n);
+  prev.classList.remove('active');
+  prev.classList.add('exit-left');
+  setTimeout(()=>{prev.classList.remove('exit-left')},400);
+  next.classList.add('active');
+  currentStep=n;
+}
+
+// Login
+function doLogin(){
+  const raw=getRawPhone();
+  const code=codeInput.value.trim();
+  if(!raw||raw.length<11){showToast('请输入正确的手机号');return}
+  if(!code||code.length<4){showToast('请输入正确的验证码');return}
+  if(code==='888888'){
+    showToast('验证成功，欢迎新用户！');
+    setTimeout(()=>{
+      goToStep(2);
+    },800);
+  }else{
+    showToast('登录成功');
+    setTimeout(()=>{window.location.href='fenxi.html'},800);
+  }
+}
+
+// Step 2 -> Step 3
+function goStep3(){
+  goToStep(3);
+}
+
+// Step 3 -> Save & Step 4
+function saveChildAndGoStep4(){
+  const name = document.getElementById('childName').value.trim();
+  const grade = document.getElementById('childGrade').value;
+  const school = document.getElementById('childSchool').value.trim();
+
+  if(!name){
+    showToast('请输入孩子姓名');
+    return;
+  }
+
+  const childInfo = {
+    name: name,
+    grade: grade,
+    school: school || '未填写',
+    subjects: selectedSubjects
+  };
+
+  localStorage.setItem('child_info', JSON.stringify(childInfo));
+  showToast('孩子档案保存成功');
+  
+  setTimeout(()=>{
+    goToStep(4);
+    renderStep4();
+  }, 600);
+}
+
+const prdData={
+  1:{title:'标记 1 · 短信验证码规则',badge:'交互规范',badgeType:'interaction',
+     text:'获取验证码按钮规则：\n• 初始 disabled（手机号未满 11 位）\n• phoneInput input 事件实时格式化 3-4-4\n• getRawPhone().length===11 且 countdown===0 → 启用\n\n发送后（sendSms）：\n• countdown=60，每秒递减\n• 按钮文字变为 "{n}s 后重发"\n• 倒计时归零 → 若手机号仍 11 位则重新启用\n\n测试验证码：888888（hardcode）\n• 输入 888888 → 进入新用户引导（Step 2）\n• 其他任意 4+ 位 → 直接登录 → 跳转 fenxi.html'},
+  2:{title:'标记 2 · 引导流程概览',badge:'业务规则',badgeType:'',
+     text:'Step 1（登录）：手机号 + 验证码\n• 888888 触发新用户建档流程（Step 2 -> Step 3）\n\nStep 2（产品介绍）：\n• 展现 3 大核心价值，点击后进入孩子信息录入页。'},
+  3:{title:'标记 3 · 孩子档案收集规则',badge:'数据规范',badgeType:'data',
+     text:'表单包含字段：\n• 姓名：必填，未填点击保存弹出 Toast 提示\n• 年级：下拉菜单，默认"高三"\n• 学校：选填，可输入学校简称\n• 学习科目：多选胶囊，选中后打亮并高亮存储\n\n数据持久化：\n• 提交后通过 localStorage 存储为 `child_info` 对象，可供主页和个人中心调用。'}
+};
+
+let _curPrdId=null;
+(function(){const prdK='prd_login';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_login';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

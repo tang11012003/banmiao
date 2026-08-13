@@ -1,0 +1,4485 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "陪读社区 App - 高考知识图谱种子数据",
+    "subjects": [
+      "语文",
+      "数学",
+      "英语",
+      "物理",
+      "化学",
+      "生物",
+      "政治",
+      "历史",
+      "地理"
+    ],
+    "total_nodes": 358,
+    "total_relations": 248
+  },
+  "nodes": [
+    {
+      "id": "kp-math-001",
+      "sql_id": 1,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "函数的概念与性质",
+      "level": 1,
+      "description": "函数的定义、表示方法、三要素及基本性质"
+    },
+    {
+      "id": "kp-math-002",
+      "sql_id": 2,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "基本初等函数",
+      "level": 1,
+      "description": "指数函数、对数函数、幂函数的图像与性质"
+    },
+    {
+      "id": "kp-math-003",
+      "sql_id": 3,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "导数及其应用",
+      "level": 1,
+      "description": "导数的概念、计算及其在研究函数中的应用"
+    },
+    {
+      "id": "kp-math-004",
+      "sql_id": 4,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "直线与圆",
+      "level": 1,
+      "description": "直线方程、圆的方程及位置关系"
+    },
+    {
+      "id": "kp-math-005",
+      "sql_id": 5,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "圆锥曲线",
+      "level": 1,
+      "description": "椭圆、双曲线、抛物线的标准方程与几何性质"
+    },
+    {
+      "id": "kp-math-006",
+      "sql_id": 6,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "三角恒等变换",
+      "level": 1,
+      "description": "和差角公式、倍角公式、辅助角公式等三角恒等变换"
+    },
+    {
+      "id": "kp-math-007",
+      "sql_id": 7,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "三角函数的图像与性质",
+      "level": 1,
+      "description": "正弦、余弦、正切函数的图像、周期性、单调性、最值"
+    },
+    {
+      "id": "kp-math-008",
+      "sql_id": 8,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "正弦定理与余弦定理",
+      "level": 1,
+      "description": "解三角形中的正弦定理、余弦定理及其应用"
+    },
+    {
+      "id": "kp-math-009",
+      "sql_id": 9,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "等差数列",
+      "level": 1,
+      "description": "等差数列的定义、通项公式与前n项和"
+    },
+    {
+      "id": "kp-math-010",
+      "sql_id": 10,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "等比数列",
+      "level": 1,
+      "description": "等比数列的定义、通项公式与前n项和"
+    },
+    {
+      "id": "kp-math-011",
+      "sql_id": 11,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "数列求和与递推",
+      "level": 1,
+      "description": "裂项相消、错位相减等数列求和方法与递推关系"
+    },
+    {
+      "id": "kp-math-012",
+      "sql_id": 12,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "空间向量",
+      "level": 1,
+      "description": "空间向量的坐标运算、法向量及应用"
+    },
+    {
+      "id": "kp-math-013",
+      "sql_id": 13,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "空间角与距离",
+      "level": 1,
+      "description": "异面直线夹角、线面角、二面角及空间距离的计算"
+    },
+    {
+      "id": "kp-math-014",
+      "sql_id": 14,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "古典概型与几何概型",
+      "level": 1,
+      "description": "古典概型、几何概型的概率计算"
+    },
+    {
+      "id": "kp-math-015",
+      "sql_id": 15,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "条件概率与分布列",
+      "level": 1,
+      "description": "条件概率、独立事件、离散型随机变量的分布列与期望"
+    },
+    {
+      "id": "kp-math-016",
+      "sql_id": 16,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "统计图表与数字特征",
+      "level": 1,
+      "description": "频率分布直方图、茎叶图、均值、方差、标准差"
+    },
+    {
+      "id": "kp-math-017",
+      "sql_id": 17,
+      "subject": "数学",
+      "chapter": "平面向量",
+      "name": "向量运算",
+      "level": 1,
+      "description": "向量的线性运算、数量积、坐标表示及其应用"
+    },
+    {
+      "id": "kp-math-018",
+      "sql_id": 18,
+      "subject": "数学",
+      "chapter": "集合与逻辑",
+      "name": "集合与常用逻辑用语",
+      "level": 1,
+      "description": "集合运算、充分必要条件、量词与命题"
+    },
+    {
+      "id": "kp-math-019",
+      "sql_id": 19,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "定义域与值域",
+      "level": 2,
+      "description": "求函数定义域和值域的基本方法，含复合函数定义域"
+    },
+    {
+      "id": "kp-math-020",
+      "sql_id": 20,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "单调性与奇偶性",
+      "level": 2,
+      "description": "判断函数单调性和奇偶性的方法，含导数法判断单调性"
+    },
+    {
+      "id": "kp-math-021",
+      "sql_id": 21,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "周期性",
+      "level": 2,
+      "description": "周期函数的定义、判断方法及最小正周期的求解"
+    },
+    {
+      "id": "kp-math-022",
+      "sql_id": 22,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "函数图像与变换",
+      "level": 2,
+      "description": "函数图像的平移、对称、伸缩变换及图像识别"
+    },
+    {
+      "id": "kp-math-023",
+      "sql_id": 23,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "指数函数与对数函数",
+      "level": 2,
+      "description": "指数函数和对数函数的图像、性质及比较大小"
+    },
+    {
+      "id": "kp-math-024",
+      "sql_id": 24,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "幂函数",
+      "level": 2,
+      "description": "幂函数的图像特征与性质，含幂函数单调性"
+    },
+    {
+      "id": "kp-math-025",
+      "sql_id": 25,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "导数的定义与几何意义",
+      "level": 2,
+      "description": "导数的定义、切线方程求解及导数的几何应用"
+    },
+    {
+      "id": "kp-math-026",
+      "sql_id": 26,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "利用导数研究单调性",
+      "level": 2,
+      "description": "利用导数判断函数的单调区间，含参讨论单调性"
+    },
+    {
+      "id": "kp-math-027",
+      "sql_id": 27,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "极值与最值",
+      "level": 2,
+      "description": "利用导数求函数的极值和闭区间上的最值"
+    },
+    {
+      "id": "kp-math-028",
+      "sql_id": 28,
+      "subject": "数学",
+      "chapter": "函数与导数",
+      "name": "函数零点问题",
+      "level": 2,
+      "description": "利用导数研究函数零点个数及零点存在性定理"
+    },
+    {
+      "id": "kp-math-029",
+      "sql_id": 29,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "直线的方程",
+      "level": 2,
+      "description": "直线的点斜式、斜截式、一般式及两直线位置关系"
+    },
+    {
+      "id": "kp-math-030",
+      "sql_id": 30,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "圆的方程",
+      "level": 2,
+      "description": "圆的标准方程、一般方程及直线与圆的位置关系"
+    },
+    {
+      "id": "kp-math-031",
+      "sql_id": 31,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "椭圆的标准方程与性质",
+      "level": 2,
+      "description": "椭圆的定义、标准方程、离心率及几何性质"
+    },
+    {
+      "id": "kp-math-032",
+      "sql_id": 32,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "双曲线的标准方程与性质",
+      "level": 2,
+      "description": "双曲线的定义、标准方程、渐近线及几何性质"
+    },
+    {
+      "id": "kp-math-033",
+      "sql_id": 33,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "抛物线的标准方程与性质",
+      "level": 2,
+      "description": "抛物线的定义、标准方程、焦点弦及几何性质"
+    },
+    {
+      "id": "kp-math-034",
+      "sql_id": 34,
+      "subject": "数学",
+      "chapter": "解析几何",
+      "name": "直线与圆锥曲线的位置关系",
+      "level": 2,
+      "description": "弦长公式、中点弦问题及直线与圆锥曲线综合"
+    },
+    {
+      "id": "kp-math-035",
+      "sql_id": 35,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "和差角公式",
+      "level": 2,
+      "description": "两角和与差的正弦、余弦、正切公式及应用"
+    },
+    {
+      "id": "kp-math-036",
+      "sql_id": 36,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "倍角公式与降幂公式",
+      "level": 2,
+      "description": "二倍角公式、降幂公式及三角恒等变换综合"
+    },
+    {
+      "id": "kp-math-037",
+      "sql_id": 37,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "正弦函数的图像与性质",
+      "level": 2,
+      "description": "正弦函数的图像、定义域、值域、周期、对称性"
+    },
+    {
+      "id": "kp-math-038",
+      "sql_id": 38,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "余弦函数的图像与性质",
+      "level": 2,
+      "description": "余弦函数的图像、定义域、值域、周期、对称性"
+    },
+    {
+      "id": "kp-math-039",
+      "sql_id": 39,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "三角函数的综合应用",
+      "level": 2,
+      "description": "三角函数的图像变换、最值及实际应用问题"
+    },
+    {
+      "id": "kp-math-040",
+      "sql_id": 40,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "正弦定理",
+      "level": 2,
+      "description": "正弦定理的证明及其在解三角形中的应用"
+    },
+    {
+      "id": "kp-math-041",
+      "sql_id": 41,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "余弦定理",
+      "level": 2,
+      "description": "余弦定理的证明及其在解三角形中的应用"
+    },
+    {
+      "id": "kp-math-042",
+      "sql_id": 42,
+      "subject": "数学",
+      "chapter": "三角函数与解三角形",
+      "name": "三角形面积公式",
+      "level": 2,
+      "description": "三角形面积公式及其在解三角形中的综合运用"
+    },
+    {
+      "id": "kp-math-043",
+      "sql_id": 43,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "等差数列通项与前n项和",
+      "level": 2,
+      "description": "等差数列的定义、通项公式及前n项和的推导与应用"
+    },
+    {
+      "id": "kp-math-044",
+      "sql_id": 44,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "等差数列性质",
+      "level": 2,
+      "description": "等差中项、下标和性质及等差数列判定"
+    },
+    {
+      "id": "kp-math-045",
+      "sql_id": 45,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "等比数列通项与前n项和",
+      "level": 2,
+      "description": "等比数列的定义、通项公式及前n项和的推导与应用"
+    },
+    {
+      "id": "kp-math-046",
+      "sql_id": 46,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "等比数列性质",
+      "level": 2,
+      "description": "等比中项、下标和性质及等比数列判定"
+    },
+    {
+      "id": "kp-math-047",
+      "sql_id": 47,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "裂项相消求和",
+      "level": 2,
+      "description": "裂项相消法的常见类型及求和技巧"
+    },
+    {
+      "id": "kp-math-048",
+      "sql_id": 48,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "错位相减求和",
+      "level": 2,
+      "description": "错位相减法求等差乘等比型数列的前n项和"
+    },
+    {
+      "id": "kp-math-049",
+      "sql_id": 49,
+      "subject": "数学",
+      "chapter": "数列",
+      "name": "数列递推与通项",
+      "level": 2,
+      "description": "由递推关系求通项公式的常用方法"
+    },
+    {
+      "id": "kp-math-050",
+      "sql_id": 50,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "空间向量的坐标运算",
+      "level": 2,
+      "description": "空间向量的坐标表示、加减、数乘及数量积运算"
+    },
+    {
+      "id": "kp-math-051",
+      "sql_id": 51,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "法向量的求解与应用",
+      "level": 2,
+      "description": "平面法向量的求解方法及在线面关系中的应用"
+    },
+    {
+      "id": "kp-math-052",
+      "sql_id": 52,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "异面直线夹角",
+      "level": 2,
+      "description": "利用空间向量求异面直线所成角"
+    },
+    {
+      "id": "kp-math-053",
+      "sql_id": 53,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "线面角",
+      "level": 2,
+      "description": "利用空间向量求直线与平面所成角"
+    },
+    {
+      "id": "kp-math-054",
+      "sql_id": 54,
+      "subject": "数学",
+      "chapter": "立体几何",
+      "name": "二面角",
+      "level": 2,
+      "description": "利用空间向量求二面角的平面角"
+    },
+    {
+      "id": "kp-math-055",
+      "sql_id": 55,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "古典概型",
+      "level": 2,
+      "description": "古典概型的计数方法及概率计算公式"
+    },
+    {
+      "id": "kp-math-056",
+      "sql_id": 56,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "几何概型",
+      "level": 2,
+      "description": "几何概型的长度、面积、体积模型及概率计算"
+    },
+    {
+      "id": "kp-math-057",
+      "sql_id": 57,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "条件概率与独立性",
+      "level": 2,
+      "description": "条件概率公式、乘法公式及事件独立性判断"
+    },
+    {
+      "id": "kp-math-058",
+      "sql_id": 58,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "离散型随机变量的分布列",
+      "level": 2,
+      "description": "分布列的求法、期望与方差的计算"
+    },
+    {
+      "id": "kp-math-059",
+      "sql_id": 59,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "二项分布与超几何分布",
+      "level": 2,
+      "description": "二项分布与超几何分布模型的识别与计算"
+    },
+    {
+      "id": "kp-math-060",
+      "sql_id": 60,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "正态分布",
+      "level": 2,
+      "description": "正态分布的性质、3σ原则及标准正态分布"
+    },
+    {
+      "id": "kp-math-061",
+      "sql_id": 61,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "频率分布直方图",
+      "level": 2,
+      "description": "频率分布直方图的绘制及均值、方差的估算"
+    },
+    {
+      "id": "kp-math-062",
+      "sql_id": 62,
+      "subject": "数学",
+      "chapter": "概率与统计",
+      "name": "线性回归与独立性检验",
+      "level": 2,
+      "description": "回归直线方程的求解及卡方独立性检验"
+    },
+    {
+      "id": "kp-math-063",
+      "sql_id": 63,
+      "subject": "数学",
+      "chapter": "平面向量",
+      "name": "向量的线性运算",
+      "level": 2,
+      "description": "向量的加减法、数乘运算及共线向量定理"
+    },
+    {
+      "id": "kp-math-064",
+      "sql_id": 64,
+      "subject": "数学",
+      "chapter": "平面向量",
+      "name": "向量的数量积",
+      "level": 2,
+      "description": "数量积的定义、坐标公式及在夹角、垂直中的应用"
+    },
+    {
+      "id": "kp-math-065",
+      "sql_id": 65,
+      "subject": "数学",
+      "chapter": "集合与逻辑",
+      "name": "集合的运算",
+      "level": 2,
+      "description": "交集、并集、补集运算及Venn图应用"
+    },
+    {
+      "id": "kp-math-066",
+      "sql_id": 66,
+      "subject": "数学",
+      "chapter": "集合与逻辑",
+      "name": "充要条件与命题",
+      "level": 2,
+      "description": "充分条件、必要条件、充要条件的判断及四种命题"
+    },
+    {
+      "id": "kp-chinese-001",
+      "sql_id": 67,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "论述类文本阅读",
+      "level": 1,
+      "description": "论述类文本的理解、分析与归纳能力考查"
+    },
+    {
+      "id": "kp-chinese-002",
+      "sql_id": 68,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "文学类文本阅读",
+      "level": 1,
+      "description": "小说、散文等文学类文本的鉴赏与分析"
+    },
+    {
+      "id": "kp-chinese-003",
+      "sql_id": 69,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "实用类文本阅读",
+      "level": 1,
+      "description": "新闻、传记、报告等实用类文本的信息提取与分析"
+    },
+    {
+      "id": "kp-chinese-004",
+      "sql_id": 70,
+      "subject": "语文",
+      "chapter": "文言文阅读",
+      "name": "文言文阅读",
+      "level": 1,
+      "description": "文言文的断句、翻译、内容理解与鉴赏"
+    },
+    {
+      "id": "kp-chinese-005",
+      "sql_id": 71,
+      "subject": "语文",
+      "chapter": "诗歌鉴赏",
+      "name": "诗歌鉴赏",
+      "level": 1,
+      "description": "古代诗歌的形象、语言、表达技巧及思想情感鉴赏"
+    },
+    {
+      "id": "kp-chinese-006",
+      "sql_id": 72,
+      "subject": "语文",
+      "chapter": "语言文字运用",
+      "name": "语言文字运用",
+      "level": 1,
+      "description": "成语、病句、衔接、补写等语言基础与运用能力"
+    },
+    {
+      "id": "kp-chinese-007",
+      "sql_id": 73,
+      "subject": "语文",
+      "chapter": "写作",
+      "name": "写作",
+      "level": 1,
+      "description": "议论文、记叙文等文体的审题立意与写作表达"
+    },
+    {
+      "id": "kp-chinese-008",
+      "sql_id": 74,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "论述类文本论证分析",
+      "level": 2,
+      "description": "分析论述类文本的论点、论据和论证方法"
+    },
+    {
+      "id": "kp-chinese-009",
+      "sql_id": 75,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "论述类文本信息筛选",
+      "level": 2,
+      "description": "筛选整合文中重要信息，理解关键概念"
+    },
+    {
+      "id": "kp-chinese-010",
+      "sql_id": 76,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "小说人物形象分析",
+      "level": 2,
+      "description": "分析小说中人物形象的特点及塑造手法"
+    },
+    {
+      "id": "kp-chinese-011",
+      "sql_id": 77,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "小说情节与结构",
+      "level": 2,
+      "description": "分析小说的情节安排、叙事手法及结构特点"
+    },
+    {
+      "id": "kp-chinese-012",
+      "sql_id": 78,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "散文主旨与情感",
+      "level": 2,
+      "description": "把握散文的主题思想、情感脉络及表现手法"
+    },
+    {
+      "id": "kp-chinese-013",
+      "sql_id": 79,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "散文语言赏析",
+      "level": 2,
+      "description": "赏析散文的语言特色、修辞手法及表达效果"
+    },
+    {
+      "id": "kp-chinese-014",
+      "sql_id": 80,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "实用类文本信息提取",
+      "level": 2,
+      "description": "从新闻、报告等文本中准确提取关键信息"
+    },
+    {
+      "id": "kp-chinese-015",
+      "sql_id": 81,
+      "subject": "语文",
+      "chapter": "现代文阅读",
+      "name": "实用类文本分析概括",
+      "level": 2,
+      "description": "分析概括实用类文本的主要观点和写作意图"
+    },
+    {
+      "id": "kp-chinese-016",
+      "sql_id": 82,
+      "subject": "语文",
+      "chapter": "文言文阅读",
+      "name": "文言实词与虚词",
+      "level": 2,
+      "description": "常见文言实词和虚词的意义及用法辨析"
+    },
+    {
+      "id": "kp-chinese-017",
+      "sql_id": 83,
+      "subject": "语文",
+      "chapter": "文言文阅读",
+      "name": "文言断句",
+      "level": 2,
+      "description": "文言文断句的基本方法和技巧"
+    },
+    {
+      "id": "kp-chinese-018",
+      "sql_id": 84,
+      "subject": "语文",
+      "chapter": "文言文阅读",
+      "name": "文言文翻译",
+      "level": 2,
+      "description": "文言语句翻译的原则与方法，信达雅的实现"
+    },
+    {
+      "id": "kp-chinese-019",
+      "sql_id": 85,
+      "subject": "语文",
+      "chapter": "文言文阅读",
+      "name": "文言文内容理解",
+      "level": 2,
+      "description": "理解文言文的内容要点和作者观点态度"
+    },
+    {
+      "id": "kp-chinese-020",
+      "sql_id": 86,
+      "subject": "语文",
+      "chapter": "诗歌鉴赏",
+      "name": "诗歌形象鉴赏",
+      "level": 2,
+      "description": "鉴赏诗歌中的人物形象、景物形象和事物形象"
+    },
+    {
+      "id": "kp-chinese-021",
+      "sql_id": 87,
+      "subject": "语文",
+      "chapter": "诗歌鉴赏",
+      "name": "诗歌语言赏析",
+      "level": 2,
+      "description": "赏析诗歌的炼字、炼句和语言风格"
+    },
+    {
+      "id": "kp-chinese-022",
+      "sql_id": 88,
+      "subject": "语文",
+      "chapter": "诗歌鉴赏",
+      "name": "诗歌表达技巧",
+      "level": 2,
+      "description": "分析诗歌中的修辞手法、表达方式和表现手法"
+    },
+    {
+      "id": "kp-chinese-023",
+      "sql_id": 89,
+      "subject": "语文",
+      "chapter": "诗歌鉴赏",
+      "name": "诗歌思想情感",
+      "level": 2,
+      "description": "把握诗歌的思想内容和作者的情感态度"
+    },
+    {
+      "id": "kp-chinese-024",
+      "sql_id": 90,
+      "subject": "语文",
+      "chapter": "语言文字运用",
+      "name": "成语辨析",
+      "level": 2,
+      "description": "常见成语的含义、使用语境及近义成语辨析"
+    },
+    {
+      "id": "kp-chinese-025",
+      "sql_id": 91,
+      "subject": "语文",
+      "chapter": "语言文字运用",
+      "name": "病句辨析与修改",
+      "level": 2,
+      "description": "识别语序不当、搭配不当等六种常见病句类型"
+    },
+    {
+      "id": "kp-chinese-026",
+      "sql_id": 92,
+      "subject": "语文",
+      "chapter": "语言文字运用",
+      "name": "语言表达连贯",
+      "level": 2,
+      "description": "语句衔接、排序及补写使语言表达连贯"
+    },
+    {
+      "id": "kp-chinese-027",
+      "sql_id": 93,
+      "subject": "语文",
+      "chapter": "语言文字运用",
+      "name": "图文转换",
+      "level": 2,
+      "description": "将图表、流程图等非文字信息转换为文字表达"
+    },
+    {
+      "id": "kp-chinese-028",
+      "sql_id": 94,
+      "subject": "语文",
+      "chapter": "写作",
+      "name": "审题立意",
+      "level": 2,
+      "description": "准确理解作文材料，确立文章中心论点"
+    },
+    {
+      "id": "kp-chinese-029",
+      "sql_id": 95,
+      "subject": "语文",
+      "chapter": "写作",
+      "name": "议论文论证方法",
+      "level": 2,
+      "description": "掌握举例论证、道理论证、对比论证等论证方法"
+    },
+    {
+      "id": "kp-chinese-030",
+      "sql_id": 96,
+      "subject": "语文",
+      "chapter": "写作",
+      "name": "作文结构与层次",
+      "level": 2,
+      "description": "合理安排文章结构，做到层次清晰、逻辑严密"
+    },
+    {
+      "id": "kp-chinese-031",
+      "sql_id": 97,
+      "subject": "语文",
+      "chapter": "写作",
+      "name": "语言表达与文采",
+      "level": 2,
+      "description": "运用恰当的修辞手法和句式使语言富有文采"
+    },
+    {
+      "id": "kp-english-001",
+      "sql_id": 98,
+      "subject": "英语",
+      "chapter": "听力",
+      "name": "听力理解",
+      "level": 1,
+      "description": "高考英语听力理解能力的考查"
+    },
+    {
+      "id": "kp-english-002",
+      "sql_id": 99,
+      "subject": "英语",
+      "chapter": "阅读理解",
+      "name": "阅读理解",
+      "level": 1,
+      "description": "高考英语阅读理解能力的考查"
+    },
+    {
+      "id": "kp-english-003",
+      "sql_id": 100,
+      "subject": "英语",
+      "chapter": "完形填空",
+      "name": "完形填空",
+      "level": 1,
+      "description": "高考英语完形填空能力的考查"
+    },
+    {
+      "id": "kp-english-004",
+      "sql_id": 101,
+      "subject": "英语",
+      "chapter": "语法填空",
+      "name": "语法填空",
+      "level": 1,
+      "description": "高考英语语法填空能力的考查"
+    },
+    {
+      "id": "kp-english-005",
+      "sql_id": 102,
+      "subject": "英语",
+      "chapter": "短文改错",
+      "name": "短文改错",
+      "level": 1,
+      "description": "高考英语短文改错能力的考查"
+    },
+    {
+      "id": "kp-english-006",
+      "sql_id": 103,
+      "subject": "英语",
+      "chapter": "写作",
+      "name": "书面表达",
+      "level": 1,
+      "description": "高考英语书面表达能力的考查"
+    },
+    {
+      "id": "kp-english-007",
+      "sql_id": 104,
+      "subject": "英语",
+      "chapter": "听力",
+      "name": "短对话理解",
+      "level": 2,
+      "description": "理解简短对话的主旨、细节及说话人意图"
+    },
+    {
+      "id": "kp-english-008",
+      "sql_id": 105,
+      "subject": "英语",
+      "chapter": "听力",
+      "name": "长对话与独白",
+      "level": 2,
+      "description": "理解较长对话和独白的内容、逻辑关系及隐含意义"
+    },
+    {
+      "id": "kp-english-009",
+      "sql_id": 106,
+      "subject": "英语",
+      "chapter": "听力",
+      "name": "数字与信息记录",
+      "level": 2,
+      "description": "准确捕捉听力中的数字、时间、地点等关键信息"
+    },
+    {
+      "id": "kp-english-010",
+      "sql_id": 107,
+      "subject": "英语",
+      "chapter": "阅读理解",
+      "name": "主旨大意题",
+      "level": 2,
+      "description": "概括文章或段落的主旨大意和标题选择"
+    },
+    {
+      "id": "kp-english-011",
+      "sql_id": 108,
+      "subject": "英语",
+      "chapter": "阅读理解",
+      "name": "细节理解题",
+      "level": 2,
+      "description": "准确定位并理解文章中的具体信息和细节"
+    },
+    {
+      "id": "kp-english-012",
+      "sql_id": 109,
+      "subject": "英语",
+      "chapter": "阅读理解",
+      "name": "推理判断题",
+      "level": 2,
+      "description": "根据文章内容进行逻辑推理和判断"
+    },
+    {
+      "id": "kp-english-013",
+      "sql_id": 110,
+      "subject": "英语",
+      "chapter": "阅读理解",
+      "name": "词义猜测题",
+      "level": 2,
+      "description": "根据上下文语境猜测生词或短语的含义"
+    },
+    {
+      "id": "kp-english-014",
+      "sql_id": 111,
+      "subject": "英语",
+      "chapter": "阅读理解",
+      "name": "七选五阅读",
+      "level": 2,
+      "description": "根据文章逻辑结构和衔接手段选择合适句子填空"
+    },
+    {
+      "id": "kp-english-015",
+      "sql_id": 112,
+      "subject": "英语",
+      "chapter": "完形填空",
+      "name": "上下文逻辑推理",
+      "level": 2,
+      "description": "根据上下文逻辑关系和语义线索选择正确选项"
+    },
+    {
+      "id": "kp-english-016",
+      "sql_id": 113,
+      "subject": "英语",
+      "chapter": "完形填空",
+      "name": "词汇搭配与辨析",
+      "level": 2,
+      "description": "常见词汇的固定搭配、近义词辨析及习惯用法"
+    },
+    {
+      "id": "kp-english-017",
+      "sql_id": 114,
+      "subject": "英语",
+      "chapter": "完形填空",
+      "name": "语法结构分析",
+      "level": 2,
+      "description": "通过分析句子语法结构选择符合语法的选项"
+    },
+    {
+      "id": "kp-english-018",
+      "sql_id": 115,
+      "subject": "英语",
+      "chapter": "语法填空",
+      "name": "动词时态与语态",
+      "level": 2,
+      "description": "正确判断和使用动词的各种时态和语态"
+    },
+    {
+      "id": "kp-english-019",
+      "sql_id": 116,
+      "subject": "英语",
+      "chapter": "语法填空",
+      "name": "非谓语动词",
+      "level": 2,
+      "description": "不定式、动名词、分词的正确形式和使用"
+    },
+    {
+      "id": "kp-english-020",
+      "sql_id": 117,
+      "subject": "英语",
+      "chapter": "语法填空",
+      "name": "从句与连接词",
+      "level": 2,
+      "description": "名词性从句、定语从句、状语从句的连接词选择"
+    },
+    {
+      "id": "kp-english-021",
+      "sql_id": 118,
+      "subject": "英语",
+      "chapter": "语法填空",
+      "name": "词性转换",
+      "level": 2,
+      "description": "名词、动词、形容词、副词之间的正确转换"
+    },
+    {
+      "id": "kp-english-022",
+      "sql_id": 119,
+      "subject": "英语",
+      "chapter": "短文改错",
+      "name": "动词形式错误",
+      "level": 2,
+      "description": "识别并纠正动词时态、语态、主谓一致等错误"
+    },
+    {
+      "id": "kp-english-023",
+      "sql_id": 120,
+      "subject": "英语",
+      "chapter": "短文改错",
+      "name": "连词与介词错误",
+      "level": 2,
+      "description": "识别并纠正连词、介词使用不当的错误"
+    },
+    {
+      "id": "kp-english-024",
+      "sql_id": 121,
+      "subject": "英语",
+      "chapter": "短文改错",
+      "name": "词性误用",
+      "level": 2,
+      "description": "识别并纠正形容词与副词混淆等词性错误"
+    },
+    {
+      "id": "kp-english-025",
+      "sql_id": 122,
+      "subject": "英语",
+      "chapter": "写作",
+      "name": "书信类写作",
+      "level": 2,
+      "description": "书信、邮件等应用文的基本格式和常用表达"
+    },
+    {
+      "id": "kp-english-026",
+      "sql_id": 123,
+      "subject": "英语",
+      "chapter": "写作",
+      "name": "议论文写作",
+      "level": 2,
+      "description": "议论文的结构、论点论据组织及高级表达"
+    },
+    {
+      "id": "kp-english-027",
+      "sql_id": 124,
+      "subject": "英语",
+      "chapter": "写作",
+      "name": "图表类写作",
+      "level": 2,
+      "description": "图表描述、数据分析及趋势表达"
+    },
+    {
+      "id": "kp-english-028",
+      "sql_id": 125,
+      "subject": "英语",
+      "chapter": "写作",
+      "name": "读后续写",
+      "level": 2,
+      "description": "根据所给短文内容进行合理续写，保持逻辑和风格一致"
+    },
+    {
+      "id": "kp-physics-001",
+      "sql_id": 126,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "直线运动",
+      "level": 1,
+      "description": "匀变速直线运动规律及图像分析"
+    },
+    {
+      "id": "kp-physics-002",
+      "sql_id": 127,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "相互作用",
+      "level": 1,
+      "description": "重力、弹力、摩擦力及力的合成与分解"
+    },
+    {
+      "id": "kp-physics-003",
+      "sql_id": 128,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "牛顿运动定律",
+      "level": 1,
+      "description": "牛顿三大定律及其在动力学问题中的应用"
+    },
+    {
+      "id": "kp-physics-004",
+      "sql_id": 129,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "曲线运动",
+      "level": 1,
+      "description": "平抛运动、圆周运动的基本规律"
+    },
+    {
+      "id": "kp-physics-005",
+      "sql_id": 130,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "万有引力与航天",
+      "level": 1,
+      "description": "万有引力定律及天体运动"
+    },
+    {
+      "id": "kp-physics-006",
+      "sql_id": 131,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "机械能守恒",
+      "level": 1,
+      "description": "功、功率、动能定理及机械能守恒定律"
+    },
+    {
+      "id": "kp-physics-007",
+      "sql_id": 132,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "动量守恒",
+      "level": 1,
+      "description": "动量定理、动量守恒定律及碰撞问题"
+    },
+    {
+      "id": "kp-physics-008",
+      "sql_id": 133,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "静电场",
+      "level": 1,
+      "description": "电场强度、电势、电容及带电粒子在电场中的运动"
+    },
+    {
+      "id": "kp-physics-009",
+      "sql_id": 134,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "恒定电流",
+      "level": 1,
+      "description": "欧姆定律、电阻定律、电功与电功率"
+    },
+    {
+      "id": "kp-physics-010",
+      "sql_id": 135,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "磁场",
+      "level": 1,
+      "description": "安培力、洛伦兹力及带电粒子在磁场中的运动"
+    },
+    {
+      "id": "kp-physics-011",
+      "sql_id": 136,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "电磁感应",
+      "level": 1,
+      "description": "法拉第电磁感应定律、楞次定律及感应电动势"
+    },
+    {
+      "id": "kp-physics-012",
+      "sql_id": 137,
+      "subject": "物理",
+      "chapter": "热学",
+      "name": "热学",
+      "level": 1,
+      "description": "分子动理论、热力学定律及理想气体状态方程"
+    },
+    {
+      "id": "kp-physics-013",
+      "sql_id": 138,
+      "subject": "物理",
+      "chapter": "光学",
+      "name": "光学",
+      "level": 1,
+      "description": "光的反射、折射、干涉、衍射及偏振"
+    },
+    {
+      "id": "kp-physics-014",
+      "sql_id": 139,
+      "subject": "物理",
+      "chapter": "原子物理",
+      "name": "原子与原子核",
+      "level": 1,
+      "description": "原子结构、能级跃迁、核反应及放射性"
+    },
+    {
+      "id": "kp-physics-015",
+      "sql_id": 140,
+      "subject": "物理",
+      "chapter": "实验",
+      "name": "物理实验",
+      "level": 1,
+      "description": "高考常见力学和电学实验的原理与操作"
+    },
+    {
+      "id": "kp-physics-016",
+      "sql_id": 141,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "匀变速直线运动公式",
+      "level": 2,
+      "description": "位移公式、速度公式的推导与综合应用"
+    },
+    {
+      "id": "kp-physics-017",
+      "sql_id": 142,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "运动图像分析",
+      "level": 2,
+      "description": "x-t图像和v-t图像的识别、斜率与面积含义"
+    },
+    {
+      "id": "kp-physics-018",
+      "sql_id": 143,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "力的合成与分解",
+      "level": 2,
+      "description": "平行四边形定则及正交分解法的应用"
+    },
+    {
+      "id": "kp-physics-019",
+      "sql_id": 144,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "受力分析",
+      "level": 2,
+      "description": "整体法与隔离法在受力分析中的运用"
+    },
+    {
+      "id": "kp-physics-020",
+      "sql_id": 145,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "牛顿第二定律应用",
+      "level": 2,
+      "description": "用牛顿第二定律解决连接体及临界问题"
+    },
+    {
+      "id": "kp-physics-021",
+      "sql_id": 146,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "超重与失重",
+      "level": 2,
+      "description": "超重和失重的判断及其在生活中的应用"
+    },
+    {
+      "id": "kp-physics-022",
+      "sql_id": 147,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "平抛运动",
+      "level": 2,
+      "description": "平抛运动的分解及规律应用"
+    },
+    {
+      "id": "kp-physics-023",
+      "sql_id": 148,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "圆周运动",
+      "level": 2,
+      "description": "向心力、向心加速度及竖直面内的圆周运动"
+    },
+    {
+      "id": "kp-physics-024",
+      "sql_id": 149,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "万有引力定律应用",
+      "level": 2,
+      "description": "万有引力提供向心力分析天体运动"
+    },
+    {
+      "id": "kp-physics-025",
+      "sql_id": 150,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "宇宙速度与卫星",
+      "level": 2,
+      "description": "三大宇宙速度及人造卫星的运行规律"
+    },
+    {
+      "id": "kp-physics-026",
+      "sql_id": 151,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "动能定理",
+      "level": 2,
+      "description": "动能定理的推导及在多过程问题中的应用"
+    },
+    {
+      "id": "kp-physics-027",
+      "sql_id": 152,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "机械能守恒定律",
+      "level": 2,
+      "description": "机械能守恒的条件判断及综合运用"
+    },
+    {
+      "id": "kp-physics-028",
+      "sql_id": 153,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "动量定理",
+      "level": 2,
+      "description": "动量定理的推导及在碰撞、打击问题中的应用"
+    },
+    {
+      "id": "kp-physics-029",
+      "sql_id": 154,
+      "subject": "物理",
+      "chapter": "力学",
+      "name": "动量守恒与碰撞",
+      "level": 2,
+      "description": "弹性碰撞与非弹性碰撞的分析计算"
+    },
+    {
+      "id": "kp-physics-030",
+      "sql_id": 155,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "电场强度与电场线",
+      "level": 2,
+      "description": "电场强度的定义、叠加及电场线的理解"
+    },
+    {
+      "id": "kp-physics-031",
+      "sql_id": 156,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "电势与电势差",
+      "level": 2,
+      "description": "电势的概念、电势差与电场力做功的关系"
+    },
+    {
+      "id": "kp-physics-032",
+      "sql_id": 157,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "电容器",
+      "level": 2,
+      "description": "电容的定义、平行板电容器及动态分析"
+    },
+    {
+      "id": "kp-physics-033",
+      "sql_id": 158,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "闭合电路欧姆定律",
+      "level": 2,
+      "description": "闭合电路欧姆定律及电路动态分析"
+    },
+    {
+      "id": "kp-physics-034",
+      "sql_id": 159,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "安培力",
+      "level": 2,
+      "description": "安培力的大小方向判断及通电导线受力分析"
+    },
+    {
+      "id": "kp-physics-035",
+      "sql_id": 160,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "带电粒子在磁场中的运动",
+      "level": 2,
+      "description": "洛伦兹力提供向心力的圆周运动分析"
+    },
+    {
+      "id": "kp-physics-036",
+      "sql_id": 161,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "法拉第电磁感应定律",
+      "level": 2,
+      "description": "感应电动势的计算及楞次定律的应用"
+    },
+    {
+      "id": "kp-physics-037",
+      "sql_id": 162,
+      "subject": "物理",
+      "chapter": "电磁学",
+      "name": "电磁感应综合",
+      "level": 2,
+      "description": "电磁感应中的电路问题和力学综合"
+    },
+    {
+      "id": "kp-physics-038",
+      "sql_id": 163,
+      "subject": "物理",
+      "chapter": "热学",
+      "name": "理想气体状态方程",
+      "level": 2,
+      "description": "理想气体三个实验定律及状态方程的综合应用"
+    },
+    {
+      "id": "kp-physics-039",
+      "sql_id": 164,
+      "subject": "物理",
+      "chapter": "热学",
+      "name": "热力学定律",
+      "level": 2,
+      "description": "热力学第一定律、第二定律的理解与应用"
+    },
+    {
+      "id": "kp-physics-040",
+      "sql_id": 165,
+      "subject": "物理",
+      "chapter": "光学",
+      "name": "光的折射与全反射",
+      "level": 2,
+      "description": "折射定律、折射率及全反射条件的判断"
+    },
+    {
+      "id": "kp-physics-041",
+      "sql_id": 166,
+      "subject": "物理",
+      "chapter": "光学",
+      "name": "光的干涉与衍射",
+      "level": 2,
+      "description": "双缝干涉、薄膜干涉及单缝衍射的规律"
+    },
+    {
+      "id": "kp-physics-042",
+      "sql_id": 167,
+      "subject": "物理",
+      "chapter": "原子物理",
+      "name": "玻尔模型与能级跃迁",
+      "level": 2,
+      "description": "氢原子能级图及跃迁时吸收或辐射光子的计算"
+    },
+    {
+      "id": "kp-physics-043",
+      "sql_id": 168,
+      "subject": "物理",
+      "chapter": "原子物理",
+      "name": "核反应与核能",
+      "level": 2,
+      "description": "衰变、裂变、聚变及质能方程的应用"
+    },
+    {
+      "id": "kp-physics-044",
+      "sql_id": 169,
+      "subject": "物理",
+      "chapter": "实验",
+      "name": "力学实验",
+      "level": 2,
+      "description": "打点计时器、验证牛顿第二定律、验证机械能守恒等实验"
+    },
+    {
+      "id": "kp-physics-045",
+      "sql_id": 170,
+      "subject": "物理",
+      "chapter": "实验",
+      "name": "电学实验",
+      "level": 2,
+      "description": "测电阻、测电源电动势与内阻、多用电表使用等实验"
+    },
+    {
+      "id": "kp-chemistry-001",
+      "sql_id": 171,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "物质的量与化学计量",
+      "level": 1,
+      "description": "物质的量、摩尔质量、气体摩尔体积及物质的量浓度"
+    },
+    {
+      "id": "kp-chemistry-002",
+      "sql_id": 172,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "离子反应与氧化还原",
+      "level": 1,
+      "description": "离子反应方程式的书写及氧化还原反应的分析"
+    },
+    {
+      "id": "kp-chemistry-003",
+      "sql_id": 173,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "元素周期律",
+      "level": 1,
+      "description": "元素周期表的结构及元素性质的周期性变化规律"
+    },
+    {
+      "id": "kp-chemistry-004",
+      "sql_id": 174,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "化学键与分子结构",
+      "level": 1,
+      "description": "离子键、共价键及分子的空间构型"
+    },
+    {
+      "id": "kp-chemistry-005",
+      "sql_id": 175,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "金属元素及其化合物",
+      "level": 1,
+      "description": "钠、铝、铁、铜等金属及其化合物的性质"
+    },
+    {
+      "id": "kp-chemistry-006",
+      "sql_id": 176,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "非金属元素及其化合物",
+      "level": 1,
+      "description": "氯、硫、氮、硅等非金属及其化合物的性质"
+    },
+    {
+      "id": "kp-chemistry-007",
+      "sql_id": 177,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "化学反应与能量",
+      "level": 1,
+      "description": "反应热、热化学方程式及盖斯定律"
+    },
+    {
+      "id": "kp-chemistry-008",
+      "sql_id": 178,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "化学反应速率与平衡",
+      "level": 1,
+      "description": "化学反应速率的影响因素及化学平衡的移动"
+    },
+    {
+      "id": "kp-chemistry-009",
+      "sql_id": 179,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "水溶液中的离子平衡",
+      "level": 1,
+      "description": "弱电解质的电离、水的电离、盐类水解及沉淀溶解平衡"
+    },
+    {
+      "id": "kp-chemistry-010",
+      "sql_id": 180,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "电化学",
+      "level": 1,
+      "description": "原电池和电解池的工作原理及应用"
+    },
+    {
+      "id": "kp-chemistry-011",
+      "sql_id": 181,
+      "subject": "化学",
+      "chapter": "有机化学",
+      "name": "有机化学",
+      "level": 1,
+      "description": "烃及烃的衍生物的结构、性质与转化"
+    },
+    {
+      "id": "kp-chemistry-012",
+      "sql_id": 182,
+      "subject": "化学",
+      "chapter": "实验",
+      "name": "化学实验",
+      "level": 1,
+      "description": "常见化学实验的基本操作、设计与评价"
+    },
+    {
+      "id": "kp-chemistry-013",
+      "sql_id": 183,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "阿伏加德罗常数",
+      "level": 2,
+      "description": "阿伏加德罗常数的相关计算与判断"
+    },
+    {
+      "id": "kp-chemistry-014",
+      "sql_id": 184,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "物质的量浓度计算",
+      "level": 2,
+      "description": "物质的量浓度的计算及溶液配制"
+    },
+    {
+      "id": "kp-chemistry-015",
+      "sql_id": 185,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "离子方程式正误判断",
+      "level": 2,
+      "description": "离子反应方程式的书写规则及正误判断方法"
+    },
+    {
+      "id": "kp-chemistry-016",
+      "sql_id": 186,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "氧化还原反应配平",
+      "level": 2,
+      "description": "化合价升降法配平氧化还原反应方程式"
+    },
+    {
+      "id": "kp-chemistry-017",
+      "sql_id": 187,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "原子结构与元素周期表",
+      "level": 2,
+      "description": "原子核外电子排布规律及元素在周期表中的位置"
+    },
+    {
+      "id": "kp-chemistry-018",
+      "sql_id": 188,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "元素周期律应用",
+      "level": 2,
+      "description": "利用元素周期律比较元素金属性、非金属性等性质"
+    },
+    {
+      "id": "kp-chemistry-019",
+      "sql_id": 189,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "共价键与分子极性",
+      "level": 2,
+      "description": "σ键与π键、键参数及分子极性的判断"
+    },
+    {
+      "id": "kp-chemistry-020",
+      "sql_id": 190,
+      "subject": "化学",
+      "chapter": "基本概念与理论",
+      "name": "分子空间构型",
+      "level": 2,
+      "description": "价层电子对互斥理论及杂化轨道理论判断分子构型"
+    },
+    {
+      "id": "kp-chemistry-021",
+      "sql_id": 191,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "钠及其化合物",
+      "level": 2,
+      "description": "钠、氧化钠、过氧化钠、碳酸钠与碳酸氢钠的性质"
+    },
+    {
+      "id": "kp-chemistry-022",
+      "sql_id": 192,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "铝及其化合物",
+      "level": 2,
+      "description": "铝、氧化铝、氢氧化铝的两性及铝三角转化"
+    },
+    {
+      "id": "kp-chemistry-023",
+      "sql_id": 193,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "铁及其化合物",
+      "level": 2,
+      "description": "铁的氧化物、氢氧化物及铁离子的检验"
+    },
+    {
+      "id": "kp-chemistry-024",
+      "sql_id": 194,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "氯及其化合物",
+      "level": 2,
+      "description": "氯气的性质、氯水的成分及漂白性"
+    },
+    {
+      "id": "kp-chemistry-025",
+      "sql_id": 195,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "硫及其化合物",
+      "level": 2,
+      "description": "二氧化硫的性质及浓硫酸的特性"
+    },
+    {
+      "id": "kp-chemistry-026",
+      "sql_id": 196,
+      "subject": "化学",
+      "chapter": "元素化合物",
+      "name": "氮及其化合物",
+      "level": 2,
+      "description": "氨的性质、硝酸的性质及氮氧化物"
+    },
+    {
+      "id": "kp-chemistry-027",
+      "sql_id": 197,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "反应热与热化学方程式",
+      "level": 2,
+      "description": "反应热的计算及热化学方程式的书写"
+    },
+    {
+      "id": "kp-chemistry-028",
+      "sql_id": 198,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "盖斯定律应用",
+      "level": 2,
+      "description": "利用盖斯定律计算目标反应的反应热"
+    },
+    {
+      "id": "kp-chemistry-029",
+      "sql_id": 199,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "化学反应速率",
+      "level": 2,
+      "description": "浓度、温度、压强、催化剂对反应速率的影响"
+    },
+    {
+      "id": "kp-chemistry-030",
+      "sql_id": 200,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "化学平衡常数",
+      "level": 2,
+      "description": "平衡常数的表达式、计算及影响因素"
+    },
+    {
+      "id": "kp-chemistry-031",
+      "sql_id": 201,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "弱电解质的电离平衡",
+      "level": 2,
+      "description": "电离平衡常数的计算及影响因素"
+    },
+    {
+      "id": "kp-chemistry-032",
+      "sql_id": 202,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "盐类水解",
+      "level": 2,
+      "description": "盐类水解的规律、影响因素及离子浓度比较"
+    },
+    {
+      "id": "kp-chemistry-033",
+      "sql_id": 203,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "沉淀溶解平衡",
+      "level": 2,
+      "description": "溶度积常数的应用及沉淀的生成与转化"
+    },
+    {
+      "id": "kp-chemistry-034",
+      "sql_id": 204,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "原电池原理",
+      "level": 2,
+      "description": "原电池的工作原理及电极反应式的书写"
+    },
+    {
+      "id": "kp-chemistry-035",
+      "sql_id": 205,
+      "subject": "化学",
+      "chapter": "化学反应原理",
+      "name": "电解池原理",
+      "level": 2,
+      "description": "电解池的工作原理及电极产物的判断"
+    },
+    {
+      "id": "kp-chemistry-036",
+      "sql_id": 206,
+      "subject": "化学",
+      "chapter": "有机化学",
+      "name": "烃的结构与性质",
+      "level": 2,
+      "description": "烷烃、烯烃、炔烃、苯及其同系物的性质"
+    },
+    {
+      "id": "kp-chemistry-037",
+      "sql_id": 207,
+      "subject": "化学",
+      "chapter": "有机化学",
+      "name": "烃的衍生物",
+      "level": 2,
+      "description": "卤代烃、醇、酚、醛、羧酸、酯的性质与转化"
+    },
+    {
+      "id": "kp-chemistry-038",
+      "sql_id": 208,
+      "subject": "化学",
+      "chapter": "有机化学",
+      "name": "有机合成与推断",
+      "level": 2,
+      "description": "有机合成路线的设计与有机推断题的解题方法"
+    },
+    {
+      "id": "kp-chemistry-039",
+      "sql_id": 209,
+      "subject": "化学",
+      "chapter": "实验",
+      "name": "物质的分离与提纯",
+      "level": 2,
+      "description": "过滤、蒸馏、萃取、分液等分离提纯方法"
+    },
+    {
+      "id": "kp-chemistry-040",
+      "sql_id": 210,
+      "subject": "化学",
+      "chapter": "实验",
+      "name": "气体制备与检验",
+      "level": 2,
+      "description": "常见气体的制备装置、收集方法及检验方法"
+    },
+    {
+      "id": "kp-chemistry-041",
+      "sql_id": 211,
+      "subject": "化学",
+      "chapter": "实验",
+      "name": "定量实验",
+      "level": 2,
+      "description": "中和滴定、一定物质的量浓度溶液的配制等定量实验"
+    },
+    {
+      "id": "kp-biology-001",
+      "sql_id": 212,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞的分子组成",
+      "level": 1,
+      "description": "蛋白质、核酸、糖类、脂质等生物大分子的结构与功能"
+    },
+    {
+      "id": "kp-biology-002",
+      "sql_id": 213,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞的结构与功能",
+      "level": 1,
+      "description": "细胞膜、细胞器、细胞核的结构与功能"
+    },
+    {
+      "id": "kp-biology-003",
+      "sql_id": 214,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞的代谢",
+      "level": 1,
+      "description": "酶、ATP、光合作用与细胞呼吸"
+    },
+    {
+      "id": "kp-biology-004",
+      "sql_id": 215,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞的生命历程",
+      "level": 1,
+      "description": "细胞增殖、分化、衰老与凋亡"
+    },
+    {
+      "id": "kp-biology-005",
+      "sql_id": 216,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "遗传的基本规律",
+      "level": 1,
+      "description": "分离定律、自由组合定律及伴性遗传"
+    },
+    {
+      "id": "kp-biology-006",
+      "sql_id": 217,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "遗传的分子基础",
+      "level": 1,
+      "description": "DNA的结构与复制、基因的表达"
+    },
+    {
+      "id": "kp-biology-007",
+      "sql_id": 218,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "变异与育种",
+      "level": 1,
+      "description": "基因突变、基因重组、染色体变异及育种方法"
+    },
+    {
+      "id": "kp-biology-008",
+      "sql_id": 219,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "生物进化",
+      "level": 1,
+      "description": "自然选择学说、物种形成及共同进化"
+    },
+    {
+      "id": "kp-biology-009",
+      "sql_id": 220,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "人体的内环境与稳态",
+      "level": 1,
+      "description": "内环境的组成、稳态调节机制及神经体液免疫调节"
+    },
+    {
+      "id": "kp-biology-010",
+      "sql_id": 221,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "植物激素调节",
+      "level": 1,
+      "description": "生长素的发现、生理作用及其它植物激素"
+    },
+    {
+      "id": "kp-biology-011",
+      "sql_id": 222,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "种群与群落",
+      "level": 1,
+      "description": "种群的数量特征、群落的结构与演替"
+    },
+    {
+      "id": "kp-biology-012",
+      "sql_id": 223,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "生态系统",
+      "level": 1,
+      "description": "生态系统的结构、能量流动、物质循环与信息传递"
+    },
+    {
+      "id": "kp-biology-013",
+      "sql_id": 224,
+      "subject": "生物",
+      "chapter": "生物技术",
+      "name": "基因工程与细胞工程",
+      "level": 1,
+      "description": "基因工程的基本工具与操作、细胞工程的基本技术"
+    },
+    {
+      "id": "kp-biology-014",
+      "sql_id": 225,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "蛋白质的结构与功能",
+      "level": 2,
+      "description": "氨基酸的结构、蛋白质的结构层次及功能多样性"
+    },
+    {
+      "id": "kp-biology-015",
+      "sql_id": 226,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "核酸的结构与功能",
+      "level": 2,
+      "description": "DNA和RNA的化学组成、结构及功能比较"
+    },
+    {
+      "id": "kp-biology-016",
+      "sql_id": 227,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞膜的结构与功能",
+      "level": 2,
+      "description": "流动镶嵌模型及细胞膜的选择透过性、信息交流功能"
+    },
+    {
+      "id": "kp-biology-017",
+      "sql_id": 228,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞器的分工合作",
+      "level": 2,
+      "description": "线粒体、叶绿体、内质网等细胞器的结构与功能"
+    },
+    {
+      "id": "kp-biology-018",
+      "sql_id": 229,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "酶的特性",
+      "level": 2,
+      "description": "酶的高效性、专一性及影响酶活性的因素"
+    },
+    {
+      "id": "kp-biology-019",
+      "sql_id": 230,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "光合作用的过程",
+      "level": 2,
+      "description": "光反应与暗反应的物质变化、能量转换及影响因素"
+    },
+    {
+      "id": "kp-biology-020",
+      "sql_id": 231,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "细胞呼吸",
+      "level": 2,
+      "description": "有氧呼吸与无氧呼吸的过程、场所及能量变化"
+    },
+    {
+      "id": "kp-biology-021",
+      "sql_id": 232,
+      "subject": "生物",
+      "chapter": "分子与细胞",
+      "name": "有丝分裂",
+      "level": 2,
+      "description": "有丝分裂各时期的特征及染色体行为变化"
+    },
+    {
+      "id": "kp-biology-022",
+      "sql_id": 233,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "基因分离定律",
+      "level": 2,
+      "description": "孟德尔一对相对性状的杂交实验及分离定律的应用"
+    },
+    {
+      "id": "kp-biology-023",
+      "sql_id": 234,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "基因自由组合定律",
+      "level": 2,
+      "description": "两对相对性状的遗传规律及自由组合定律的应用"
+    },
+    {
+      "id": "kp-biology-024",
+      "sql_id": 235,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "伴性遗传",
+      "level": 2,
+      "description": "伴X隐性遗传、伴X显性遗传的特点及遗传图谱分析"
+    },
+    {
+      "id": "kp-biology-025",
+      "sql_id": 236,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "DNA复制",
+      "level": 2,
+      "description": "DNA半保留复制的条件、过程及特点"
+    },
+    {
+      "id": "kp-biology-026",
+      "sql_id": 237,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "基因的表达",
+      "level": 2,
+      "description": "转录和翻译的过程、场所及中心法则"
+    },
+    {
+      "id": "kp-biology-027",
+      "sql_id": 238,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "基因突变",
+      "level": 2,
+      "description": "基因突变的概念、特点及原因"
+    },
+    {
+      "id": "kp-biology-028",
+      "sql_id": 239,
+      "subject": "生物",
+      "chapter": "遗传与进化",
+      "name": "染色体变异",
+      "level": 2,
+      "description": "染色体结构变异和数目变异的类型及应用"
+    },
+    {
+      "id": "kp-biology-029",
+      "sql_id": 240,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "神经调节",
+      "level": 2,
+      "description": "反射弧、兴奋在神经纤维上的传导及突触传递"
+    },
+    {
+      "id": "kp-biology-030",
+      "sql_id": 241,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "体液调节",
+      "level": 2,
+      "description": "激素调节的特点及血糖调节、体温调节"
+    },
+    {
+      "id": "kp-biology-031",
+      "sql_id": 242,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "免疫调节",
+      "level": 2,
+      "description": "体液免疫和细胞免疫的过程及免疫异常"
+    },
+    {
+      "id": "kp-biology-032",
+      "sql_id": 243,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "生长素的生理作用",
+      "level": 2,
+      "description": "生长素的产生、运输、分布及两重性"
+    },
+    {
+      "id": "kp-biology-033",
+      "sql_id": 244,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "种群数量变化",
+      "level": 2,
+      "description": "种群增长的J型和S型曲线及K值"
+    },
+    {
+      "id": "kp-biology-034",
+      "sql_id": 245,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "能量流动",
+      "level": 2,
+      "description": "生态系统的能量流动过程和特点"
+    },
+    {
+      "id": "kp-biology-035",
+      "sql_id": 246,
+      "subject": "生物",
+      "chapter": "稳态与环境",
+      "name": "物质循环",
+      "level": 2,
+      "description": "碳循环过程及物质循环与能量流动的关系"
+    },
+    {
+      "id": "kp-biology-036",
+      "sql_id": 247,
+      "subject": "生物",
+      "chapter": "生物技术",
+      "name": "基因工程操作步骤",
+      "level": 2,
+      "description": "目的基因获取、基因表达载体构建、导入与检测"
+    },
+    {
+      "id": "kp-biology-037",
+      "sql_id": 248,
+      "subject": "生物",
+      "chapter": "生物技术",
+      "name": "PCR技术",
+      "level": 2,
+      "description": "PCR的原理、条件及操作过程"
+    },
+    {
+      "id": "kp-politics-001",
+      "sql_id": 249,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "生活与消费",
+      "level": 1,
+      "description": "货币的本质、价格变动的影响及消费观念"
+    },
+    {
+      "id": "kp-politics-002",
+      "sql_id": 250,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "生产、劳动与经营",
+      "level": 1,
+      "description": "生产与消费的关系、基本经济制度及企业经营"
+    },
+    {
+      "id": "kp-politics-003",
+      "sql_id": 251,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "收入与分配",
+      "level": 1,
+      "description": "分配制度、财政与税收"
+    },
+    {
+      "id": "kp-politics-004",
+      "sql_id": 252,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "市场经济与对外开放",
+      "level": 1,
+      "description": "市场调节与宏观调控、经济全球化与对外开放"
+    },
+    {
+      "id": "kp-politics-005",
+      "sql_id": 253,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "公民的政治生活",
+      "level": 1,
+      "description": "公民的政治权利与义务及政治参与途径"
+    },
+    {
+      "id": "kp-politics-006",
+      "sql_id": 254,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "为人民服务的政府",
+      "level": 1,
+      "description": "政府的职能、责任及权力的行使与监督"
+    },
+    {
+      "id": "kp-politics-007",
+      "sql_id": 255,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "发展社会主义民主政治",
+      "level": 1,
+      "description": "人民代表大会制度、政党制度及民族区域自治制度"
+    },
+    {
+      "id": "kp-politics-008",
+      "sql_id": 256,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "当代国际社会",
+      "level": 1,
+      "description": "国际关系、时代主题及我国外交政策"
+    },
+    {
+      "id": "kp-politics-009",
+      "sql_id": 257,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "文化与生活",
+      "level": 1,
+      "description": "文化的内涵、作用及文化对人的影响"
+    },
+    {
+      "id": "kp-politics-010",
+      "sql_id": 258,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "文化传承与创新",
+      "level": 1,
+      "description": "文化多样性、文化传播、继承与创新"
+    },
+    {
+      "id": "kp-politics-011",
+      "sql_id": 259,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "中华文化与民族精神",
+      "level": 1,
+      "description": "中华文化的特征及民族精神的内涵与弘扬"
+    },
+    {
+      "id": "kp-politics-012",
+      "sql_id": 260,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "发展中国特色社会主义文化",
+      "level": 1,
+      "description": "文化强国、文化自信及社会主义核心价值观"
+    },
+    {
+      "id": "kp-politics-013",
+      "sql_id": 261,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "唯物论与认识论",
+      "level": 1,
+      "description": "物质与意识的关系、实践与认识的关系"
+    },
+    {
+      "id": "kp-politics-014",
+      "sql_id": 262,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "唯物辩证法",
+      "level": 1,
+      "description": "联系观、发展观、矛盾观及辩证否定观"
+    },
+    {
+      "id": "kp-politics-015",
+      "sql_id": 263,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "历史唯物主义",
+      "level": 1,
+      "description": "社会存在与社会意识、社会基本矛盾及人生价值"
+    },
+    {
+      "id": "kp-politics-016",
+      "sql_id": 264,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "货币与价格",
+      "level": 2,
+      "description": "货币的职能、纸币发行规律及影响价格的因素"
+    },
+    {
+      "id": "kp-politics-017",
+      "sql_id": 265,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "消费与消费观",
+      "level": 2,
+      "description": "影响消费的因素、消费类型及正确的消费观"
+    },
+    {
+      "id": "kp-politics-018",
+      "sql_id": 266,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "生产与消费的关系",
+      "level": 2,
+      "description": "生产决定消费、消费对生产的反作用"
+    },
+    {
+      "id": "kp-politics-019",
+      "sql_id": 267,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "我国的基本经济制度",
+      "level": 2,
+      "description": "公有制为主体、多种所有制经济共同发展"
+    },
+    {
+      "id": "kp-politics-020",
+      "sql_id": 268,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "企业的经营与发展",
+      "level": 2,
+      "description": "公司的类型、企业经营成功的因素"
+    },
+    {
+      "id": "kp-politics-021",
+      "sql_id": 269,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "分配制度与效率公平",
+      "level": 2,
+      "description": "按劳分配为主体、多种分配方式并存及效率与公平"
+    },
+    {
+      "id": "kp-politics-022",
+      "sql_id": 270,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "财政与税收",
+      "level": 2,
+      "description": "财政的作用、财政收入与支出及税收的基本特征"
+    },
+    {
+      "id": "kp-politics-023",
+      "sql_id": 271,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "市场调节与宏观调控",
+      "level": 2,
+      "description": "市场配置资源的方式及国家宏观调控的手段"
+    },
+    {
+      "id": "kp-politics-024",
+      "sql_id": 272,
+      "subject": "政治",
+      "chapter": "经济生活",
+      "name": "经济全球化与对外开放",
+      "level": 2,
+      "description": "经济全球化的表现、影响及提高开放型经济水平"
+    },
+    {
+      "id": "kp-politics-025",
+      "sql_id": 273,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "公民的政治参与",
+      "level": 2,
+      "description": "民主选举、民主决策、民主管理、民主监督"
+    },
+    {
+      "id": "kp-politics-026",
+      "sql_id": 274,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "政府的职能与责任",
+      "level": 2,
+      "description": "政府的五大职能及对人民负责的原则"
+    },
+    {
+      "id": "kp-politics-027",
+      "sql_id": 275,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "政府权力的制约与监督",
+      "level": 2,
+      "description": "依法行政的要求及对政府权力进行制约和监督的意义"
+    },
+    {
+      "id": "kp-politics-028",
+      "sql_id": 276,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "人民代表大会制度",
+      "level": 2,
+      "description": "人大的职权、人大代表的权利与义务及政体优势"
+    },
+    {
+      "id": "kp-politics-029",
+      "sql_id": 277,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "我国的政党制度",
+      "level": 2,
+      "description": "中国共产党领导的多党合作和政治协商制度"
+    },
+    {
+      "id": "kp-politics-030",
+      "sql_id": 278,
+      "subject": "政治",
+      "chapter": "政治生活",
+      "name": "国际关系与外交政策",
+      "level": 2,
+      "description": "国际关系的决定因素及我国独立自主的和平外交政策"
+    },
+    {
+      "id": "kp-politics-031",
+      "sql_id": 279,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "文化的作用",
+      "level": 2,
+      "description": "文化对社会和人的影响及其特点"
+    },
+    {
+      "id": "kp-politics-032",
+      "sql_id": 280,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "文化继承与发展",
+      "level": 2,
+      "description": "传统文化的继承、文化在继承中发展"
+    },
+    {
+      "id": "kp-politics-033",
+      "sql_id": 281,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "文化创新",
+      "level": 2,
+      "description": "文化创新的源泉、动力及途径"
+    },
+    {
+      "id": "kp-politics-034",
+      "sql_id": 282,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "中华民族精神",
+      "level": 2,
+      "description": "中华民族精神的基本内涵及弘扬和培育"
+    },
+    {
+      "id": "kp-politics-035",
+      "sql_id": 283,
+      "subject": "政治",
+      "chapter": "文化生活",
+      "name": "社会主义核心价值观",
+      "level": 2,
+      "description": "社会主义核心价值观的内涵及践行"
+    },
+    {
+      "id": "kp-politics-036",
+      "sql_id": 284,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "物质与意识的辩证关系",
+      "level": 2,
+      "description": "世界的物质性及意识的能动作用"
+    },
+    {
+      "id": "kp-politics-037",
+      "sql_id": 285,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "实践是认识的基础",
+      "level": 2,
+      "description": "实践的特点及实践是检验真理的唯一标准"
+    },
+    {
+      "id": "kp-politics-038",
+      "sql_id": 286,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "联系观",
+      "level": 2,
+      "description": "联系的普遍性、客观性、多样性及整体与部分的关系"
+    },
+    {
+      "id": "kp-politics-039",
+      "sql_id": 287,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "矛盾观",
+      "level": 2,
+      "description": "矛盾的对立统一、普遍性与特殊性及主次矛盾"
+    },
+    {
+      "id": "kp-politics-040",
+      "sql_id": 288,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "社会发展的规律",
+      "level": 2,
+      "description": "社会存在与社会意识的辩证关系及社会基本矛盾运动"
+    },
+    {
+      "id": "kp-politics-041",
+      "sql_id": 289,
+      "subject": "政治",
+      "chapter": "生活与哲学",
+      "name": "人生价值的实现",
+      "level": 2,
+      "description": "价值判断与价值选择及在劳动和奉献中实现人生价值"
+    },
+    {
+      "id": "kp-history-001",
+      "sql_id": 290,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "先秦时期",
+      "level": 1,
+      "description": "夏商周的政治制度、经济发展及百家争鸣"
+    },
+    {
+      "id": "kp-history-002",
+      "sql_id": 291,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "秦汉时期",
+      "level": 1,
+      "description": "秦朝的统一与中央集权制度、汉朝的政治经济与文化"
+    },
+    {
+      "id": "kp-history-003",
+      "sql_id": 292,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "隋唐时期",
+      "level": 1,
+      "description": "隋唐的政治制度、经济繁荣与对外交流"
+    },
+    {
+      "id": "kp-history-004",
+      "sql_id": 293,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "宋元时期",
+      "level": 1,
+      "description": "宋朝的政治经济、元朝的统一与行省制度"
+    },
+    {
+      "id": "kp-history-005",
+      "sql_id": 294,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "明清时期",
+      "level": 1,
+      "description": "明清君主专制的加强、经济新因素与对外政策"
+    },
+    {
+      "id": "kp-history-006",
+      "sql_id": 295,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "列强侵略与民族危机",
+      "level": 1,
+      "description": "鸦片战争至八国联军侵华及不平等条约"
+    },
+    {
+      "id": "kp-history-007",
+      "sql_id": 296,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "近代中国的探索与变革",
+      "level": 1,
+      "description": "洋务运动、维新变法、辛亥革命及新文化运动"
+    },
+    {
+      "id": "kp-history-008",
+      "sql_id": 297,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "新民主主义革命",
+      "level": 1,
+      "description": "五四运动、中共成立、抗日战争及解放战争"
+    },
+    {
+      "id": "kp-history-009",
+      "sql_id": 298,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "社会主义建设",
+      "level": 1,
+      "description": "新中国成立、改革开放及中国特色社会主义道路"
+    },
+    {
+      "id": "kp-history-010",
+      "sql_id": 299,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "古代世界文明",
+      "level": 1,
+      "description": "古希腊民主政治、罗马法及西方人文精神的起源"
+    },
+    {
+      "id": "kp-history-011",
+      "sql_id": 300,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "近代世界",
+      "level": 1,
+      "description": "新航路开辟、文艺复兴、资产阶级革命及工业革命"
+    },
+    {
+      "id": "kp-history-012",
+      "sql_id": 301,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "现代世界",
+      "level": 1,
+      "description": "两次世界大战、苏联建设、冷战及全球化"
+    },
+    {
+      "id": "kp-history-013",
+      "sql_id": 302,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "分封制与宗法制",
+      "level": 2,
+      "description": "西周分封制和宗法制的含义、特点及影响"
+    },
+    {
+      "id": "kp-history-014",
+      "sql_id": 303,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "百家争鸣",
+      "level": 2,
+      "description": "儒家、道家、法家、墨家等学派的主要思想主张"
+    },
+    {
+      "id": "kp-history-015",
+      "sql_id": 304,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "秦朝中央集权制度",
+      "level": 2,
+      "description": "皇帝制度、三公九卿制及郡县制的确立"
+    },
+    {
+      "id": "kp-history-016",
+      "sql_id": 305,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "汉武帝大一统",
+      "level": 2,
+      "description": "推恩令、罢黜百家独尊儒术及经济措施"
+    },
+    {
+      "id": "kp-history-017",
+      "sql_id": 306,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "三省六部制",
+      "level": 2,
+      "description": "三省六部制的职能及运行机制"
+    },
+    {
+      "id": "kp-history-018",
+      "sql_id": 307,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "科举制度",
+      "level": 2,
+      "description": "科举制的创立、发展与影响"
+    },
+    {
+      "id": "kp-history-019",
+      "sql_id": 308,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "宋初加强中央集权",
+      "level": 2,
+      "description": "杯酒释兵权、分化事权及重文轻武政策"
+    },
+    {
+      "id": "kp-history-020",
+      "sql_id": 309,
+      "subject": "历史",
+      "chapter": "中国古代史",
+      "name": "明清君主专制的强化",
+      "level": 2,
+      "description": "废丞相设内阁、军机处的设立及文字狱"
+    },
+    {
+      "id": "kp-history-021",
+      "sql_id": 310,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "鸦片战争与影响",
+      "level": 2,
+      "description": "两次鸦片战争的背景、过程及《南京条约》等不平等条约"
+    },
+    {
+      "id": "kp-history-022",
+      "sql_id": 311,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "甲午中日战争",
+      "level": 2,
+      "description": "甲午战争的背景、过程及《马关条约》的影响"
+    },
+    {
+      "id": "kp-history-023",
+      "sql_id": 312,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "洋务运动",
+      "level": 2,
+      "description": "洋务运动的口号、内容及历史评价"
+    },
+    {
+      "id": "kp-history-024",
+      "sql_id": 313,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "辛亥革命",
+      "level": 2,
+      "description": "辛亥革命的背景、过程、历史意义及局限性"
+    },
+    {
+      "id": "kp-history-025",
+      "sql_id": 314,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "新文化运动",
+      "level": 2,
+      "description": "新文化运动的内容、代表人物及历史影响"
+    },
+    {
+      "id": "kp-history-026",
+      "sql_id": 315,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "抗日战争",
+      "level": 2,
+      "description": "抗日民族统一战线的形成、正面战场与敌后战场"
+    },
+    {
+      "id": "kp-history-027",
+      "sql_id": 316,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "改革开放",
+      "level": 2,
+      "description": "十一届三中全会、经济体制改革及对外开放格局"
+    },
+    {
+      "id": "kp-history-028",
+      "sql_id": 317,
+      "subject": "历史",
+      "chapter": "中国近现代史",
+      "name": "社会主义市场经济体制",
+      "level": 2,
+      "description": "从计划经济到市场经济的转型及成就"
+    },
+    {
+      "id": "kp-history-029",
+      "sql_id": 318,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "古希腊民主政治",
+      "level": 2,
+      "description": "雅典民主政治的形成、内容及评价"
+    },
+    {
+      "id": "kp-history-030",
+      "sql_id": 319,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "罗马法",
+      "level": 2,
+      "description": "十二铜表法、公民法到万民法的发展及影响"
+    },
+    {
+      "id": "kp-history-031",
+      "sql_id": 320,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "新航路开辟",
+      "level": 2,
+      "description": "新航路开辟的背景、过程及对世界的影响"
+    },
+    {
+      "id": "kp-history-032",
+      "sql_id": 321,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "英国君主立宪制",
+      "level": 2,
+      "description": "光荣革命、《权利法案》及责任内阁制的形成"
+    },
+    {
+      "id": "kp-history-033",
+      "sql_id": 322,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "美国1787年宪法",
+      "level": 2,
+      "description": "联邦制、三权分立及总统共和制的确立"
+    },
+    {
+      "id": "kp-history-034",
+      "sql_id": 323,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "工业革命",
+      "level": 2,
+      "description": "两次工业革命的成就及对世界的影响"
+    },
+    {
+      "id": "kp-history-035",
+      "sql_id": 324,
+      "subject": "历史",
+      "chapter": "世界史",
+      "name": "冷战与国际格局",
+      "level": 2,
+      "description": "冷战的表现、多极化趋势及经济全球化"
+    },
+    {
+      "id": "kp-geography-001",
+      "sql_id": 325,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "地球与地图",
+      "level": 1,
+      "description": "经纬网、地图三要素及等高线地形图的判读"
+    },
+    {
+      "id": "kp-geography-002",
+      "sql_id": 326,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "大气运动",
+      "level": 1,
+      "description": "大气的受热过程、气压带风带及天气系统"
+    },
+    {
+      "id": "kp-geography-003",
+      "sql_id": 327,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "水体运动",
+      "level": 1,
+      "description": "水循环、河流补给及洋流"
+    },
+    {
+      "id": "kp-geography-004",
+      "sql_id": 328,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "地表形态的塑造",
+      "level": 1,
+      "description": "内力作用、外力作用及岩石圈物质循环"
+    },
+    {
+      "id": "kp-geography-005",
+      "sql_id": 329,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "自然环境的整体性与差异性",
+      "level": 1,
+      "description": "自然地理环境的整体性及地域分异规律"
+    },
+    {
+      "id": "kp-geography-006",
+      "sql_id": 330,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "人口与城市",
+      "level": 1,
+      "description": "人口增长模式、人口迁移及城市化"
+    },
+    {
+      "id": "kp-geography-007",
+      "sql_id": 331,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "农业与工业",
+      "level": 1,
+      "description": "农业区位因素、工业区位因素及产业转移"
+    },
+    {
+      "id": "kp-geography-008",
+      "sql_id": 332,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "交通与区域联系",
+      "level": 1,
+      "description": "交通运输方式及布局、资源跨区域调配"
+    },
+    {
+      "id": "kp-geography-009",
+      "sql_id": 333,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "人地关系与可持续发展",
+      "level": 1,
+      "description": "环境问题、可持续发展及生态文明建设"
+    },
+    {
+      "id": "kp-geography-010",
+      "sql_id": 334,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "世界地理",
+      "level": 1,
+      "description": "世界主要区域的自然与人文地理特征"
+    },
+    {
+      "id": "kp-geography-011",
+      "sql_id": 335,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "中国地理",
+      "level": 1,
+      "description": "中国自然地理特征及区域差异"
+    },
+    {
+      "id": "kp-geography-012",
+      "sql_id": 336,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "区域可持续发展",
+      "level": 1,
+      "description": "区域生态环境建设及流域综合治理"
+    },
+    {
+      "id": "kp-geography-013",
+      "sql_id": 337,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "经纬网与方向判断",
+      "level": 2,
+      "description": "利用经纬网确定位置、判断方向及计算距离"
+    },
+    {
+      "id": "kp-geography-014",
+      "sql_id": 338,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "等高线地形图判读",
+      "level": 2,
+      "description": "等高线的判读方法及地形剖面图的绘制"
+    },
+    {
+      "id": "kp-geography-015",
+      "sql_id": 339,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "大气的受热过程",
+      "level": 2,
+      "description": "太阳辐射、地面辐射、大气逆辐射及保温作用"
+    },
+    {
+      "id": "kp-geography-016",
+      "sql_id": 340,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "热力环流与风",
+      "level": 2,
+      "description": "热力环流的形成原理及近地面风向的判断"
+    },
+    {
+      "id": "kp-geography-017",
+      "sql_id": 341,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "气压带与风带",
+      "level": 2,
+      "description": "全球气压带风带的分布及季节性移动"
+    },
+    {
+      "id": "kp-geography-018",
+      "sql_id": 342,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "常见天气系统",
+      "level": 2,
+      "description": "冷锋、暖锋、准静止锋及气旋反气旋的特征"
+    },
+    {
+      "id": "kp-geography-019",
+      "sql_id": 343,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "水循环",
+      "level": 2,
+      "description": "水循环的类型、环节及地理意义"
+    },
+    {
+      "id": "kp-geography-020",
+      "sql_id": 344,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "洋流的分布与影响",
+      "level": 2,
+      "description": "世界洋流分布规律及洋流对地理环境的影响"
+    },
+    {
+      "id": "kp-geography-021",
+      "sql_id": 345,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "内力作用与地质构造",
+      "level": 2,
+      "description": "地壳运动、板块构造学说及褶皱、断层的判读"
+    },
+    {
+      "id": "kp-geography-022",
+      "sql_id": 346,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "外力作用与地貌",
+      "level": 2,
+      "description": "风化、侵蚀、搬运、堆积作用及其形成的地貌"
+    },
+    {
+      "id": "kp-geography-023",
+      "sql_id": 347,
+      "subject": "地理",
+      "chapter": "自然地理",
+      "name": "垂直地域分异规律",
+      "level": 2,
+      "description": "山地垂直自然带的分布规律及影响因素"
+    },
+    {
+      "id": "kp-geography-024",
+      "sql_id": 348,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "人口增长模式",
+      "level": 2,
+      "description": "人口增长模式的类型、特点及转变"
+    },
+    {
+      "id": "kp-geography-025",
+      "sql_id": 349,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "人口迁移",
+      "level": 2,
+      "description": "人口迁移的影响因素及对迁入地和迁出地的影响"
+    },
+    {
+      "id": "kp-geography-026",
+      "sql_id": 350,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "城市化",
+      "level": 2,
+      "description": "城市化的进程、特点及城市化对地理环境的影响"
+    },
+    {
+      "id": "kp-geography-027",
+      "sql_id": 351,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "农业区位因素",
+      "level": 2,
+      "description": "自然因素和社会经济因素对农业区位选择的影响"
+    },
+    {
+      "id": "kp-geography-028",
+      "sql_id": 352,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "工业区位因素",
+      "level": 2,
+      "description": "原料、市场、劳动力、技术等工业区位因素分析"
+    },
+    {
+      "id": "kp-geography-029",
+      "sql_id": 353,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "交通运输布局",
+      "level": 2,
+      "description": "交通运输方式的选择及交通运输布局的影响因素"
+    },
+    {
+      "id": "kp-geography-030",
+      "sql_id": 354,
+      "subject": "地理",
+      "chapter": "人文地理",
+      "name": "可持续发展",
+      "level": 2,
+      "description": "可持续发展的内涵、原则及实现途径"
+    },
+    {
+      "id": "kp-geography-031",
+      "sql_id": 355,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "中国地形与气候",
+      "level": 2,
+      "description": "中国主要地形区的分布及气候特征"
+    },
+    {
+      "id": "kp-geography-032",
+      "sql_id": 356,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "中国区域差异",
+      "level": 2,
+      "description": "四大地理区域的自然与人文特征差异"
+    },
+    {
+      "id": "kp-geography-033",
+      "sql_id": 357,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "荒漠化的防治",
+      "level": 2,
+      "description": "西北地区荒漠化的成因、危害及防治措施"
+    },
+    {
+      "id": "kp-geography-034",
+      "sql_id": 358,
+      "subject": "地理",
+      "chapter": "区域地理",
+      "name": "流域综合治理",
+      "level": 2,
+      "description": "流域开发的地理条件、综合治理措施及经验"
+    }
+  ],
+  "relations": [
+    {
+      "from": "kp-math-019",
+      "to": "kp-math-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-020",
+      "to": "kp-math-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-021",
+      "to": "kp-math-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-022",
+      "to": "kp-math-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-023",
+      "to": "kp-math-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-024",
+      "to": "kp-math-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-025",
+      "to": "kp-math-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-026",
+      "to": "kp-math-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-027",
+      "to": "kp-math-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-028",
+      "to": "kp-math-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-029",
+      "to": "kp-math-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-030",
+      "to": "kp-math-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-031",
+      "to": "kp-math-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-032",
+      "to": "kp-math-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-033",
+      "to": "kp-math-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-034",
+      "to": "kp-math-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-035",
+      "to": "kp-math-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-036",
+      "to": "kp-math-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-037",
+      "to": "kp-math-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-038",
+      "to": "kp-math-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-039",
+      "to": "kp-math-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-040",
+      "to": "kp-math-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-041",
+      "to": "kp-math-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-042",
+      "to": "kp-math-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-043",
+      "to": "kp-math-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-044",
+      "to": "kp-math-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-045",
+      "to": "kp-math-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-046",
+      "to": "kp-math-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-047",
+      "to": "kp-math-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-048",
+      "to": "kp-math-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-049",
+      "to": "kp-math-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-050",
+      "to": "kp-math-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-051",
+      "to": "kp-math-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-052",
+      "to": "kp-math-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-053",
+      "to": "kp-math-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-054",
+      "to": "kp-math-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-055",
+      "to": "kp-math-014",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-056",
+      "to": "kp-math-014",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-057",
+      "to": "kp-math-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-058",
+      "to": "kp-math-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-059",
+      "to": "kp-math-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-060",
+      "to": "kp-math-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-061",
+      "to": "kp-math-016",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-062",
+      "to": "kp-math-016",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-063",
+      "to": "kp-math-017",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-064",
+      "to": "kp-math-017",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-065",
+      "to": "kp-math-018",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-math-066",
+      "to": "kp-math-018",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-008",
+      "to": "kp-chinese-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-009",
+      "to": "kp-chinese-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-010",
+      "to": "kp-chinese-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-011",
+      "to": "kp-chinese-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-012",
+      "to": "kp-chinese-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-013",
+      "to": "kp-chinese-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-014",
+      "to": "kp-chinese-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-015",
+      "to": "kp-chinese-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-016",
+      "to": "kp-chinese-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-017",
+      "to": "kp-chinese-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-018",
+      "to": "kp-chinese-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-019",
+      "to": "kp-chinese-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-020",
+      "to": "kp-chinese-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-021",
+      "to": "kp-chinese-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-022",
+      "to": "kp-chinese-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-023",
+      "to": "kp-chinese-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-024",
+      "to": "kp-chinese-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-025",
+      "to": "kp-chinese-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-026",
+      "to": "kp-chinese-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-027",
+      "to": "kp-chinese-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-028",
+      "to": "kp-chinese-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-029",
+      "to": "kp-chinese-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-030",
+      "to": "kp-chinese-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chinese-031",
+      "to": "kp-chinese-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-007",
+      "to": "kp-english-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-008",
+      "to": "kp-english-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-009",
+      "to": "kp-english-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-010",
+      "to": "kp-english-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-011",
+      "to": "kp-english-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-012",
+      "to": "kp-english-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-013",
+      "to": "kp-english-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-014",
+      "to": "kp-english-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-015",
+      "to": "kp-english-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-016",
+      "to": "kp-english-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-017",
+      "to": "kp-english-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-018",
+      "to": "kp-english-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-019",
+      "to": "kp-english-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-020",
+      "to": "kp-english-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-021",
+      "to": "kp-english-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-022",
+      "to": "kp-english-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-023",
+      "to": "kp-english-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-024",
+      "to": "kp-english-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-025",
+      "to": "kp-english-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-026",
+      "to": "kp-english-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-027",
+      "to": "kp-english-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-english-028",
+      "to": "kp-english-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-016",
+      "to": "kp-physics-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-017",
+      "to": "kp-physics-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-018",
+      "to": "kp-physics-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-019",
+      "to": "kp-physics-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-020",
+      "to": "kp-physics-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-021",
+      "to": "kp-physics-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-022",
+      "to": "kp-physics-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-023",
+      "to": "kp-physics-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-024",
+      "to": "kp-physics-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-025",
+      "to": "kp-physics-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-026",
+      "to": "kp-physics-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-027",
+      "to": "kp-physics-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-028",
+      "to": "kp-physics-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-029",
+      "to": "kp-physics-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-030",
+      "to": "kp-physics-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-031",
+      "to": "kp-physics-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-032",
+      "to": "kp-physics-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-033",
+      "to": "kp-physics-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-034",
+      "to": "kp-physics-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-035",
+      "to": "kp-physics-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-036",
+      "to": "kp-physics-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-037",
+      "to": "kp-physics-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-038",
+      "to": "kp-physics-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-039",
+      "to": "kp-physics-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-040",
+      "to": "kp-physics-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-041",
+      "to": "kp-physics-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-042",
+      "to": "kp-physics-014",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-043",
+      "to": "kp-physics-014",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-044",
+      "to": "kp-physics-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-physics-045",
+      "to": "kp-physics-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-013",
+      "to": "kp-chemistry-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-014",
+      "to": "kp-chemistry-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-015",
+      "to": "kp-chemistry-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-016",
+      "to": "kp-chemistry-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-017",
+      "to": "kp-chemistry-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-018",
+      "to": "kp-chemistry-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-019",
+      "to": "kp-chemistry-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-020",
+      "to": "kp-chemistry-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-021",
+      "to": "kp-chemistry-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-022",
+      "to": "kp-chemistry-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-023",
+      "to": "kp-chemistry-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-024",
+      "to": "kp-chemistry-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-025",
+      "to": "kp-chemistry-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-026",
+      "to": "kp-chemistry-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-027",
+      "to": "kp-chemistry-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-028",
+      "to": "kp-chemistry-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-029",
+      "to": "kp-chemistry-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-030",
+      "to": "kp-chemistry-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-031",
+      "to": "kp-chemistry-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-032",
+      "to": "kp-chemistry-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-033",
+      "to": "kp-chemistry-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-034",
+      "to": "kp-chemistry-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-035",
+      "to": "kp-chemistry-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-036",
+      "to": "kp-chemistry-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-037",
+      "to": "kp-chemistry-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-038",
+      "to": "kp-chemistry-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-039",
+      "to": "kp-chemistry-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-040",
+      "to": "kp-chemistry-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-chemistry-041",
+      "to": "kp-chemistry-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-014",
+      "to": "kp-biology-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-015",
+      "to": "kp-biology-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-016",
+      "to": "kp-biology-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-017",
+      "to": "kp-biology-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-018",
+      "to": "kp-biology-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-019",
+      "to": "kp-biology-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-020",
+      "to": "kp-biology-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-021",
+      "to": "kp-biology-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-022",
+      "to": "kp-biology-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-023",
+      "to": "kp-biology-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-024",
+      "to": "kp-biology-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-025",
+      "to": "kp-biology-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-026",
+      "to": "kp-biology-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-027",
+      "to": "kp-biology-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-028",
+      "to": "kp-biology-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-029",
+      "to": "kp-biology-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-030",
+      "to": "kp-biology-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-031",
+      "to": "kp-biology-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-032",
+      "to": "kp-biology-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-033",
+      "to": "kp-biology-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-034",
+      "to": "kp-biology-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-035",
+      "to": "kp-biology-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-036",
+      "to": "kp-biology-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-biology-037",
+      "to": "kp-biology-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-016",
+      "to": "kp-politics-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-017",
+      "to": "kp-politics-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-018",
+      "to": "kp-politics-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-019",
+      "to": "kp-politics-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-020",
+      "to": "kp-politics-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-021",
+      "to": "kp-politics-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-022",
+      "to": "kp-politics-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-023",
+      "to": "kp-politics-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-024",
+      "to": "kp-politics-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-025",
+      "to": "kp-politics-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-026",
+      "to": "kp-politics-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-027",
+      "to": "kp-politics-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-028",
+      "to": "kp-politics-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-029",
+      "to": "kp-politics-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-030",
+      "to": "kp-politics-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-031",
+      "to": "kp-politics-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-032",
+      "to": "kp-politics-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-033",
+      "to": "kp-politics-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-034",
+      "to": "kp-politics-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-035",
+      "to": "kp-politics-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-036",
+      "to": "kp-politics-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-037",
+      "to": "kp-politics-013",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-038",
+      "to": "kp-politics-014",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-039",
+      "to": "kp-politics-014",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-040",
+      "to": "kp-politics-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-politics-041",
+      "to": "kp-politics-015",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-013",
+      "to": "kp-history-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-014",
+      "to": "kp-history-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-015",
+      "to": "kp-history-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-016",
+      "to": "kp-history-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-017",
+      "to": "kp-history-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-018",
+      "to": "kp-history-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-019",
+      "to": "kp-history-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-020",
+      "to": "kp-history-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-021",
+      "to": "kp-history-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-022",
+      "to": "kp-history-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-023",
+      "to": "kp-history-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-024",
+      "to": "kp-history-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-025",
+      "to": "kp-history-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-026",
+      "to": "kp-history-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-027",
+      "to": "kp-history-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-028",
+      "to": "kp-history-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-029",
+      "to": "kp-history-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-030",
+      "to": "kp-history-010",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-031",
+      "to": "kp-history-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-032",
+      "to": "kp-history-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-033",
+      "to": "kp-history-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-034",
+      "to": "kp-history-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-history-035",
+      "to": "kp-history-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-013",
+      "to": "kp-geography-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-014",
+      "to": "kp-geography-001",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-015",
+      "to": "kp-geography-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-016",
+      "to": "kp-geography-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-017",
+      "to": "kp-geography-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-018",
+      "to": "kp-geography-002",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-019",
+      "to": "kp-geography-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-020",
+      "to": "kp-geography-003",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-021",
+      "to": "kp-geography-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-022",
+      "to": "kp-geography-004",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-023",
+      "to": "kp-geography-005",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-024",
+      "to": "kp-geography-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-025",
+      "to": "kp-geography-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-026",
+      "to": "kp-geography-006",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-027",
+      "to": "kp-geography-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-028",
+      "to": "kp-geography-007",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-029",
+      "to": "kp-geography-008",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-030",
+      "to": "kp-geography-009",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-031",
+      "to": "kp-geography-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-032",
+      "to": "kp-geography-011",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-033",
+      "to": "kp-geography-012",
+      "type": "child_of"
+    },
+    {
+      "from": "kp-geography-034",
+      "to": "kp-geography-012",
+      "type": "child_of"
+    }
+  ]
+}

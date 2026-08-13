@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>应用权限管理 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--keep:#43A047;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.perm-item{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--divider);gap:12px}
+.perm-item:last-child{border-bottom:none}
+.perm-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.perm-icon .material-icons{font-size:22px;color:#fff}
+.perm-info{flex:1}
+.perm-name{font-size:14px;font-weight:600;color:var(--text1)}
+.perm-desc{font-size:12px;color:var(--hint);margin-top:3px;line-height:1.4}
+.toggle{width:44px;height:26px;border-radius:13px;background:#e0e0e0;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;border:none}
+.toggle.on{background:var(--keep)}
+.toggle::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:21px}
+.section-title{font-size:12px;color:var(--hint);padding:14px 16px 6px;font-weight:500}
+.hint-text{font-size:12px;color:var(--hint);padding:8px 16px 14px;line-height:1.6}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">应用权限管理</span>
+  </div>
+  <div class="page-body">
+    <div class="section-title">以下权限由你授权，可随时关闭。关闭后相关功能将受限。</div>
+    <div class="card" id="permList"></div>
+    <div class="hint-text">如需修改系统级权限（相机、麦克风等），请前往手机【设置 → 应用 → 陪读社区】进行管理。</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+const perms=[
+  {id:'notify',icon:'notifications',color:'#E6431A',name:'消息推送',desc:'接收错题提醒、社区互动通知',on:true},
+  {id:'camera',icon:'photo_camera',color:'#1565C0',name:'相机',desc:'拍摄试卷用于错题录入',on:true},
+  {id:'album',icon:'photo_library',color:'#43A047',name:'相册',desc:'从相册选取试卷图片',on:true},
+  {id:'location',icon:'location_on',color:'#FF6D00',name:'位置信息',desc:'用于推荐附近家长社区内容',on:false},
+  {id:'clipboard',icon:'content_paste',color:'#9C27B0',name:'剪贴板',desc:'粘贴题目文字快速录入',on:true},
+];
+let state={};
+perms.forEach(p=>state[p.id]=p.on);
+function render(){
+  document.getElementById('permList').innerHTML=perms.map(p=>`
+<div class="perm-item">
+  <div class="perm-icon" style="background:${p.color}"><span class="material-icons">${p.icon}</span></div>
+  <div class="perm-info">
+    <div class="perm-name">${p.name}</div>
+    <div class="perm-desc">${p.desc}</div>
+  </div>
+  <button class="toggle${state[p.id]?' on':''}" onclick="togglePerm('${p.id}')"></button>
+</div>`).join('');
+}
+function togglePerm(id){
+  state[id]=!state[id];
+  render();
+  showToast(state[id]?'已开启':'已关闭');
+}
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

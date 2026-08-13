@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>陪读社区 - 社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 16px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1}
+.app-bar .actions button{background:none;border:none;color:var(--text2);cursor:pointer;padding:6px;border-radius:50%;display:flex;align-items:center}
+.app-bar .actions button:active{background:#f0f0f0}
+.page-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint);transition:color .2s}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px;transition:color .2s}
+.nav-item.active .material-icons{color:var(--primary)}
+.nav-item.active .nav-label{color:var(--primary);font-weight:500}
+/* HupuPostCard style */
+.post-card{background:var(--surface);border-radius:var(--r-card);margin:0 16px 12px;box-shadow:0 2px 6px rgba(0,0,0,.04);overflow:hidden;cursor:pointer;transition:box-shadow .15s}
+.post-card:active{box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.post-card-inner{padding:14px 16px}
+.post-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.tag-circle{padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;background:rgba(230,67,26,.08);color:var(--primary)}
+.tag-hot{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:var(--primary);color:#fff}
+.tag-report{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;border:1px solid #3F51B5;color:#3F51B5;display:flex;align-items:center;gap:2px}
+.tag-report .material-icons{font-size:12px}
+.post-title{font-size:16px;font-weight:700;color:var(--text1);margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.post-summary{font-size:13px;color:var(--text3);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.post-image{width:100%;height:160px;background:#f5f5f5;position:relative;overflow:hidden}
+.post-image img{width:100%;height:100%;object-fit:cover}
+.post-image .img-count{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px}
+.post-actions{display:flex;align-items:center;padding:10px 16px;border-top:1px solid #f5f5f5;gap:6px}
+.action-btn{display:flex;align-items:center;gap:4px;padding:5px 12px;border-radius:16px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--hint);transition:all .12s}
+.action-btn:active{background:#f5f5f5}
+.action-btn .material-icons{font-size:16px}
+.action-btn.lit{background:rgba(230,67,26,.08);color:var(--primary)}
+.action-spacer{flex:1}
+.empty-state{text-align:center;padding:60px 20px;color:var(--hint);font-size:13px}
+.search-bar{padding:10px 16px 6px;background:var(--surface);flex-shrink:0}
+.search-input{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg);border-radius:20px;cursor:pointer}
+.search-input .material-icons{font-size:18px;color:var(--hint)}
+.search-placeholder{font-size:13px;color:var(--hint)}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+<span class="title">陪读社区</span>
+<div class="actions"><button onclick="window.location.href='fabutiezi.html'"><span class="prd-mark" onclick="openPrd(event,3)" style="margin-left:4px">3</span><span class="material-icons">add</span></button></div>
+</div>
+<div class="search-bar">
+<div class="search-input" >
+  <span class="material-icons">search</span>
+  <span class="search-placeholder">搜索帖子</span>
+</div>
+</div>
+<div style="display:flex;align-items:center;padding:0 16px 0 0;background:var(--surface)"><span class="prd-mark" onclick="openPrd(event,1)" style="flex-shrink:0;margin:10px 8px 10px 16px">1</span></div><span class="prd-mark" style="position:fixed;top:100px;right:20px;z-index:50" onclick="openPrd(event,2)">2</span><div class="page-body" id="pageBody" style="padding-top:12px"></div>
+<div class="bottom-nav">
+<a class="nav-item" href="fenxi.html"><span class="material-icons">insights</span><span class="nav-label">分析</span></a>
+<a class="nav-item active" href="shequ.html"><span class="material-icons">forum</span><span class="nav-label">社区</span></a>
+<a class="nav-item" href="xiaoxi.html"><span class="material-icons">notifications</span><span class="nav-label">消息</span></a>
+<a class="nav-item" href="wode.html"><span class="material-icons">person</span><span class="nav-label">我的</span></a>
+</div>
+</div>
+<script>
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+//
+const placeholderImg=`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect fill="#f0f0f0" width="400" height="200"/><text x="200" y="100" text-anchor="middle" font-size="14" fill="#bbb">图片</text></svg>')}`;
+
+const mockPosts=[
+{id:1,author:'张妈妈',circleId:1,circleName:'高三',title:'孩子三角函数老出错怎么办？',content:'最近几次模考三角函数大题都丢分严重，有没有好的练习方法推荐？孩子说自己复习了但还是会出错，感觉是基础不够扎实。',likes:12,comments:5,shares:2,images:[],pinned:false,isReport:false},
+{id:2,author:'王爸爸',circleId:3,circleName:'其它',title:'分享一个错题整理的好习惯',content:'我家孩子坚持每周整理错题本，按知识点分类，标注错误原因和正确思路。这学期数学从72提到了85分，分享给大家参考。',likes:128,comments:13,shares:8,images:[placeholderImg,placeholderImg,placeholderImg],pinned:false,isReport:false},
+{id:3,author:'张妈妈',circleId:1,circleName:'高三',title:'数学期中考试分析报告分享',content:'用陪读社区的试卷分析功能生成的报告，发现二次函数是最大薄弱点，分享给同年级的家长参考。',likes:45,comments:21,shares:15,images:[],pinned:false,isReport:true},
+{id:4,author:'刘爸爸',circleId:4,circleName:'其它',title:'高三压力大，家长怎么陪伴？',content:'最近发现孩子情绪波动比较大，考试前会焦虑失眠。我们家长应该怎么做才能帮到他？求有经验的家长分享。',likes:67,comments:34,shares:5,images:[],pinned:true,isReport:false},
+{id:5,author:'陈妈妈',circleId:1,circleName:'高三',title:'数列求和公式总结',content:'整理了高中数列所有求和方法：等差等比公式、裂项相消、错位相减、分组求和。打印出来贴在书桌前，效果不错。',likes:89,comments:28,shares:12,images:[placeholderImg],pinned:false,isReport:false},
+{id:6,author:'赵妈妈',circleId:2,circleName:'高二',title:'完形填空提分技巧',content:'英语老师推荐的完形填空解题方法：先通读全文不看选项，把握文章大意，然后再逐题分析。亲测有效，孩子完形从扣8分减到扣2分。',likes:52,comments:18,shares:6,images:[placeholderImg,placeholderImg],pinned:false,isReport:false},
+{id:7,author:'张爸爸',circleId:3,circleName:'其它',title:'用试卷分析两个月的心得',content:'用了两个月的试卷分析功能，发现孩子数学丢分主要集中在函数和概率两个板块。针对性练习后，最近一次月考提高了15分。',likes:103,comments:22,shares:9,images:[],pinned:false,isReport:true}
+];
+
+let litPosts=new Set();
+
+function toggleLit(id,e){
+e.stopPropagation();
+if(litPosts.has(id))litPosts.delete(id);else litPosts.add(id);
+renderPosts();
+}
+
+function renderPosts(){
+const filtered=mockPosts;
+if(filtered.length===0){
+document.getElementById('pageBody').innerHTML='<div class="empty-state">这里还没有帖子，去发一条吧～</div>';
+return;
+}
+document.getElementById('pageBody').innerHTML=filtered.map(p=>{
+const isHot=p.pinned||p.likes>100;
+const isLit=litPosts.has(p.id);
+const litCount=p.likes+(isLit?1:0);
+return `
+<div class="post-card" onclick="window.location.href='tiezidetail.html?id=${p.id}'">
+<div class="post-card-inner">
+<div class="post-tags">
+<span class="tag-circle">${p.circleName}</span>
+${isHot?'<span class="tag-hot">热</span>':''}
+${p.isReport?'<span class="tag-report"><span class="material-icons">insights</span>报告</span>':''}
+</div>
+<div class="post-title">${p.title}</div>
+<div class="post-summary">${p.content}</div>
+</div>
+${p.images.length>0?`<div class="post-image"><img src="${p.images[0]}">${p.images.length>1?`<span class="img-count">+${p.images.length}</span>`:''}</div>`:''}
+<div class="post-actions">
+<button class="action-btn${isLit?' lit':''}" onclick="toggleLit(${p.id},event)"><span class="material-icons">${isLit?'lightbulb':'lightbulb_outline'}</span>有用 ${litCount}</button>
+<button class="action-btn"><span class="material-icons">chat_bubble_outline</span>${p.comments}</button>
+<button class="action-btn"><span class="material-icons">share</span>${p.shares}</button>
+</div>
+</div>`;
+}).join('');
+}
+
+renderPosts();
+
+const prdData={
+  1:{title:'标记 1 · 圈子',badge:'交互规范',badgeType:'interaction',
+     text:'circles 数组定义 5 个圈子：全部(0)/高一(1)/高二(2)/高三(3)/其它(4)\nactiveCircle 默认 0（全部）\n\nfilterCircle(id) 执行：\n① 更新 activeCircle\n② 重渲染圈子 chip 列表\n③ 重渲染帖子列表\n\n筛选逻辑：activeCircle===0 时显示全部\n否则按 post.circleId === activeCircle 过滤\n\n注：圈子 id 与 post.circleId 数字匹配，非名称匹配'},
+  2:{title:'标记 2 · 帖子',badge:'业务规则',badgeType:'',
+     text:'热门标签规则（isHot）：\n• post.pinned === true，OR\n• post.likes > 100\n满足任一条件显示红色"热"标签\n\n点亮（有用）规则：\n• litPosts 用 Set 存储已点亮 post.id\n• 点击切换：已点亮则删除，未点亮则添加\n• 显示数 = post.likes + (isLit ? 1 : 0)\n• 状态仅存内存，刷新后重置\n\n报告标签：post.isReport===true 时显示蓝色"报告"标签\n图片数>1 时右下角显示 +N'},
+  3:{title:'标记 3 · 发帖',badge:'交互规范',badgeType:'interaction',
+     text:'发帖按钮 → window.location.href="fabutiezi.html"\n\n两种进入 fabutiezi.html 的方式：\n① 直接点击发帖按钮：空白表单\n② 从 fenxibaogao.html 分享：\n   fenxibaogao 写 sessionStorage "shareReport"\n   fabutiezi 的 loadSharedReport() 读取后删除\n   自动填充内容文本并注入报告微卡片\n\n发布成功后跳转回 shequ.html'}
+};
+let _curPrdId=null;
+(function(){const prdK='prd_shequ';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_shequ';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>
+
+
+
+

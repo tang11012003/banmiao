@@ -1,0 +1,20 @@
+<!-- PRD 数据配置 -->
+<script>
+const prdData = {
+  1: {
+    title: '标记 1 · 功能名称',
+    badge: '交互规则',
+    badgeType: 'interaction',  // interaction(绿) / data(蓝) / 空(红)
+    text: '详细的产品需求说明...\n支持多行文本\n\n可以包含：\n• 业务规则\n• 数据来源\n• 交互逻辑\n• 边界条件'
+  },
+  2: {
+    title: '标记 2 · 另一个功能',
+    badge: '数据规范',
+    badgeType: 'data',
+    text: '数据相关的说明...'
+  }
+};
+</script>
+
+<!-- 引入 PRD 运行时脚本 -->
+<script src="prd-runtime.js"></script>

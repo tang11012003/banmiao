@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>获得的赞 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
+.post-item{background:var(--surface);border-radius:var(--r-card);padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.post-meta{flex:1}
+.poster{font-size:13px;font-weight:600;color:var(--text1)}
+.post-time{font-size:11px;color:var(--hint);margin-top:1px}
+.post-content{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.post-footer{display:flex;align-items:center;justify-content:space-between}
+.like-info{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--primary);font-weight:600}
+.like-info .material-icons{font-size:16px}
+.post-tag{font-size:11px;padding:2px 8px;border-radius:6px;background:#FDE8E8;color:#C62828}
+.empty{text-align:center;padding:60px 20px;color:var(--hint)}
+.empty .material-icons{font-size:48px;color:#e0e0e0;display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">获得的赞</span>
+    <button id="toggleBtn" onclick="toggleEmpty()" style="margin-left:auto;border:none;background:none;color:#9E9E9E;font-size:12px;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid #e0e0e0">空状态</button>
+  </div>
+  <div class="page-body" id="pageBody"></div>
+</div>
+<script>
+const colors=['#E6431A','#1565C0','#43A047','#9C27B0','#FF6D00','#00838F'];
+let showEmpty=false;
+function toggleEmpty(){
+  showEmpty=!showEmpty;
+  var btn=document.getElementById('toggleBtn');
+  if(btn) btn.textContent=showEmpty?'有数据':'空状态';
+  render();
+}
+const posts=[
+  {id:1,liker:'张妈妈',likerColor:0,time:'昨天 20:14',content:'分享一个数学错题整理方法：按知识点分类，每周复盘一次，效果非常好！坚持了两个月，孩子数学提了15分。',likes:32,tag:'其它'},
+  {id:2,liker:'张妈妈',likerColor:1,time:'2天前',content:'高三家长加油！熬过这一年，一切都值得。和孩子一起坚持，是最好的陪伴。',likes:28,tag:'高二'},
+  {id:3,liker:'陈老师',likerColor:2,time:'3天前',content:'英语长难句拆解技巧：先找主干（主谓宾），再看修饰成分。推荐孩子每天精读一篇，坚持21天见效。',likes:19,tag:'高一'},
+  {id:4,liker:'赵爸爸',likerColor:3,time:'07-20 ',content:'物理压轴题的突破口往往在受力分析，画好受力图是解题关键。分享我帮孩子总结的受力分析checklist。',likes:15,tag:'高二'},
+  {id:5,liker:'刘妈妈',likerColor:4,time:'07-20 ',content:'孩子月考退步了，别急着批评，先问问哪里没做好，一起分析原因，比责骂有效得多。',likes:41,tag:'高二'},
+];
+function render(){
+  if(posts.length===0||showEmpty){
+    document.getElementById('pageBody').innerHTML='<div class="empty"><span class="material-icons">favorite_border</span>还没有获得赞</div>';
+    return;
+  }
+  document.getElementById('pageBody').innerHTML=posts.map(p=>`
+<div class="post-item" onclick="window.location.href='tiezidetail.html'">
+  <div class="post-head">
+    <div class="avatar" style="background:${colors[p.likerColor]}">${p.liker[0]}</div>
+    <div class="post-meta">
+      <div class="poster">${p.liker} 赞了这篇帖子</div>
+      <div class="post-time">${p.time}</div>
+    </div>
+    <span class="post-tag">${p.tag}</span>
+  </div>
+  <div class="post-content">${p.content}</div>
+  <div class="post-footer">
+    <div class="like-info"><span class="material-icons">favorite</span>${p.likes} 人点赞</div>
+    <span class="material-icons" style="font-size:16px;color:var(--hint)">chevron_right</span>
+  </div>
+</div>`).join('');
+}
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

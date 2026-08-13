@@ -1,0 +1,554 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>帖子详情 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+.app-bar .actions{display:flex;gap:4px;align-items:center}
+.app-bar .actions button{background:none;border:none;color:var(--text2);cursor:pointer;padding:6px;border-radius:50%;display:flex;align-items:center}
+.page-body{flex:1;overflow-y:auto;padding-bottom:70px;-webkit-overflow-scrolling:touch}
+.post-header{background:var(--surface);padding:16px;margin-bottom:8px}
+.post-author{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.post-author .avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;flex-shrink:0}
+.post-author .author-info{flex:1}
+.post-author .author-name{font-size:14px;font-weight:600;color:var(--text1)}
+.post-author .author-meta{font-size:12px;color:var(--hint);margin-top:2px}
+.post-author .follow-btn{padding:5px 14px;border-radius:14px;border:1px solid var(--primary);background:none;color:var(--primary);font-size:12px;font-weight:500;cursor:pointer}
+.post-author .follow-btn:active{background:rgba(230,67,26,.06)}
+.post-detail-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag-circle{padding:2px 10px;border-radius:10px;font-size:11px;font-weight:500;background:rgba(230,67,26,.08);color:var(--primary)}
+.tag-hot{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:var(--primary);color:#fff}
+.tag-report{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;border:1px solid #3F51B5;color:#3F51B5;display:flex;align-items:center;gap:2px}
+.tag-report .material-icons{font-size:12px}
+.post-detail-title{font-size:18px;font-weight:700;color:var(--text1);margin-bottom:12px;line-height:1.4}
+.post-detail-content{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:14px}
+.post-detail-images{display:grid;gap:6px;margin-bottom:14px}
+.post-detail-images.cols-1{grid-template-columns:1fr}
+.post-detail-images.cols-2{grid-template-columns:1fr 1fr}
+.post-detail-images.cols-3{grid-template-columns:1fr 1fr 1fr}
+.post-detail-images img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:#f0f0f0}
+.post-stats{display:flex;align-items:center;gap:16px;padding-top:12px;border-top:1px solid var(--divider);font-size:12px;color:var(--hint)}
+.post-stats .material-icons{font-size:14px;vertical-align:middle;margin-right:2px}
+.comments-section{background:var(--surface);padding:16px;margin-top:8px}
+.comments-title{font-size:15px;font-weight:600;margin-bottom:14px;color:var(--text1)}
+.comment-item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #f5f5f5}
+.comment-item:last-child{border-bottom:none}
+.comment-item .c-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.comment-item .c-body{flex:1;min-width:0}
+.comment-item .c-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.comment-item .c-name{font-size:13px;font-weight:600;color:var(--text1)}
+.comment-item .c-time{font-size:11px;color:var(--hint)}
+.comment-item .c-text{font-size:13px;color:var(--text2);line-height:1.6}
+.comment-item .c-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.comment-item .c-actions .left-act{display:flex;align-items:center;gap:12px}
+.comment-item .c-actions button{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;font-size:11px;color:var(--hint)}
+.comment-item .c-actions button .material-icons{font-size:14px}
+.comment-item .c-actions button.liked{color:var(--primary)}
+.bottom-input{position:absolute;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -1px 4px rgba(0,0,0,.08);z-index:10;transition:all .2s}
+.bottom-input .input-row{display:flex;align-items:center;gap:10px;padding:10px 16px}
+.bottom-input .input-row input{flex:1;padding:10px 14px;border:1px solid var(--divider);border-radius:20px;font-size:13px;outline:none;background:#fafafa}
+.bottom-input .input-row input:focus{border-color:var(--primary)}
+.bottom-input .send-btn{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.bottom-input .send-btn:active{opacity:.8}
+.toolbar-row{display:none;padding:6px 16px 10px;border-top:1px solid var(--divider);gap:6px;align-items:center}
+.toolbar-row.show{display:flex}
+.toolbar-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:16px;border:none;background:#f5f5f5;color:var(--text2);font-size:12px;cursor:pointer;transition:background .12s}
+.toolbar-btn:active{background:#eee}
+.toolbar-btn .material-icons{font-size:16px;color:var(--text3)}
+.at-dropdown{position:absolute;bottom:100%;left:16px;right:16px;background:#fff;border-radius:12px;box-shadow:0 -4px 16px rgba(0,0,0,.12);max-height:200px;overflow-y:auto;display:none;z-index:20}
+.at-dropdown.show{display:block}
+.at-item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;border-bottom:1px solid #f5f5f5}
+.at-item:last-child{border-bottom:none}
+.at-item:active{background:#fafafa}
+.at-item .at-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;flex-shrink:0}
+.at-item .at-name{font-size:14px;color:var(--text1);font-weight:500}
+.img-preview-row{display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap}
+.img-preview-row .img-thumb{width:56px;height:56px;border-radius:8px;object-fit:cover;background:#f0f0f0;position:relative}
+.img-preview-row .img-remove{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* ── 底部 ActionSheet / 模态框 样式 ── */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .15s ease}
+.sheet-panel{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:390px;padding:8px 0 24px;overflow:hidden;animation:slideUp .2s ease}
+.sheet-item{padding:14px 20px;font-size:15px;color:var(--text1);display:flex;align-items:center;gap:12px;cursor:pointer;border-bottom:1px solid #f5f5f5}
+.sheet-item:active{background:#f9f9f9}
+.sheet-item .material-icons{font-size:20px;color:var(--text3)}
+.sheet-item.danger{color:var(--urgent)}
+.sheet-item.danger .material-icons{color:var(--urgent)}
+.sheet-cancel{padding:14px 20px;font-size:15px;color:var(--hint);text-align:center;cursor:pointer;margin-top:6px;border-top:6px solid #f5f5f5}
+
+/* 小红书风格举报弹窗 */
+.dialog-panel{background:#fff;border-radius:16px;width:90%;max-width:340px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.15);animation:scaleIn .15s ease}
+.dialog-title{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text1)}
+.report-reasons{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.report-chip{padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s}
+.report-chip.selected{border-color:var(--primary);color:var(--primary);background:rgba(230,67,26,.04);font-weight:500}
+
+/* 小红书补充描述文本域 */
+.report-textarea-wrap{margin-top:10px;display:none;position:relative}
+.report-textarea-wrap.show{display:block;animation:fadeIn .2s ease}
+.report-textarea{width:100%;height:80px;border:1px solid #e0e0e0;border-radius:8px;padding:10px;font-size:12px;color:var(--text1);resize:none;outline:none;background:#fafafa;font-family:inherit;line-height:1.5}
+.report-textarea:focus{border-color:var(--primary);background:#fff}
+.report-char-count{position:absolute;bottom:8px;right:10px;font-size:10px;color:var(--hint)}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes scaleIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+<button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+<span class="title">帖子详情</span>
+<div class="actions">
+<button onclick="showToast('已复制分享链接')"><span class="material-icons">share</span></button>
+<button onclick="openMoreMenu()"><span class="material-icons">more_vert</span></button>
+<span class="prd-mark" onclick="openPrd(event,3)">3</span>
+</div>
+</div>
+<div class="page-body" id="pageBody"></div>
+<div class="bottom-input" id="bottomInput">
+<div class="at-dropdown" id="atDropdown"></div>
+<div class="img-preview-row" id="imgPreviewRow"></div>
+<div class="input-row">
+<input type="text" id="commentInput" placeholder="写评论..." onfocus="showToolbar()" onblur="hideToolbarDelay()">
+<button class="send-btn" onclick="sendComment()"><span class="material-icons">send</span></button>
+</div>
+<div class="toolbar-row" id="toolbarRow">
+<button class="toolbar-btn" onclick="addImage()"><span class="material-icons">image</span>图片</button>                                                                                                                                                                                                                                            
+</div>
+</div>
+
+<script>
+const placeholderImg=`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect fill="#f0f0f0" width="400" height="400"/><text x="200" y="200" text-anchor="middle" font-size="14" fill="#bbb">图片</text></svg>')}`;
+
+const blacklistedAuthors = new Set();
+const currentUser = '张妈妈';
+
+const posts={
+1:{id:1,author:'张妈妈',avatarColor:'#1565C0',circleName:'高一',title:'孩子三角函数老出错怎么办？',content:'最近几次模考三角函数大题都丢分严重，有没有好的练习方法推荐？\n\n孩子说自己复习了但还是会出错，感觉是基础不够扎实。公式记住了但是看到题不知道怎么用，特别是辅助角公式和和差化积那块。\n\n有经验的家长能分享一下吗？',likes:12,comments:5,shares:2,images:[],pinned:false,isReport:false,time:'2026-07-20 09:30'},
+2:{id:2,author:'王爸爸',avatarColor:'#9C27B0',circleName:'其它',title:'分享一个错题整理的好习惯',content:'我家孩子坚持每周整理错题本，按知识点分类，标注错误原因和正确思路。\n\n具体做法：\n1. 每次考试后把错题剪下来贴到本子上\n2. 用红笔标注错误原因（计算失误/概念不清/方法不对）\n3. 用蓝笔写出正确解题思路\n4. 每周复习一遍，标记已掌握的\n\n这学期数学从72提到了85分，分享给大家参考。坚持是关键！',likes:128,comments:13,shares:8,images:[placeholderImg,placeholderImg,placeholderImg],pinned:false,isReport:false,time:'2026-07-19 15:20'},
+3:{id:3,author:'张妈妈',avatarColor:'#E6431A',circleName:'高三',title:'数学期中考试分析报告分享',content:'用陪读社区的试卷分析功能生成的报告，发现二次函数是最大薄弱点。\n\n三档分布：\n- 待改进：二次函数、三角函数\n- 需关注：概率统计、数列\n- 已掌握：向量、集合\n\n分享给同年级的家长参考，大家也可以试试这个功能，真的挺有帮助。',likes:45,comments:21,shares:15,images:[],pinned:false,isReport:true,time:'2026-07-18 20:10'}
+};
+
+const commentsData={
+1:[
+{id:1,author:'张妈妈',avatarColor:'#9C27B0',text:'我家也是这个问题，后来给孩子报了一个网课，三角函数那块好多了。建议先把基础公式背熟再做题。',time:'07-20 10:15',likes:3,liked:false},
+{id:2,author:'张爸爸',avatarColor:'#1565C0',text:'推荐一本书《高中数学三角函数专项突破》，我家孩子用了之后提了不少。',time:'07-20 11:30',likes:5,liked:false},
+{id:3,author:'赵妈妈',avatarColor:'#00838F',text:'辅助角公式确实难，让孩子多画单位圆图，建立直觉会好很多。',time:'07-20 14:20',likes:2,liked:false}
+]
+};
+
+function getPostId(){
+const params=new URLSearchParams(window.location.search);
+return parseInt(params.get('id'))||1;
+}
+
+const postId=getPostId();
+const post=posts[postId]||posts[1];
+const comments=commentsData[postId]||[];
+
+function render(){
+if(blacklistedAuthors.has(post.author)){
+  document.getElementById('pageBody').innerHTML=`
+    <div style="text-align:center;padding:80px 20px;color:var(--hint)">
+      <span class="material-icons" style="font-size:48px;margin-bottom:12px;color:#ccc">block</span>
+      <div style="font-size:15px;font-weight:600;color:var(--text2)">已拉黑该用户</div>
+      <div style="font-size:12px;margin-top:4px">已为你隐藏 ${post.author} 发表的帖子内容</div>
+    </div>`;
+  return;
+}
+
+const isHot=post.pinned||post.likes>100;
+let imagesHtml='';
+if(post.images.length>0){
+const cols=post.images.length===1?'cols-1':post.images.length===2?'cols-2':'cols-3';
+imagesHtml=`<div class="post-detail-images ${cols}">${post.images.map(img=>`<img src="${img}">`).join('')}</div>`;
+}
+
+const visibleComments = comments.filter(c => !blacklistedAuthors.has(c.author));
+
+let html=`
+<div class="post-header">
+<div class="post-author">
+<div class="avatar" style="background:${post.avatarColor}">${post.author[0]}</div>
+<div class="author-info">
+<div class="author-name">${post.author}</div>
+<div class="author-meta">${post.time}</div>
+</div>
+<button class="follow-btn">关注</button>
+</div>
+<div class="post-detail-tags">
+<span class="tag-circle">${post.circleName}</span>
+${isHot?'<span class="tag-hot">热</span>':''}
+${post.isReport?'<span class="tag-report"><span class="material-icons">insights</span>报告</span>':''}
+</div>
+<div class="post-detail-title">${post.title}</div>
+<div class="post-detail-content">${post.content.replace(/\n/g,'<br>')}</div>
+${imagesHtml}
+<div class="post-stats"><span class="prd-mark" onclick="openPrd(event,1)" style="margin-right:auto">1</span>
+<span><span class="material-icons">lightbulb</span>${post.likes} 有用</span>
+<span><span class="material-icons">chat_bubble_outline</span>${visibleComments.length} 评论</span>
+<span><span class="material-icons">share</span>${post.shares} 分享</span>
+</div>
+</div>
+
+<div class="comments-section" style="position:relative"><span class="prd-mark" onclick="openPrd(event,2)" style="position:absolute;top:14px;right:16px">2</span>
+<div class="comments-title">评论 (${visibleComments.length})</div>
+${visibleComments.length===0?'<div style="text-align:center;padding:20px;color:var(--hint);font-size:13px">暂无评论，快来抢沙发</div>':''}
+${visibleComments.map(c=>`
+<div class="comment-item">
+<div class="c-avatar" style="background:${c.avatarColor}">${c.author[0]}</div>
+<div class="c-body">
+<div class="c-header"><span class="c-name">${c.author}</span><span class="c-time">${c.time}</span></div>
+<div class="c-text">${c.text}</div>
+<div class="c-actions">
+<div class="left-act">
+  <button class="${c.liked?'liked':''}" onclick="likeComment(${c.id})"><span class="material-icons">${c.liked?'thumb_up':'thumb_up_off_alt'}</span>${c.likes}</button>
+  <button onclick="replyComment('${c.author}')"><span class="material-icons">reply</span>回复</button>
+</div>
+<button onclick="openCommentMenu('${c.author}', ${c.id})"><span class="material-icons" style="color:var(--hint);font-size:16px">more_horiz</span></button>
+</div>
+</div>
+</div>`).join('')}
+</div>`;
+document.getElementById('pageBody').innerHTML=html;
+}
+
+function openMoreMenu(){
+  const mask = document.createElement('div');
+  mask.className = 'modal-mask';
+  mask.id = 'moreMenuModal';
+  mask.onclick = (e)=>{ if(e.target===mask) closeMoreMenu(); };
+
+  const isOwn = post.author===currentUser;
+  mask.innerHTML = `
+    <div class="sheet-panel">
+      ${isOwn?`<div class="sheet-item danger" onclick="closeMoreMenu(); showDeletePostConfirm();"><span class="material-icons">delete_outline</span> 删除帖子</div>`:`
+      <div class="sheet-item" onclick="closeMoreMenu(); openReportDialog('post');"><span class="material-icons">outlined_flag</span> 举报该帖子</div>
+      <div class="sheet-item danger" onclick="closeMoreMenu(); confirmBlockAuthor('${post.author}');"><span class="material-icons">block</span> 拉黑作者（${post.author}）</div>`}
+      <div class="sheet-cancel" onclick="closeMoreMenu()">取消</div>
+    </div>
+  `;
+  document.body.appendChild(mask);
+}
+
+function closeMoreMenu(){
+  document.getElementById('moreMenuModal')?.remove();
+}
+
+function openCommentMenu(authorName, commentId){
+  const isOwn = authorName===currentUser || authorName==='我';
+  const mask = document.createElement('div');
+  mask.className = 'modal-mask';
+  mask.id = 'commentMenuModal';
+  mask.onclick = (e)=>{ if(e.target===mask) closeCommentMenu(); };
+
+  mask.innerHTML = `
+    <div class="sheet-panel">
+      ${isOwn?`<div class="sheet-item danger" onclick="closeCommentMenu(); showDeleteCommentConfirm(${commentId});"><span class="material-icons">delete_outline</span> 删除评论</div>`:`
+      <div class="sheet-item" onclick="closeCommentMenu(); openReportDialog('comment');"><span class="material-icons">outlined_flag</span> 举报该评论</div>
+      <div class="sheet-item danger" onclick="closeCommentMenu(); confirmBlockAuthor('${authorName}');"><span class="material-icons">block</span> 拉黑该用户（${authorName}）</div>`}
+      <div class="sheet-cancel" onclick="closeCommentMenu()">取消</div>
+    </div>
+  `;
+  document.body.appendChild(mask);
+}
+
+function closeCommentMenu(){
+  document.getElementById('commentMenuModal')?.remove();
+}
+
+function showDeletePostConfirm(){
+  const mask=document.createElement('div');
+  mask.className='modal-mask';mask.style.alignItems='center';mask.id='deletePostModal';
+  mask.onclick=(e)=>{if(e.target===mask)mask.remove();};
+  mask.innerHTML=`<div class="dialog-panel" style="text-align:center">
+    <div class="dialog-title" style="font-size:16px;font-weight:700;margin-bottom:8px">删除帖子</div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:20px">确定要删除这篇帖子吗？删除后无法恢复。</div>
+    <div style="display:flex;gap:10px">
+      <button onclick="document.getElementById('deletePostModal').remove()" style="flex:1;padding:11px;border-radius:var(--r-btn);border:none;background:var(--bg);color:var(--text2);font-size:14px;font-weight:600;cursor:pointer">取消</button>
+      <button onclick="deletePost()" style="flex:1;padding:11px;border-radius:var(--r-btn);border:none;background:var(--urgent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">确定删除</button>
+    </div>
+  </div>`;
+  document.body.appendChild(mask);
+}
+
+function deletePost(){
+  document.getElementById('deletePostModal')?.remove();
+  showToast('帖子已删除');
+  setTimeout(()=>{history.back();},1500);
+}
+
+function showDeleteCommentConfirm(commentId){
+  const mask=document.createElement('div');
+  mask.className='modal-mask';mask.style.alignItems='center';mask.id='deleteCommentModal';
+  mask.onclick=(e)=>{if(e.target===mask)mask.remove();};
+  mask.innerHTML=`<div class="dialog-panel" style="text-align:center">
+    <div class="dialog-title" style="font-size:16px;font-weight:700;margin-bottom:8px">删除评论</div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:20px">确定要删除这条评论吗？删除后无法恢复。</div>
+    <div style="display:flex;gap:10px">
+      <button onclick="document.getElementById('deleteCommentModal').remove()" style="flex:1;padding:11px;border-radius:var(--r-btn);border:none;background:var(--bg);color:var(--text2);font-size:14px;font-weight:600;cursor:pointer">取消</button>
+      <button onclick="deleteComment(${commentId})" style="flex:1;padding:11px;border-radius:var(--r-btn);border:none;background:var(--urgent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">确定删除</button>
+    </div>
+  </div>`;
+  document.body.appendChild(mask);
+}
+
+function deleteComment(commentId){
+  document.getElementById('deleteCommentModal')?.remove();
+  const idx=comments.findIndex(c=>c.id===commentId);
+  if(idx!==-1)comments.splice(idx,1);
+  render();
+  showToast('评论已删除');
+}
+
+let selectedReportReason = '广告营销';
+function openReportDialog(targetType){
+  const mask = document.createElement('div');
+  mask.className = 'modal-mask';
+  mask.style.alignItems = 'center';
+  mask.id = 'reportModal';
+  mask.onclick = (e)=>{ if(e.target===mask) closeReportDialog(); };
+
+  const reasons = ['广告营销 / 垃圾信息', '辱骂攻击 / 不友善言论', '虚假错误信息', '泄露他人隐私', '其它违规内容'];
+  selectedReportReason = reasons[0];
+
+  mask.innerHTML = `
+    <div class="dialog-panel">
+      <div class="dialog-title">举报${targetType==='post'?'帖子':'评论'}原因</div>
+      <div class="report-reasons" id="reasonList">
+        ${reasons.map((r, i)=>`
+          <div class="report-chip ${i===0?'selected':''}" onclick="selectReason(this, '${r}')">
+            <span>${r}</span>
+            <span class="material-icons" style="font-size:16px">${i===0?'check_circle':'radio_button_unchecked'}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="report-textarea-wrap" id="reportTextareaWrap">
+        <textarea class="report-textarea" id="reportDetail" maxlength="200" placeholder="请详细描述具体的违规行为，以便客服快速处理（选填）..." oninput="updateCharCount(this)"></textarea>
+        <span class="report-char-count" id="charCount">0/200</span>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+        <button onclick="closeReportDialog()" style="padding:8px 16px;border-radius:8px;border:none;background:#f5f5f5;color:#666;font-size:13px;cursor:pointer">取消</button>
+        <button onclick="submitReport()" style="padding:8px 16px;border-radius:8px;border:none;background:var(--primary);color:#fff;font-size:13px;font-weight:500;cursor:pointer">提交举报</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(mask);
+}
+
+function selectReason(el, reason){
+  selectedReportReason = reason;
+  document.querySelectorAll('.report-chip').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.material-icons').textContent = 'radio_button_unchecked';
+  });
+  el.classList.add('selected');
+  el.querySelector('.material-icons').textContent = 'check_circle';
+
+  const wrap = document.getElementById('reportTextareaWrap');
+  if(reason === '其它违规内容'){
+    wrap.classList.add('show');
+  } else {
+    wrap.classList.remove('show');
+  }
+}
+
+function updateCharCount(el){
+  document.getElementById('charCount').textContent = `${el.value.length}/200`;
+}
+
+function closeReportDialog(){
+  document.getElementById('reportModal')?.remove();
+}
+
+function submitReport(){
+  const detailText = document.getElementById('reportDetail')?.value.trim();
+  
+  if(selectedReportReason === '其它违规内容' && !detailText){
+    showToast('请补充具体违规描述');
+    return;
+  }
+  
+  closeReportDialog();
+  showToast('举报已提交，平台将尽快审核处理');
+}
+
+function confirmBlockAuthor(authorName){
+  if(confirm(`确定要拉黑用户“${authorName}”吗？\n拉黑后将不再看到该用户发表的任何帖子和评论。`)){
+    blacklistedAuthors.add(authorName);
+    showToast(`已将 ${authorName} 加入黑名单`);
+    render();
+  }
+}
+
+function likeComment(cid){
+const c=comments.find(x=>x.id===cid);
+if(c){c.liked=!c.liked;c.likes+=c.liked?1:-1;render();}
+}
+
+function replyComment(name){
+const input=document.getElementById('commentInput');
+input.value=`回复 ${name}：`;
+input.focus();
+}
+
+function sendComment(){
+const input=document.getElementById('commentInput');
+const text=input.value.trim();
+if(!text&&commentImages.length===0)return;
+let finalText=text;
+if(commentImages.length>0)finalText+=(text?' ':'')+'[图片x'+commentImages.length+']';
+comments.push({id:Date.now(),author:'我',avatarColor:'#E6431A',text:finalText,time:'刚刚',likes:0,liked:false});
+input.value='';
+commentImages=[];
+renderImgPreview();
+hideToolbar();
+render();
+const body=document.querySelector('.page-body');
+body.scrollTop=body.scrollHeight;
+}
+
+let toolbarVisible=false;
+let hideTimer=null;
+let commentImages=[];
+
+function showToolbar(){
+clearTimeout(hideTimer);
+toolbarVisible=true;
+document.getElementById('toolbarRow').classList.add('show');
+}
+
+function hideToolbarDelay(){
+hideTimer=setTimeout(()=>{
+if(!document.getElementById('atDropdown').classList.contains('show')){
+hideToolbar();
+}
+},200);
+}
+
+function hideToolbar(){
+toolbarVisible=false;
+document.getElementById('toolbarRow').classList.remove('show');
+document.getElementById('atDropdown').classList.remove('show');
+}
+
+function addImage(){
+commentImages.push(placeholderImg);
+if(commentImages.length>3)commentImages=commentImages.slice(0,3);
+renderImgPreview();
+}
+
+function removeImage(idx){
+commentImages.splice(idx,1);
+renderImgPreview();
+}
+
+function renderImgPreview(){
+const row=document.getElementById('imgPreviewRow');
+if(commentImages.length===0){row.innerHTML='';return;}
+row.innerHTML=commentImages.map((img,i)=>`
+<div style="position:relative;width:56px;height:56px">
+<img class="img-thumb" src="${img}" style="width:56px;height:56px;border-radius:8px;object-fit:cover">
+<div class="img-remove" onclick="removeImage(${i})"><span class="material-icons" style="font-size:12px">close</span></div>
+</div>`).join('');
+}
+
+render();
+
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+
+const prdData={
+  1:{title:'标记 1 · 帖子',badge:'数据规范',badgeType:'data',
+     text:'posts 对象：以 postId 为键（1-7）\n• 字段：id, author, avatarColor, circleName, title, content, likes, comments, shares, images[], pinned, isReport, time\n\n图片网格布局规则：\n• 1张 → cols-1（全宽）\n• 2张 → cols-2（各半）\n• 3张或更多 → cols-3（三列，1:1 比例）\n\nisHot 判断：post.pinned===true OR post.likes>100\n\npostId 来源：URL 参数 ?id=N，缺省为 1\n• posts[postId] 不存在时 fallback 到 posts[1]'},
+  2:{title:'标记 2 · 评论交互',badge:'交互规范',badgeType:'interaction',
+     text:'评论区单条评论交互规范：\n• 支持点赞、回复、单条评论更多（举报/拉黑）操作\n• 拉黑特定评论者后，系统会自动过滤黑名单用户的发言，并不在评论列表中呈现'},
+  3:{title:'标记 3 · 举报与拉黑安全治理',badge:'交互规范',badgeType:'interaction',
+     text:'举报与拉黑安全治理规范：\n• 点击右上角 more_vert 弹出 ActionSheet：选择【举报帖子】或【拉黑作者】\n• 举报规则（小红书对标）：支持 5 种违规原因，选择“其它违规内容”时平滑展示 200 字 limit 输入框，空内容提交触发拦截 Toast\n• 拉黑作者规则：将用户加入 blacklistedAuthors 集合，全局隐藏该作者发表的所有帖子内容与评论内容'}
+};
+let _curPrdId=null;
+(function(){const prdK='prd_tiezidetail';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_tiezidetail';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>设置 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--keep:#43A047;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.card-title{font-size:12px;color:var(--text3);font-weight:600;padding:14px 16px 6px;text-transform:uppercase;letter-spacing:.5px}
+.menu-item{display:flex;align-items:center;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--divider);transition:background .1s}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:#fafafa}
+.mi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
+.mi-icon .material-icons{font-size:18px}
+.mi-content{flex:1;min-width:0}
+.mi-title{font-size:14px;font-weight:500;color:var(--text1)}
+.mi-value{font-size:12px;color:var(--text3);margin-top:1px}
+.mi-arrow{color:var(--hint)}
+.mi-arrow .material-icons{font-size:18px}
+.mi-badge{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px}
+.switch-wrap{position:relative;width:44px;height:24px;flex-shrink:0}
+.switch-wrap input{opacity:0;width:0;height:0}
+.switch-track{position:absolute;inset:0;border-radius:12px;background:#ccc;transition:background .2s;cursor:pointer}
+.switch-track::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch-wrap input:checked+.switch-track{background:var(--primary)}
+.switch-wrap input:checked+.switch-track::after{transform:translateX(20px)}
+.logout-section{margin-top:12px;margin-bottom:24px;display:flex;flex-direction:column;gap:10px}
+.logout-btn{width:100%;padding:14px;border:none;background:var(--surface);border-radius:var(--r-card);font-size:15px;font-weight:600;color:var(--urgent);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:background .1s}
+.logout-btn:active{background:#fff5f5}
+.delete-btn{background:transparent;box-shadow:none;color:var(--hint);font-size:13px;font-weight:normal}
+.delete-btn:active{background:none;color:var(--urgent)}
+
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;display:flex;align-items:center;justify-content:center}
+.modal-mask.show{opacity:1;pointer-events:auto}
+.modal-box{background:#fff;border-radius:16px;padding:24px 20px;width:310px;text-align:center;transform:scale(.9);transition:transform .2s}
+.modal-mask.show .modal-box{transform:scale(1)}
+.modal-title{font-size:16px;font-weight:700;color:var(--text1);margin-bottom:8px}
+.modal-desc{font-size:13px;color:var(--text3);margin-bottom:20px}
+.modal-actions{display:flex;gap:10px}
+.modal-actions button{flex:1;padding:11px;border-radius:var(--r-btn);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .1s}
+.modal-actions button:active{transform:scale(.97)}
+.modal-cancel{background:var(--bg);color:var(--text2)}
+.modal-confirm{background:var(--urgent);color:#fff}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,0,0,.82);color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;z-index:3000;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+<button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+<span class="title">设置</span>
+</div>
+<div class="page-body">
+
+<!-- 1. 账号与安全 -->
+<div class="card">
+  <div class="card-title">账号与安全</div>
+  <div class="menu-item" onclick="window.location.href='xiugaishouji.html'">
+    <div class="mi-icon" style="background:rgba(21,101,194,.1)"><span class="material-icons" style="color:#1565C0">smartphone</span></div>
+    <div class="mi-content"><div class="mi-title">修改手机号</div><div class="mi-value">138 **** 8888</div><span class="prd-mark" onclick="openPrd(event,1)">1</span></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item" onclick="window.location.href='jiazhangrenzheng.html'">
+    <div class="mi-icon" style="background:rgba(67,160,71,.1)"><span class="material-icons" style="color:var(--keep)">verified_user</span></div>
+    <div class="mi-content"><div class="mi-title">家长身份认证</div></div>
+    <span class="mi-badge" style="color:var(--keep);background:rgba(67,160,71,.1)">已认证</span><span class="prd-mark" onclick="openPrd(event,2)">2</span>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  
+</div>
+
+<!-- 2. 消息通知设置 -->
+<div class="card">
+  <div class="card-title">消息通知</div>
+  <div class="menu-item">
+    <div class="mi-icon" style="background:rgba(233,30,99,.1)"><span class="material-icons" style="color:#E91E63">notifications</span></div>
+    <div class="mi-content"><div class="mi-title">互动消息提醒</div><div class="mi-value">赞、评论、@我的通知</div></div>
+    <label class="switch-wrap">
+      <input type="checkbox" checked onchange="toggleNotify(this, '互动消息')">
+      <span class="switch-track"></span>
+    </label>
+  </div>
+  <div class="menu-item">
+    <div class="mi-icon" style="background:rgba(156,39,176,.1)"><span class="material-icons" style="color:#9C27B0">forum</span></div>
+    <div class="mi-content"><div class="mi-title">私信消息通知</div><div class="mi-value">接收社区家长私信</div></div>
+    <label class="switch-wrap">
+      <input type="checkbox" checked onchange="toggleNotify(this, '私信消息')">
+      <span class="switch-track"></span>
+    </label>
+  </div>
+  <div class="menu-item">
+    <div class="mi-icon" style="background:rgba(33,150,243,.1)"><span class="material-icons" style="color:#1E88E5">campaign</span></div>
+    <div class="mi-content"><div class="mi-title">系统与活动公告</div></div>
+    <label class="switch-wrap">
+      <input type="checkbox" onchange="toggleNotify(this, '系统公告')">
+      <span class="switch-track"></span>
+    </label>
+  </div>
+</div>
+
+<!-- 3. 隐私与权限 -->
+<div class="card">
+  <div class="card-title">隐私与权限</div>
+  <div class="menu-item" onclick="window.location.href='heimdan.html'">
+    <div class="mi-icon" style="background:rgba(96,125,139,.1)"><span class="material-icons" style="color:#546E7A">block</span></div>
+    <div class="mi-content"><div class="mi-title">黑名单管理</div><div class="mi-value">已屏蔽 0 人</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item">
+    <div class="mi-icon" style="background:rgba(0,150,136,.1)"><span class="material-icons" style="color:#00897B">person_search</span></div>
+    <div class="mi-content"><div class="mi-title">允许通过手机号搜索到我</div></div>
+    <label class="switch-wrap">
+      <input type="checkbox" checked onchange="togglePrivacy(this, '手机号搜索')">
+      <span class="switch-track"></span>
+    </label>
+  </div>
+  <div class="menu-item" onclick="window.location.href='quanxian.html'">
+    <div class="mi-icon" style="background:rgba(63,81,181,.1)"><span class="material-icons" style="color:#3949AB">security</span></div>
+    <div class="mi-content"><div class="mi-title">系统权限管理</div><div class="mi-value">相机、相册、麦克风等权限</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item" onclick="window.location.href='yinsi_info.html'">
+    <div class="mi-icon" style="background:rgba(0,188,212,.1)"><span class="material-icons" style="color:#00ACC1">assignment</span></div>
+    <div class="mi-content"><div class="mi-title">个人信息收集清单</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item" onclick="window.location.href='yinsi_third.html'">
+    <div class="mi-icon" style="background:rgba(255,87,34,.1)"><span class="material-icons" style="color:#F4511E">share</span></div>
+    <div class="mi-content"><div class="mi-title">第三方信息共享清单</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+</div>
+
+<!-- 4. 通用与存储 -->
+<div class="card">
+  <div class="card-title">通用与存储</div>
+  <div class="menu-item" onclick="clearCache()">
+    <div class="mi-icon" style="background:#f5f5f5"><span class="material-icons" style="color:var(--text3)">delete_sweep</span></div>
+    <div class="mi-content"><div class="mi-title">清理缓存</div><div class="mi-value" id="cacheSize">12.8 MB</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+</div>
+
+<!-- 5. 帮助与合规 -->
+<div class="card">
+  <div class="card-title">关于与帮助</div>
+  <div class="menu-item" onclick="window.location.href='yonghu_xieyi.html'">
+    <div class="mi-icon" style="background:#f5f5f5"><span class="material-icons" style="color:var(--text3)">description</span></div>
+    <div class="mi-content"><div class="mi-title">用户协议与服务条款</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item" onclick="window.location.href='yinsi_zhengce.html'">
+    <div class="mi-icon" style="background:#f5f5f5"><span class="material-icons" style="color:var(--text3)">privacy_tip</span></div>
+    <div class="mi-content"><div class="mi-title">隐私政策</div></div>
+    <div class="mi-arrow"><span class="material-icons">chevron_right</span></div>
+  </div>
+  <div class="menu-item">
+    <div class="mi-icon" style="background:#f5f5f5"><span class="material-icons" style="color:var(--text3)">info_outline</span></div>
+    <div class="mi-content"><div class="mi-title">关于陪读社区</div><div class="mi-value">版本 v1.2.0</div></div>
+  </div>
+</div>
+
+<!-- 底部账号操作 -->
+<div class="logout-section">
+  <button class="logout-btn" onclick="showLogoutModal()"><span class="prd-mark" onclick="openPrd(event,3)" style="margin-right:6px">3</span><span class="material-icons">logout</span>退出登录</button>
+  <button class="logout-btn delete-btn" onclick="showDeleteAccountModal()">注销账号</button>
+</div>
+
+</div>
+</div>
+
+<!-- 退出登录模态框 -->
+<div class="modal-mask" id="logoutModal" onclick="closeModal(event)">
+<div class="modal-box">
+  <div class="modal-title">退出登录</div>
+  <div class="modal-desc">确定要退出登录吗？退出后需重新验证手机号登录。</div>
+  <div class="modal-actions">
+    <button class="modal-cancel" onclick="hideLogoutModal()">取消</button>
+    <button class="modal-confirm" onclick="doLogout()">确定退出</button>
+  </div>
+</div>
+</div>
+
+<!-- 合规注销账号模态框（包含条款与协议勾选防呆） -->
+<div class="modal-mask" id="deleteAccountModal" onclick="closeModal(event)">
+<div class="modal-box" style="text-align: left;">
+  <div class="modal-title" style="color:var(--urgent); text-align: center;">注销账号须知</div>
+  
+  <div style="font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; max-height: 130px; overflow-y: auto; background: #fafafa; padding: 10px; border-radius: 8px; border: 1px solid #f0f0f0;">
+    <p style="margin-bottom: 6px; font-weight: 600; color: var(--text1);">注销为不可逆操作，您将放弃以下权益：</p>
+    <p>1. 家长身份认证状态及认证标记将永久清空；</p>
+    <p>2. 社区发布的帖子、评论及点赞互动数据无法找回；</p>
+    <p>3. 历史试卷、学习日程规划及试卷诊断报告将永久失效；</p>
+    <p>4. 账号注销后无法撤销。</p>
+  </div>
+
+  <!-- 协议勾选区域 -->
+  <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text3); margin-bottom: 16px; cursor: pointer;">
+    <input type="checkbox" id="agreeDeleteCheck" onchange="toggleDeleteBtn(this)" style="accent-color: var(--primary);">
+    <span>我已阅读并同意<a href="zhuxiao_xieyi.html" style="color: var(--primary); text-decoration: underline;">《账号注销协议》</a></span>
+  </label>
+
+  <div class="modal-actions">
+    <button class="modal-cancel" onclick="hideDeleteAccountModal()">再想想</button>
+    <button class="modal-confirm" id="confirmDeleteBtn" onclick="doDeleteAccount()" disabled style="opacity: 0.4; cursor: not-allowed;">确认注销</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show')},2200);
+}
+
+function clearCache(){
+  document.getElementById('cacheSize').textContent = '0 KB';
+  showToast('已清理缓存 12.8MB');
+}
+
+function toggleNotify(el, name){
+  showToast((el.checked ? '已开启' : '已关闭') + name + '通知');
+}
+
+function togglePrivacy(el, name){
+  showToast((el.checked ? '允许' : '禁止') + name);
+}
+
+function showLogoutModal(){
+  document.getElementById('logoutModal').classList.add('show');
+}
+
+function hideLogoutModal(){
+  document.getElementById('logoutModal').classList.remove('show');
+}
+
+function showDeleteAccountModal(){
+  const check = document.getElementById('agreeDeleteCheck');
+  if (check) {
+    check.checked = false;
+    toggleDeleteBtn(check);
+  }
+  document.getElementById('deleteAccountModal').classList.add('show');
+}
+
+function hideDeleteAccountModal(){
+  document.getElementById('deleteAccountModal').classList.remove('show');
+}
+
+function toggleDeleteBtn(el) {
+  const btn = document.getElementById('confirmDeleteBtn');
+  if (el.checked) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.4';
+    btn.style.cursor = 'not-allowed';
+  }
+}
+
+function closeModal(e){
+  if(e.target.classList.contains('modal-mask')) {
+    hideLogoutModal();
+    hideDeleteAccountModal();
+  }
+}
+
+function doLogout(){
+  localStorage.clear();
+  window.location.href='login.html';
+}
+
+function doDeleteAccount(){
+  localStorage.clear();
+  showToast('账号注销成功');
+  setTimeout(() => {
+    window.location.href='login.html';
+  }, 1500);
+}
+
+const prdData={
+  1:{title:'标记 1 · 账号安全数据显示规则',badge:'数据规范',badgeType:'data',
+     text:'手机号：固定脱敏格式 138 **** 8888\n（原始值不存 localStorage，仅作展示用）\n\n密码状态：显示"已设置"或"未设置"\n→ 点击跳转修改/设置密码页面\n\n认证状态：从 user.verified 读取\n→ true = 已认证（绿色），false = 未认证（橙色警告）'},
+  2:{title:'标记 2 · 认证状态徽章规则',badge:'交互规范',badgeType:'interaction',
+     text:'家长认证 menu-item 点击 → 跳转 jiazhangrenzheng.html\n\n已认证状态（user.verified=true）：\n• mi-badge: 绿色背景，文字"已认证"\n• 可再次点击进入查看\n\n未认证状态（user.verified=false）：\n• mi-badge: 橙色背景，文字"去认证"\n• 点击进入认证流程'},
+  3:{title:'标记 3 · 退出登录与注销合规流',badge:'业务规则',badgeType:'',
+     text:'• 退出登录：清除本地 token 并清空缓存，保留服务端账号数据。\n• 注销账号（合规改造）：点击后弹出包含资产清空与风险告诫的注销须知；须主动勾选同意《账号注销协议》复选框后方可解锁“确认注销”按钮，提交后清空数据并跳转登录页。'}
+};
+
+let _curPrdId=null;
+(function(){const prdK='prd_shezhi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title"><span>${d.title}</span><span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg) translateY(-4px)';
+  _curPrdId=id;
+}
+
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_shezhi';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

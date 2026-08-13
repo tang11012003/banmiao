@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>黑名单管理 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#757575;--hint:#9E9E9E;--divider:#EEEEEE;--urgent:#E53935;--keep:#43A047;--r-card:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.05);flex-shrink:0;z-index:10}
+.back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text1)}
+.back-btn:active{background:#f0f0f0}
+.bar-title{font-size:17px;font-weight:600;flex:1;text-align:center;margin-right:36px}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.menu-item{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--divider);cursor:pointer;gap:12px}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:#fafafa}
+.mi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mi-icon .material-icons{font-size:20px}
+.mi-text{flex:1;font-size:14px;color:var(--text1)}
+.mi-arrow .material-icons{font-size:18px;color:var(--hint)}
+.mi-badge{font-size:12px;padding:2px 8px;border-radius:10px;background:#f5f5f5;color:var(--text3)}
+.section-title{font-size:12px;color:var(--hint);padding:14px 16px 6px;font-weight:500}
+.empty{text-align:center;padding:60px 20px;color:var(--hint)}
+.empty .material-icons{font-size:52px;color:#e0e0e0;display:block;margin-bottom:12px}
+.empty p{font-size:13px;line-height:1.6}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">  <div class="app-bar">
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+    <span class="bar-title">黑名单管理</span>
+  </div>
+  <div class="page-body">
+    <div class="section-title">以下用户已被你屏蔽，屏蔽后对方无法查看你的帖子和主页</div>
+    <div class="card" id="listCard"></div>
+    <div id="emptyState" style="display:none" class="empty">
+      <span class="material-icons">block</span>
+      <p>暂无黑名单用户</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+const colors=['#E6431A','#1565C0','#43A047','#9C27B0','#FF6D00'];
+let blocked=[
+  {id:1,name:'匿名用户A',desc:'因发表不友善评论被屏蔽',color:0},
+  {id:2,name:'推广小号',desc:'持续发布广告内容',color:1},
+];
+function render(){
+  const card=document.getElementById('listCard');
+  const empty=document.getElementById('emptyState');
+  if(!blocked.length){card.style.display='none';empty.style.display='block';return;}
+  card.style.display='block';empty.style.display='none';
+  card.innerHTML=blocked.map(u=>`
+<div class="menu-item">
+  <div style="width:40px;height:40px;border-radius:50%;background:${colors[u.color]};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0">${u.name[0]}</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-size:14px;font-weight:600;color:var(--text1)">${u.name}</div>
+    <div style="font-size:12px;color:var(--hint);margin-top:2px">${u.desc}</div>
+  </div>
+  <button onclick="unblock(${u.id})" style="padding:6px 14px;border-radius:16px;border:1.5px solid var(--divider);background:#fff;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer">解除屏蔽</button>
+</div>`).join('');
+}
+function unblock(id){
+  blocked=blocked.filter(u=>u.id!==id);
+  render();showToast('已解除屏蔽');
+}
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body></html>

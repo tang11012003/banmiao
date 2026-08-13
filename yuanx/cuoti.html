@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>学情复盘 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 16px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{background:none;border:none;color:var(--text1);cursor:pointer;padding:4px;margin-right:4px;display:flex;align-items:center;border-radius:50%}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1}
+.app-bar .actions{display:flex;gap:4px;align-items:center}
+.app-bar .actions button{background:none;border:none;color:var(--primary);cursor:pointer;padding:6px 10px;border-radius:6px;display:flex;align-items:center;gap:4px;font-size:13px;font-weight:500}
+.app-bar .actions button:active{background:#f0f0f0}
+.page-body{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.bottom-nav{background:var(--surface);height:56px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--divider);flex-shrink:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0;border:none;background:none;min-width:50px;text-decoration:none}
+.nav-item .material-icons{font-size:24px;color:var(--hint);transition:color .2s}
+.nav-item .nav-label{font-size:10px;color:var(--hint);margin-top:2px;transition:color .2s}
+.nav-item.active .material-icons{color:var(--primary)}
+.nav-item.active .nav-label{color:var(--primary);font-weight:500}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.filter-strip{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.filter-strip::-webkit-scrollbar{display:none}
+.filter-chip{padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer;white-space:nowrap;border:1px solid var(--divider);background:#fff;color:var(--text2);transition:all .15s;font-weight:500}
+.filter-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.paper-item{display:flex;align-items:center;padding:14px 16px;background:var(--surface);border-radius:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04);cursor:pointer;transition:background .12s}
+.paper-item:active{background:#fafafa}
+.paper-item .pi-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
+.paper-item .pi-icon .material-icons{font-size:22px}
+.paper-item .pi-content{flex:1;min-width:0}
+.paper-item .pi-title{font-size:14px;font-weight:600;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.paper-item .pi-meta{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:12px;color:var(--text3);flex-wrap:wrap}
+.paper-item .pi-meta .subject-tag{padding:1px 8px;border-radius:4px;background:rgba(21,101,194,.1);color:#1565C0;font-size:11px}
+.paper-item .pi-right{text-align:right;margin-left:8px;flex-shrink:0}
+.paper-item .pi-right .wrong-count{font-size:16px;font-weight:700;color:var(--urgent)}
+.paper-item .pi-right .wrong-label{font-size:10px;color:var(--text3)}
+.stats-summary{display:flex;justify-content:space-around;padding:12px 0;border-bottom:1px solid var(--divider);margin-bottom:12px}
+.stats-summary .ss-item{text-align:center}
+.stats-summary .ss-item .ss-val{font-size:20px;font-weight:700;color:var(--primary)}
+.stats-summary .ss-item .ss-label{font-size:11px;color:var(--text3);margin-top:2px}
+.section-title{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--text1)}
+.empty-state{text-align:center;padding:50px 20px;color:var(--hint)}
+.empty-state .material-icons{font-size:48px;color:#e0e0e0}
+.empty-state p{margin-top:10px;font-size:13px}
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4)}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;resize:vertical;outline:none;background:#fafafa}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+<button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+<span class="title">学情复盘</span><span class="prd-mark" onclick="openPrd(event,1)" style="margin-left:8px">1</span>
+<div class="actions"><button class="upload-action-btn" onclick="window.location.href='xuanzhexingzhi.html'"><span class="material-icons" style="font-size:16px">add_a_photo</span>考试诊断</button></div>
+</div>
+<div class="page-body" id="pageBody"></div>
+<div class="bottom-nav">
+<a class="nav-item active" href="fenxi.html"><span class="material-icons">insights</span><span class="nav-label">分析</span></a>
+<a class="nav-item" href="shequ.html"><span class="material-icons">forum</span><span class="nav-label">社区</span></a>
+<a class="nav-item" href="xiaoxi.html"><span class="material-icons">notifications</span><span class="nav-label">消息</span></a>
+<a class="nav-item" href="wode.html"><span class="material-icons">person</span><span class="nav-label">我的</span></a>
+</div>
+</div>
+<script>
+const students=[
+{id:1,name:'张小明',grade:'高三'},
+{id:2,name:'刘小五',grade:'高三'}
+];
+let selectedStudentId=1;
+
+const papers=[
+{id:1,studentId:1,examName:'数学期中考试',subject:'数学',date:'2026-07-15',totalQ:15,wrongQ:4,scoreRate:78.5,status:'completed'},
+{id:2,studentId:1,examName:'英语期末考试',subject:'英语',date:'2026-06-30',totalQ:20,wrongQ:3,scoreRate:85.2,status:'completed'},
+{id:3,studentId:1,examName:'数学月考（三）',subject:'数学',date:'2026-06-20',totalQ:18,wrongQ:5,scoreRate:72.0,status:'completed'},
+{id:4,studentId:1,examName:'物理一模',subject:'物理',date:'2026-05-18',totalQ:16,wrongQ:6,scoreRate:68.0,status:'completed'},
+{id:5,studentId:1,examName:'数学月考（二）',subject:'数学',date:'2026-05-10',totalQ:15,wrongQ:4,scoreRate:74.5,status:'completed'},
+{id:6,studentId:1,examName:'化学单元测试',subject:'化学',date:'2026-04-22',totalQ:12,wrongQ:3,scoreRate:75.0,status:'completed'},
+{id:7,studentId:1,examName:'语文模拟考',subject:'语文',date:'2026-04-15',totalQ:10,wrongQ:2,scoreRate:80.0,status:'completed'},
+{id:8,studentId:2,examName:'数学期中考试',subject:'数学',date:'2026-07-15',totalQ:15,wrongQ:6,scoreRate:70.0,status:'completed'},
+{id:9,studentId:2,examName:'英语月考',subject:'英语',date:'2026-06-25',totalQ:20,wrongQ:4,scoreRate:80.0,status:'completed'}
+];
+
+const subjects=['全部','数学','英语','物理','化学','语文','生物'];
+let selectedSubject='全部';
+
+function renderStudentTab(){}
+
+function switchStudent(id){
+selectedStudentId=id;
+selectedSubject='全部';
+render();
+}
+
+function getStudentPapers(){
+return papers.filter(p=>p.studentId===selectedStudentId);
+}
+
+function getStats(){
+const studentPapers=getStudentPapers();
+const filtered=selectedSubject==='全部'?studentPapers:studentPapers.filter(p=>p.subject===selectedSubject);
+return {
+total:filtered.length,
+totalWrong:filtered.reduce((s,p)=>s+p.wrongQ,0),
+avgScore:filtered.length>0?(filtered.reduce((s,p)=>s+p.scoreRate,0)/filtered.length).toFixed(1):0
+};
+}
+
+function render(){
+const stats=getStats();
+const studentPapers=getStudentPapers();
+const filtered=selectedSubject==='全部'?studentPapers:studentPapers.filter(p=>p.subject===selectedSubject);
+
+const iconColors={
+'数学':'rgba(230,67,26,.1)','英语':'rgba(21,101,194,.1)','物理':'rgba(156,39,176,.1)',
+'化学':'rgba(67,160,71,.1)','语文':'rgba(255,109,0,.1)','生物':'rgba(0,131,143,.1)'
+};
+const iconTextColors={
+'数学':'#E6431A','英语':'#1565C0','物理':'#9C27B0',
+'化学':'#43A047','语文':'#FF6D00','生物':'#00838F'
+};
+
+let html=`
+<div class="card">
+<div class="stats-summary">
+<div class="ss-item"><div class="ss-val">${stats.total}</div><div class="ss-label">试卷总数</div></div>
+<div class="ss-item"><div class="ss-val" style="color:var(--urgent)">${stats.totalWrong}</div><div class="ss-label">累计错题</div></div>
+<div class="ss-item"><div class="ss-val" style="color:var(--keep)">${stats.avgScore}%</div><div class="ss-label">平均得分率</div></div>
+</div>
+<div class="filter-strip" style="position:relative"><span class="prd-mark" onclick="openPrd(event,2)" style="position:absolute;right:0;top:-24px;z-index:10">2</span>
+${subjects.map(s=>`<span class="filter-chip${s===selectedSubject?' active':''}" onclick="filterSubject('${s}')">${s}</span>`).join('')}
+</div>
+</div>
+
+<div class="section-title" style="display:flex;align-items:center">历史试卷 (${filtered.length})<span class="prd-mark" onclick="openPrd(event,3)" style="margin-left:6px">3</span></div>
+`;
+
+// Show analyzing card if report is generating
+const reportTask=JSON.parse(localStorage.getItem('reportTask')||'null');
+if(reportTask && (reportTask.status==='generating'||reportTask.status==='completed')){
+const isReady=reportTask.status==='completed';
+html+=`
+<div class="paper-item" onclick="window.location.href='${isReady?'fenxibaogao.html':'loading.html'}'" style="border-left:3px solid ${isReady?'var(--keep)':'var(--attention)'}">
+<div class="pi-icon" style="background:${isReady?'rgba(67,160,71,.1)':'rgba(251,192,45,.1)'}"><span class="material-icons" style="color:${isReady?'var(--keep)':'var(--attention)'}">${isReady?'check_circle':'hourglass_top'}</span></div>
+<div class="pi-content">
+<div class="pi-title">${reportTask.examName||'试卷分析'}</div>
+<div class="pi-meta">
+<span class="subject-tag" style="background:${isReady?'rgba(67,160,71,.1)':'rgba(251,192,45,.1)'};color:${isReady?'var(--keep)':'#F57F17'}">${isReady?'报告就绪':'分析中'}</span>
+<span>${reportTask.subject||''}</span>
+<span>${reportTask.wrongCount||0}题待分析</span>
+</div>
+</div>
+<div class="pi-right">
+<span class="material-icons" style="font-size:18px;color:${isReady?'var(--keep)':'var(--attention)'}">${isReady?'arrow_forward':'sync'}</span>
+</div>
+</div>`;
+}
+
+if(filtered.length===0){
+html+=`<div class="empty-state"><span class="material-icons">description</span><p>暂无${selectedSubject==='全部'?'':'该科目'}试卷记录</p></div>`;
+}else{
+filtered.forEach(p=>{
+const bg=iconColors[p.subject]||'rgba(230,67,26,.1)';
+const color=iconTextColors[p.subject]||'#E6431A';
+html+=`
+<div class="paper-item" onclick="window.location.href='fenxibaogao.html'">
+<div class="pi-icon" style="background:${bg}"><span class="material-icons" style="color:${color}">description</span></div>
+<div class="pi-content">
+<div class="pi-title">${p.examName}</div>
+<div class="pi-meta">
+<span class="subject-tag">${p.subject}</span>
+<span>${p.date}</span>
+<span>共${p.totalQ}题</span>
+</div>
+</div>
+<div class="pi-right">
+<div class="wrong-count">${p.wrongQ}</div>
+<div class="wrong-label">错题</div>
+</div>
+</div>`;
+});
+}
+
+document.getElementById('pageBody').innerHTML=html;
+}
+
+function filterSubject(s){selectedSubject=s;render()}
+
+renderStudentTab();
+render();
+
+const prdData={
+  1:{title:'标记 1 · 学情统计规则',badge:'数据规范',badgeType:'data',
+     text:'统计范围：当前选中学生 + 当前科目筛选下的试卷。\n\n指标定义：\n• 试卷总数：符合筛选条件的试卷数量\n• 累计错题：所有试卷 wrongQ 之和\n• 平均得分率：scoreRate 平均值，保留 1 位小数\n\n数据来源：本地 papers 数组（原型 mock 数据）'},
+ //:{title:'标记 2 · 科目筛选规则',badge:'交互规范',badgeType:'interaction',
+    //ext:'筛选项：全部 / 数学 / 英语 / 物理 / 化学 / 语文 / 生物。\n\n行为：\n• 点击切换 selectedSubject，重新调用 render()\n• 同时联动统计数值和试卷列表\n• 默认选中"全部"\n• 横向滚动，超出不换行'},
+  3:{title:'标记 2 · 试卷列表项规则',badge:'业务规则',badgeType:'',
+     text:'排序：按 date 倒序（新→旧）。\n\n颜色编码：每个科目对应固定图标色（数学红、英语蓝、物理紫…）。\n\n点击行为：跳转 fenxibaogao.html。\n\n分析中状态：若 localStorage.reportTask.status === generating，在列表顶部插入进行中卡片；completed 则显示报告就绪卡片。\n\n空状态：无匹配试卷时显示空状态插画 + 提示文案。'}
+};
+function openPrd(e,id){
+  e.stopPropagation();closePrd();
+  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
+  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
+  const popW=290,popH=280,appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top=spaceBelow>=popH?rect.bottom+8:rect.top-popH-8;
+  let arrowTop=spaceBelow>=popH?-6:popH-6;
+  pop.style.left=left+'px';pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';arrow.style.top=arrowTop+'px';
+  if(spaceBelow<popH)arrow.style.transform='rotate(45deg)';
+}
+function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
+function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();if(typeof showToast==='function')showToast('产品规则已保存');}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

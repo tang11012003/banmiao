@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>编辑个人资料 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--keep:#43A047;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 16px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10;gap:4px}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2);flex-shrink:0}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1}
+.app-bar .save-btn{padding:7px 16px;border-radius:var(--r-btn);background:var(--primary);color:#fff;font-size:14px;font-weight:500;border:none;cursor:pointer;flex-shrink:0}
+.app-bar .save-btn:active{opacity:.85}
+.page-body{flex:1;overflow-y:auto;padding:20px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.avatar-section{display:flex;flex-direction:column;align-items:center;padding:28px 16px 20px;position:relative}
+.avatar-wrap{position:relative;width:80px;height:80px;cursor:pointer}
+.avatar-circle{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;transition:opacity .15s}
+.avatar-wrap:active .avatar-circle{opacity:.8}
+.avatar-edit-badge{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center}
+.avatar-edit-badge .material-icons{font-size:15px;color:var(--text2)}
+.avatar-tip{font-size:12px;color:var(--hint);margin-top:8px}
+.form-item{display:flex;align-items:center;padding:15px 16px;border-bottom:1px solid var(--divider);position:relative}
+.form-item:last-child{border-bottom:none}
+.form-label{font-size:14px;color:var(--text2);width:72px;flex-shrink:0}
+.form-input{flex:1;font-size:14px;color:var(--text1);outline:none;border:none;background:transparent;font-family:inherit;text-align:right;padding-right:4px}
+.form-input::placeholder{color:var(--hint)}
+.form-static{flex:1;font-size:14px;color:var(--hint);text-align:right;padding-right:4px}
+.form-arrow{color:var(--hint);display:flex;align-items:center}
+.form-arrow .material-icons{font-size:18px}
+.hint-text{font-size:12px;color:var(--hint);padding:8px 16px 4px;line-height:1.5}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="app-bar">
+    <button class="back-btn" onclick="goBack()"><span class="material-icons">arrow_back</span></button>
+    <span class="title">编辑个人资料</span>
+    <button class="save-btn" onclick="saveProfile()">保存</button>
+  </div>
+  <div class="page-body">
+
+    <!-- 头像卡片 -->
+    <div class="card">
+      <div class="avatar-section">
+        <div class="avatar-wrap" onclick="changeAvatar()">
+          <div class="avatar-circle" id="avatarCircle">张</div>
+          <div class="avatar-edit-badge"><span class="material-icons">photo_camera</span></div>
+        </div>
+        <div class="avatar-tip">点击更换头像</div>
+        <span class="prd-mark" onclick="openPrd(event,1)" style="position:absolute;top:14px;right:16px">1</span>
+      </div>
+    </div>
+
+    <!-- 表单卡片 -->
+    <div class="card">
+      <div class="form-item">
+        <span class="form-label">家长昵称</span>
+        <input class="form-input" id="inputName" type="text" placeholder="请输入昵称" maxlength="20" value="张妈妈">
+        <span class="prd-mark" onclick="openPrd(event,2)">2</span>
+      </div>
+      <div class="form-item" onclick="window.location.href='xiugaishouji.html'" style="cursor:pointer">
+        <span class="form-label">绑定手机号</span>
+        <span class="form-static" id="phoneDisplay">138****8888</span>
+        <div class="form-arrow"><span class="material-icons">chevron_right</span></div>
+      </div>
+    </div>
+    <div class="hint-text">手机号修改请前往"账号与安全"页面操作。</div>
+
+  </div>
+</div>
+
+<script>
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;white-space:nowrap';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+const avatarEmojis=['张','妈','A','B','C','D'];
+let avatarIdx=0;
+function changeAvatar(){
+  avatarIdx=(avatarIdx+1)%avatarEmojis.length;
+  document.getElementById('avatarCircle').textContent=avatarEmojis[avatarIdx];
+  showToast('头像已更换（原型模拟）');
+}
+
+function saveProfile(){
+  const name=document.getElementById('inputName').value.trim();
+  if(!name){showToast('昵称不能为空');return;}
+  localStorage.setItem('profileName',name);
+  localStorage.setItem('profileAvatarIdx',avatarIdx);
+  showToast('保存成功');
+  setTimeout(()=>history.back(),800);
+}
+
+function goBack(){
+  const name=document.getElementById('inputName').value.trim();
+  const orig=localStorage.getItem('profileName')||'张妈妈';
+  if(name!==orig){
+    if(!confirm('尚未保存，确认离开？'))return;
+  }
+  history.back();
+}
+
+// 读取已保存的昵称和头像
+(function(){
+  const savedName=localStorage.getItem('profileName');
+  if(savedName)document.getElementById('inputName').value=savedName;
+  const savedIdx=parseInt(localStorage.getItem('profileAvatarIdx')||'0');
+  avatarIdx=savedIdx;
+  document.getElementById('avatarCircle').textContent=avatarEmojis[savedIdx];
+})();
+
+/* ─── PRD 标注系统 ─── */
+const prdData={
+  1:{title:'标记 1 · 头像更换规则',badge:'交互规范',badgeType:'interaction',
+     text:'原型阶段：点击头像区域循环切换预设字符（姓氏/字母），模拟更换效果，不调用真实文件选择器。\n\n正式版本规则：\n• 点击头像弹出底部 ActionSheet：拍照 / 从相册选择 / 取消\n• 图片裁剪为 1:1 圆形，最大 2MB\n• 上传成功后实时更新头像显示\n• 头像存储于 CDN，URL 保存至用户 profile'},
+  2:{title:'标记 2 · 昵称编辑规则',badge:'业务规则',badgeType:'',
+     text:'字段规则：\n• 最大长度：20 个字符\n• 不允许纯空白\n• 不做敏感词校验（原型阶段）\n\n保存行为：\n• 点击顶部"保存"按钮写入 localStorage.profileName\n• Toast 提示"保存成功"，800ms 后自动返回上一页\n• 返回时若有未保存修改，弹 confirm 确认对话框\n\n数据来源：\n• 优先读取 localStorage.profileName\n• 无记录则显示默认值"张妈妈"'}
+};
+
+let _curPrdId=null;
+(function(){
+  const prdK='prd_bianjijiazhang';
+  const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');
+  Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});
+})();
+
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  _curPrdId=id;
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`<div class="prd-pop-head"><div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div></div><div class="prd-pop-body"><textarea id="prdTa" spellcheck="false">${d.text}</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd(${id})">保存</button></div>`;
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10,appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){top=rect.bottom+8;arrowTop=-6;arrowDir='top';}
+  else{top=rect.top-popH-8;arrowTop=popH-6;arrowDir='bottom';}
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom')arrow.style.transform='rotate(45deg)';
+}
+function closePrd(){
+  document.querySelector('.prd-overlay')?.remove();
+  document.getElementById('prdPop')?.remove();
+  _curPrdId=null;
+}
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_bianjijiazhang';
+  const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');
+  prdS[id]=prdData[id].text;
+  localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>
+
+

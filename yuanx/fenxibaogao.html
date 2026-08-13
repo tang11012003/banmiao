@@ -1,0 +1,322 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>分析报告 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--attention:#FBC02D;--keep:#43A047;--orange:#FF6D00;--r-card:14px;--r-btn:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .back-btn:active{background:#f0f0f0}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+.app-bar .actions{display:flex;gap:2px;align-items:center}
+.app-bar .actions button{background:none;border:none;color:var(--text2);cursor:pointer;padding:6px 8px;border-radius:6px;display:flex;align-items:center;gap:3px;font-size:13px}
+.app-bar .actions button:active{background:#f0f0f0}
+.page-body{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--surface);border-radius:var(--r-card);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.section-title{font-size:15px;font-weight:600;margin:16px 0 10px;color:var(--text1)}
+.tier-bar{display:flex;gap:4px;height:28px;border-radius:14px;overflow:hidden;margin-bottom:10px}
+.tier-bar div{transition:flex .3s}
+.tier-legend{display:flex;justify-content:space-around;font-size:12px;margin-bottom:4px}
+.kp-card{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.03);cursor:pointer}
+.kp-card:active{background:#fafafa}
+.kp-card .kp-name{font-size:14px;font-weight:600;color:var(--text1)}
+.kp-card .kp-desc{font-size:12px;color:var(--text3);margin-top:3px}
+.kp-card .kp-rate{font-size:12px;margin-top:4px;font-weight:500}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:var(--r-btn);font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all .15s;width:100%}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.paper-photos-section{margin-bottom:12px}
+.paper-photos-card{background:var(--surface);border-radius:var(--r-card);padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.pp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pp-title{font-size:14px;font-weight:600;color:var(--text1);display:flex;align-items:center;gap:6px}
+.pp-title .material-icons{font-size:18px;color:var(--primary)}
+.pp-count{font-size:12px;color:var(--text3)}
+.pp-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.pp-scroll::-webkit-scrollbar{display:none}
+.pp-thumb{width:90px;height:120px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#f0f0f0;cursor:pointer;position:relative;border:1px solid var(--divider)}
+.pp-thumb img{width:100%;height:100%;object-fit:cover}
+.pp-thumb .pp-page{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:10px;text-align:center;padding:2px 0;font-weight:500}
+.preview-overlay{position:absolute;inset:0;background:rgba(0,0,0,.88);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.preview-overlay.show{opacity:1;pointer-events:auto}
+.preview-overlay img{max-width:92%;max-height:80%;object-fit:contain;border-radius:6px}
+.preview-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.preview-close .material-icons{color:#fff;font-size:22px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:3000;display:none;white-space:nowrap}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1565C0;color:#fff;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .12s;user-select:none;vertical-align:middle;margin-left:6px;box-shadow:0 2px 6px rgba(21,101,194,.4);position:relative;z-index:5}
+.prd-mark:active{transform:scale(.85)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:14px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;resize:vertical;outline:none;background:#fafafa;transition:border .15s}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+.prd-btn-save:active{opacity:.85}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+<button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+<span class="title">分析报告</span>
+<div class="actions">
+<button onclick="window.location.href='gouxuancuoti.html'"><span class="material-icons" style="font-size:16px">edit</span>修改错题</button>
+</div>
+</div>
+<div class="page-body" id="pageBody"></div>
+<div class="preview-overlay" id="previewOverlay" onclick="closePreview()">
+<button class="preview-close"><span class="material-icons">close</span></button>
+<img id="previewImg" src="">
+</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+
+function openPreview(url){
+  document.getElementById('previewImg').src=url;
+  document.getElementById('previewOverlay').classList.add('show');
+}
+function closePreview(){
+  document.getElementById('previewOverlay').classList.remove('show');
+}
+
+function generateMockPaperPhotos(subject,count){
+  const colors={'数学':'#E6431A','英语':'#1565C0','物理':'#9C27B0','化学':'#43A047','语文':'#FF6D00','生物':'#00838F'};
+  const color=colors[subject]||'#E6431A';
+  const photos=[];
+  for(let n=1;n<=count;n++){
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="270" height="360" viewBox="0 0 270 360"><rect fill="#f8f8f8" width="270" height="360" rx="4"/><rect x="12" y="12" width="246" height="22" rx="3" fill="#eee"/><text x="135" y="27" text-anchor="middle" font-size="10" fill="${color}">${subject} · 第${n}页</text><line x1="12" y1="42" x2="258" y2="42" stroke="#e0e0e0"/><text x="20" y="62" font-size="9" fill="#666">一、选择题（每题3分）</text><text x="20" y="80" font-size="8" fill="#999">1. 已知函数 f(x)=x²+2x+1...</text><circle cx="248" cy="86" r="5" fill="none" stroke="#E53935" stroke-width="1"/><text x="248" y="89" text-anchor="middle" font-size="6" fill="#E53935">✗</text><text x="20" y="115" font-size="8" fill="#999">2. 下列命题中正确的是...</text><circle cx="248" cy="122" r="5" fill="none" stroke="#43A047" stroke-width="1"/><text x="248" y="125" text-anchor="middle" font-size="6" fill="#43A047">✓</text><text x="20" y="155" font-size="9" fill="#666">二、填空题</text><text x="20" y="173" font-size="8" fill="#999">5. sin²α + cos²α = ________</text><text x="20" y="218" font-size="9" fill="#666">三、解答题</text><rect x="20" y="226" width="230" height="60" rx="3" fill="#fafafa" stroke="#eee"/><text x="28" y="244" font-size="8" fill="#aaa">解：由题意可得</text><text x="28" y="260" font-size="8" fill="#aaa">f'(x) = 2x + 2</text><text x="135" y="352" text-anchor="middle" font-size="8" fill="#ccc">- 第 ${n} 页 -</text></svg>`;
+    photos.push(`data:image/svg+xml,${encodeURIComponent(svg)}`);
+  }
+  return photos;
+}
+
+const report={
+  exam:{name:'期中考试',subject:'数学',date:'2026-07-15'},
+  scoreRate:78.5,
+  kpResults:[
+    {name:'二次函数',level:'urgent',errorRate:0.6,desc:'函数图像平移变换、顶点坐标计算、与x轴交点'},
+    {name:'三角函数',level:'urgent',errorRate:0.5,desc:'正弦余弦公式运用、诱导公式、图像变换'},
+    {name:'概率统计',level:'attention',errorRate:0.35,desc:'条件概率计算、独立事件、分布列'},
+    {name:'数列求和',level:'attention',errorRate:0.3,desc:'等比数列求和、裂项相消法'},
+    {name:'向量运算',level:'keep',errorRate:0.1,desc:'平面向量基本运算、数量积应用'},
+    {name:'集合运算',level:'keep',errorRate:0.05,desc:'交集并集补集判断、集合关系'}
+  ]
+};
+
+const tierLabels={urgent:'待改进（需重点突破）',attention:'需关注（加强巩固）',keep:'继续保持（已掌握）'};
+const tierColors={urgent:'var(--urgent)',attention:'var(--attention)',keep:'var(--keep)'};
+const tierEmoji={urgent:'🔴',attention:'🟡',keep:'🟢'};
+
+function render(){
+  const r=report;
+  const paperPhotos=generateMockPaperPhotos(r.exam.subject,4);
+  const urgentCount=r.kpResults.filter(k=>k.level==='urgent').length;
+  const attentionCount=r.kpResults.filter(k=>k.level==='attention').length;
+  const keepCount=r.kpResults.filter(k=>k.level==='keep').length;
+
+  let html=`
+<div class="card" style="position:relative">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:18px;font-weight:700;color:var(--text1)">${r.exam.name} · ${r.exam.subject}</div>
+    <span class="prd-mark" onclick="openPrd(event,1)">1</span>
+  </div>
+  <div style="font-size:15px;color:var(--text2);margin-top:6px">得分率：${r.scoreRate}%</div>
+</div>
+
+<div class="paper-photos-section">
+<div class="paper-photos-card" style="position:relative">
+<div class="pp-header">
+  <div class="pp-title"><span class="material-icons">photo_library</span>试卷原图<span class="prd-mark" onclick="openPrd(event,2)">2</span></div>
+  <div class="pp-count">共 ${paperPhotos.length} 页</div>
+</div>
+<div class="pp-scroll">
+${paperPhotos.map((url,i)=>`<div class="pp-thumb" onclick="openPreview('${url}')"><img src="${url}"><div class="pp-page">第${i+1}页</div></div>`).join('')}
+</div>
+</div>
+</div>
+
+<div class="section-title" style="display:flex;align-items:center">三档分布<span class="prd-mark" onclick="openPrd(event,3)">3</span></div>
+<div class="card">
+<div class="tier-bar">
+<div style="flex:${urgentCount};background:var(--urgent)"></div>
+<div style="flex:${attentionCount};background:var(--attention)"></div>
+<div style="flex:${keepCount};background:var(--keep)"></div>
+</div>
+<div class="tier-legend">
+<span style="color:var(--urgent)">待改进 ${urgentCount}</span>
+<span style="color:var(--attention)">需关注 ${attentionCount}</span>
+<span style="color:var(--keep)">保持 ${keepCount}</span>
+</div>
+</div>
+`;
+
+  ['urgent','attention','keep'].forEach(level=>{
+    const items=r.kpResults.filter(k=>k.level===level);
+    if(!items.length)return;
+    html+=`<div class="section-title" style="display:flex;align-items:center">${tierEmoji[level]} ${tierLabels[level]}${level==='urgent'?`<span class="prd-mark" onclick="openPrd(event,4)">4</span>`:''}</div>`;
+    items.forEach(k=>{
+      html+=`<div class="kp-card" style="border-left:3px solid ${tierColors[level]}" onclick="showToast('查看知识点趋势：${k.name}')">
+<div class="kp-name">${k.name}</div>
+<div class="kp-desc">${k.desc}</div>
+<div class="kp-rate" style="color:${tierColors[level]}">错误率 ${(k.errorRate*100).toFixed(0)}%</div>
+</div>`;
+    });
+  });
+
+  html+=`
+<div style="margin-top:20px;position:relative;display:flex;align-items:center;gap:10px">
+<button class="btn btn-primary" onclick="shareToCommunity()" style="flex:1"><span class="material-icons" style="font-size:18px;margin-right:8px">forum</span>把分析报告分享到社区</button>
+<span class="prd-mark" onclick="openPrd(event,5)" style="position:static;flex-shrink:0">5</span>
+</div>
+<div style="height:24px"></div>
+`;
+  document.getElementById('pageBody').innerHTML=html;
+}
+
+/* ─── 简化后的分享流程（无弹窗，默认脱敏直接跳转） ─── */
+function shareToCommunity(){
+  const r = report;
+  const payload = {
+    examName: r.exam.name,
+    subject: r.exam.subject,
+    date: r.exam.date,
+    scoreRate: r.scoreRate,
+    kpResults: r.kpResults.map(k => ({ name: k.name, level: k.level, errorRate: k.errorRate })),
+    includePhotos: false // 默认固定不附带试卷照片
+  };
+  
+  sessionStorage.setItem('shareReport', JSON.stringify(payload));
+  showToast('正在生成脱敏诊断卡，准备发帖…');
+  setTimeout(() => {
+    window.location.href = 'fabutiezi.html';
+  }, 600);
+}
+
+/* ─── PRD 标注系统 ─── */
+const prdData={
+  1:{
+    title:'标记 1 · 报告头部数据规范',
+    badge:'数据规范',badgeType:'data',
+    text:'报告对象结构：\n• exam.name：考试名称\n• exam.subject：学科\n• exam.date：YYYY-MM-DD\n• scoreRate：得分率（数字，如 78.5）\n• kpResults：知识点数组，每项含 name/level/errorRate/desc\n\n得分率展示精度：保留一位小数，单位"%"。'
+  },
+  2:{
+    title:'标记 2 · 试卷原图展示规则',
+    badge:'交互规范',badgeType:'interaction',
+    text:'• 缩略图尺寸：90×120px，圆角 8px，横向滚动容器\n• 每张图底部叠加"第 N 页"黑色半透明标签\n• 点击任意图片弹出全屏预览覆盖层（opacity 动画）\n• 点击遮罩任意位置关闭预览（无独立关闭按钮之外的遮罩关闭）\n• 原型中使用 SVG Mock 图，含学科色彩编码与题目模拟内容'
+  },
+  3:{
+    title:'标记 3 · 知识点三档分类规则',
+    badge:'PRD业务规则',badgeType:'',
+    text:'所有知识点归入且仅归入一个档位：\n\n🔴 待改进（urgent）：错误率 ≥50%\n  → 重点突破，优先刷专项题\n\n🟡 需关注（attention）：错误率 25%-49%\n  → 加强巩固，定期复习\n\n🟢 继续保持（keep）：错误率 <25%\n  → 维持，轻量复习即可\n\n三档比例色条高度 28px，圆角 14px，各段 flex 值等于该档知识点数量。'
+  },
+  4:{
+    title:'标记 4 · 知识点卡片交互',
+    badge:'交互规范',badgeType:'interaction',
+    text:'• 知识点按 urgent→attention→keep 分组展示\n• 每组有分组标题（含 emoji + 文字说明）\n• 卡片左侧 border-left 3px 对应档位颜色\n• 点击卡片：当前为 Toast 占位（"查看知识点趋势：XXX"）\n• 正式版本应跳转该知识点的历史趋势详情页\n• 卡片展示：知识点名称（加粗）+ 描述（灰色）+ 错误率（档位颜色）'
+  },
+  5:{
+    title:'标记 5 · 无缝脱敏分享规则',
+    badge:'PRD业务规则',badgeType:'',
+    text:'点击【把分析报告分享到社区】按钮：\n• 采用零阻断（Zero-Friction）流程，无需弹出隐私选择弹窗\n• 默认固定 includePhotos = false（不含任何试卷原图）\n• 自动将得分率、三档分布、知识点提炼列表打包写入 sessionStorage.shareReport\n• 提示 Toast 并无缝跳转至 fabutiezi.html，将数据自动注入发帖编辑区'
+  }
+};
+
+let _curPrdId=null;
+(function(){const prdK='prd_fenxibaogao';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');Object.keys(prdS).forEach(function(i){if(prdData[i])prdData[i].text=prdS[i]});})();
+
+function openPrd(e,id){
+  e.stopPropagation();
+  closePrd();
+  _curPrdId=id;
+  const d=prdData[id];
+  const mark=e.currentTarget;
+  const rect=mark.getBoundingClientRect();
+
+  const overlay=document.createElement('div');
+  overlay.className='prd-overlay';
+  overlay.onclick=closePrd;
+  document.body.appendChild(overlay);
+
+  const pop=document.createElement('div');
+  pop.className='prd-popover';
+  pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML=`
+<div class="prd-pop-head">
+  <div class="prd-pop-title">${d.title}<span class="${badgeCls}">${d.badge}</span></div>
+</div>
+<div class="prd-pop-body">
+  <textarea id="prdTa" spellcheck="false">${d.text}</textarea>
+</div>
+<div class="prd-pop-foot">
+  <button class="prd-btn-cancel" onclick="closePrd()">取消</button>
+  <button class="prd-btn-save" onclick="savePrd(${id})">保存</button>
+</div>`;
+
+  const arrow=document.createElement('div');
+  arrow.className='prd-popover-arrow';
+  pop.appendChild(arrow);
+  document.body.appendChild(pop);
+
+  const popW=290,popH=280;
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  let left=Math.min(rect.left-10, appRect.right-popW-8);
+  left=Math.max(appRect.left+8,left);
+  const spaceBelow=window.innerHeight-rect.bottom-12;
+  let top,arrowTop,arrowDir;
+  if(spaceBelow>=popH){
+    top=rect.bottom+8;
+    arrowTop=-6;arrowDir='top';
+  } else {
+    top=rect.top-popH-8;
+    arrowTop=popH-6;arrowDir='bottom';
+  }
+  pop.style.left=left+'px';
+  pop.style.top=top+'px';
+  const arrowLeft=Math.min(Math.max(rect.left-left+4,10),popW-22);
+  arrow.style.left=arrowLeft+'px';
+  arrow.style.top=arrowTop+'px';
+  if(arrowDir==='bottom') arrow.style.transform='rotate(45deg)';
+}
+
+function closePrd(){
+  const ov=document.querySelector('.prd-overlay');
+  const pop=document.getElementById('prdPop');
+  if(ov)ov.remove();
+  if(pop)pop.remove();
+  _curPrdId=null;
+}
+
+function savePrd(id){
+  const ta=document.getElementById('prdTa');
+  if(ta)prdData[id].text=ta.value;
+  const prdK='prd_fenxibaogao';const prdS=JSON.parse(localStorage.getItem(prdK)||'{}');prdS[id]=prdData[id].text;localStorage.setItem(prdK,JSON.stringify(prdS));
+  closePrd();
+  showToast('产品规则已更新并保存');
+}
+
+render();
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>

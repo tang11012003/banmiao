@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>确认错题信息 - 陪读社区</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#E6431A;--secondary:#F24B0A;--bg:#F5F5F7;--surface:#FFFFFF;--text1:#1A1A1A;--text2:#424242;--text3:#616161;--hint:#9E9E9E;--divider:#EAEAEA;--urgent:#E53935;--orange:#FF6D00;--green:#2E7D32}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8e8e8;color:var(--text1);font-size:14px;line-height:1.5;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:390px;height:100vh;max-height:844px;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+@media(max-width:420px){#app{max-height:100vh;box-shadow:none}}
+
+/* 顶部 App Bar */
+.app-bar{background:var(--surface);height:52px;display:flex;align-items:center;padding:0 12px;box-shadow:0 .5px 2px rgba(0,0,0,.08);flex-shrink:0;z-index:10}
+.app-bar .back-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:none;background:none;color:var(--text2)}
+.app-bar .title{font-size:17px;font-weight:600;color:var(--text1);flex:1;margin-left:4px}
+
+/* 吸顶锚点 Tab 栏 */
+.anchor-nav-bar{background:var(--surface);display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--divider);overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0;position:sticky;top:0;z-index:9}
+.anchor-nav-bar::-webkit-scrollbar{display:none}
+.anchor-tab{display:inline-flex;align-items:center;gap:4px;padding:6px 16px;border-radius:16px;background:#f0f0f0;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.anchor-tab.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(230,67,26,.3)}
+.anchor-tab .status-dot{width:6px;height:6px;border-radius:50%;background:#ccc}
+.anchor-tab.edited .status-dot{background:var(--green)}
+.anchor-tab.active .status-dot{background:#fff}
+
+/* 长滚动页面容器 */
+.scroll-container{flex:1;overflow-y:auto;padding:16px;padding-bottom:100px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+
+/* 原封不动的单科面板设计块 */
+.subject-section{background:var(--surface);border-radius:12px;padding:16px;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,.05);scroll-margin-top:12px}
+
+.image-preview{height:180px;border-radius:8px;border:1px solid #ddd;overflow:hidden;margin-bottom:14px;cursor:pointer;position:relative}
+.image-preview img{width:100%;height:100%;object-fit:cover}
+.image-preview .zoom-hint{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;padding:3px 8px;border-radius:4px;font-size:11px}
+
+.chip-grid{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px}
+.chip{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:8px 13px;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .12s;user-select:none}
+.chip-wrong{background:var(--urgent);color:#fff}
+.chip-correct{background:#EEEEEE;color:var(--text1)}
+.chip-new{outline:2px solid var(--orange);outline-offset:-2px}
+.chip-add{background:#fff;border:1.5px dashed #bbb;color:var(--hint);font-weight:400;padding:8px 12px}
+
+/* 底部常驻按钮 */
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;background:#fff;padding:12px 16px 20px;box-shadow:0 -2px 10px rgba(0,0,0,.08);z-index:10}
+.btn-generate{width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 12px rgba(230,67,26,.25);transition:all .15s}
+.btn-generate:active{transform:scale(.98)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-box{background:#fff;border-radius:16px;padding:22px;width:88%;max-width:340px}
+
+/* ── PRD 标注系统 ── */
+.prd-mark{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#1565C0;color:#fff;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;user-select:none;box-shadow:0 2px 4px rgba(21,101,194,.3)}
+.prd-overlay{position:fixed;inset:0;z-index:900;background:transparent}
+.prd-popover{position:fixed;z-index:910;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:290px;padding:0;overflow:hidden}
+.prd-popover-arrow{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg);box-shadow:-2px -2px 5px rgba(0,0,0,.06)}
+.prd-pop-head{padding:14px 16px 10px;border-bottom:1px solid #f0f0f0}
+.prd-pop-title{font-size:13px;font-weight:700;color:#1A1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prd-pop-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;background:#FDE8E8;color:#C62828}
+.prd-pop-badge.interaction{background:#E8F5E9;color:#2E7D32}
+.prd-pop-badge.data{background:#E3F2FD;color:#1565C0}
+.prd-pop-body{padding:12px 16px}
+.prd-pop-body textarea{width:100%;min-height:110px;border:1px solid #e0e0e0;border-radius:8px;padding:9px 10px;font-size:12px;line-height:1.6;color:#424242;resize:vertical;outline:none;background:#fafafa}
+.prd-pop-body textarea:focus{border-color:#1565C0;background:#fff}
+.prd-pop-foot{padding:10px 16px 14px;display:flex;gap:8px;justify-content:flex-end}
+.prd-pop-foot button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+.prd-btn-cancel{background:#f5f5f5;color:#424242}
+.prd-btn-save{background:#1565C0;color:#fff}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-bar">
+  <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
+  <span class="title">确认错题信息</span><span class="prd-mark" onclick="openPrd(event,1)" style="margin-left:8px">1</span>
+</div>
+
+<!-- 吸顶锚点 Tab 栏 -->
+<div style="display:flex;align-items:center"><div class="anchor-nav-bar" id="anchorNavBar" style="flex:1"></div><span class="prd-mark" onclick="openPrd(event,2)" style="margin-right:12px;flex-shrink:0">2</span></div>
+
+<!-- 长滚动容器 -->
+<div class="scroll-container" id="scrollContainer" onscroll="handleScroll()"></div>
+
+<!-- 底部生成按钮 -->
+<div class="bottom-bar">
+  <button class="btn-generate" onclick="clickGenerateReport()"><span class="prd-mark" onclick="event.stopPropagation();openPrd(event,3)" style="margin-right:6px">3</span>
+    <span id="btnText">生成大考诊断报告</span>
+    <span class="material-icons" style="font-size:18px"></span>
+  </button>
+</div>
+</div>
+
+<div class="zoom-overlay" id="zoomOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;display:none;align-items:center;justify-content:center;cursor:zoom-out" onclick="this.style.display='none'">
+  <img id="zoomImg" style="max-width:95%;max-height:92%;object-fit:contain">
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)hideModal()">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<script>
+const paperImgSvg=`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="560" viewBox="0 0 400 560"><rect fill="#f9f9f9" width="400" height="560"/><rect x="30" y="30" width="340" height="40" rx="4" fill="#eee"/><text x="200" y="56" text-anchor="middle" font-size="16" fill="#888">试卷扫描预览图</text><line x1="30" y1="90" x2="370" y2="90" stroke="#ddd" stroke-width="1"/><text x="40" y="120" font-size="13" fill="#555">一、选择题（每题5分）</text><text x="40" y="150" font-size="12" fill="#666">1. 题目示例分析内容...</text><text x="40" y="175" font-size="12" fill="#666">2. 题目示例分析内容...</text><circle cx="355" cy="150" r="10" fill="none" stroke="#E53935" stroke-width="2"/><text x="355" y="155" text-anchor="middle" font-size="10" fill="#E53935">✗</text></svg>')}`;
+
+const uploadCtx = JSON.parse(localStorage.getItem('uploadContext')||'null');
+const examName = uploadCtx ? uploadCtx.examName : '期中综合考试';
+const subjectList = (uploadCtx && uploadCtx.subjects && uploadCtx.subjects.length > 0) 
+  ? uploadCtx.subjects 
+  : ['数学', '英语', '物理', '化学'];
+
+let activeSubjectIndex = 0;
+let subjectDataMap = {};
+let isManualScrolling = false;
+
+function initDataMap() {
+  subjectList.forEach((sub) => {
+    let questions = [];
+    for(let i = 1; i <= 10; i++) {
+      questions.push({ num: i, wrong: (i === 1 || i === 4), isNew: false });
+    }
+    subjectDataMap[sub] = {
+      isEdited: false,
+      questions: questions,
+      origWrongCount: 2
+    };
+  });
+}
+initDataMap();
+
+function renderAnchorBar() {
+  const bar = document.getElementById('anchorNavBar');
+  let html = '';
+  subjectList.forEach((sub, idx) => {
+    const isActive = idx === activeSubjectIndex;
+    const isEdited = subjectDataMap[sub].isEdited;
+    html += `
+      <div class="anchor-tab ${isActive ? 'active' : ''} ${isEdited ? 'edited' : ''}" id="tab-${idx}" onclick="scrollToSubject(${idx})">
+        <span class="status-dot"></span>
+        <span>${sub}</span>
+      </div>
+    `;
+  });
+  bar.innerHTML = html;
+}
+
+// 渲染长列表（每个 Block 完全保持原始单科 UI 细节）
+function renderPageBody() {
+  const container = document.getElementById('scrollContainer');
+  let html = '';
+
+  subjectList.forEach((sub, idx) => {
+    const curData = subjectDataMap[sub];
+    const questions = curData.questions;
+    const wrongCount = questions.filter(q => q.wrong).length;
+
+    let chipsHtml = '';
+    questions.forEach((q, qIdx) => {
+      chipsHtml += `<div class="chip ${q.wrong ? 'chip-wrong' : 'chip-correct'}${q.isNew ? ' chip-new' : ''}" onclick="toggleQ('${sub}', ${qIdx})">${q.num}</div>`;
+    });
+
+    html += `
+      <div class="subject-section" id="section-${idx}">
+        <div class="image-preview" onclick="zoomImage()">
+          <img src="${paperImgSvg}">
+          <div class="zoom-hint">点击放大照片</div>
+        </div>
+        
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <span style="font-size:12px;padding:2px 8px;border-radius:4px;background:rgba(21,101,194,.1);color:#1565C0;font-weight:600">${sub}</span>
+          <span style="font-size:13px;color:var(--text2);font-weight:500">${examName}</span>
+          ${curData.isEdited ? '<span style="font-size:11px;padding:2px 6px;border-radius:4px;background:#E8F5E9;color:#2E7D32;margin-left:auto">已人工微调</span>' : ''}
+        </div>
+
+        <div style="font-size:14px;color:var(--text1);margin-bottom:4px">AI 识别出 ${questions.length} 道题，自动判定错题 ${curData.origWrongCount} 道</div>
+        <div style="font-size:13px;color:var(--orange);margin-bottom:10px">当前修正为错题 ${wrongCount} 道</div>
+
+        <div style="font-size:12px;color:var(--hint);margin-bottom:6px">点击题号即可修正对错：</div>
+        <div class="chip-grid">
+          ${chipsHtml}
+          <div class="chip chip-add" onclick="showAddDialog('${sub}')"><span class="material-icons" style="font-size:18px">add</span></div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+  document.getElementById('btnText').innerText = `生成大考诊断报告 (${subjectList.length}科全涵盖)`;
+}
+
+// 锚点点击平滑跳转
+function scrollToSubject(index) {
+  activeSubjectIndex = index;
+  renderAnchorBar();
+  
+  isManualScrolling = true;
+  const targetSection = document.getElementById(`section-${index}`);
+  if(targetSection) {
+    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  
+  setTimeout(() => { isManualScrolling = false; }, 400);
+}
+
+// 监听滚动自动高亮 Tab (Scrollspy)
+function handleScroll() {
+  if (isManualScrolling) return;
+
+  const container = document.getElementById('scrollContainer');
+  const containerTop = container.getBoundingClientRect().top;
+
+  for (let i = 0; i < subjectList.length; i++) {
+    const section = document.getElementById(`section-${i}`);
+    if (section) {
+      const rect = section.getBoundingClientRect();
+      if (rect.top - containerTop <= 80 && rect.bottom - containerTop > 80) {
+        if (activeSubjectIndex !== i) {
+          activeSubjectIndex = i;
+          renderAnchorBar();
+          document.getElementById(`tab-${i}`).scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        }
+        break;
+      }
+    }
+  }
+}
+
+function toggleQ(sub, qIdx) {
+  subjectDataMap[sub].questions[qIdx].wrong = !subjectDataMap[sub].questions[qIdx].wrong;
+  subjectDataMap[sub].isEdited = true;
+  renderPageBody();
+  renderAnchorBar();
+}
+
+function clickGenerateReport() {
+  const task = {
+    examName: examName,
+    selectedSubjects: subjectList,
+    status: 'generating',
+    startedAt: Date.now()
+  };
+  localStorage.setItem('reportTask', JSON.stringify(task));
+  window.location.href = 'loading.html';
+}
+
+function zoomImage() {
+  document.getElementById('zoomImg').src = paperImgSvg;
+  document.getElementById('zoomOverlay').style.display = 'flex';
+}
+
+let addingSub = '';
+function showAddDialog(sub) {
+  addingSub = sub;
+  document.getElementById('modalBox').innerHTML = `
+    <h3 style="font-size:16px;font-weight:600;margin-bottom:14px">为 [${sub}] 添加题号</h3>
+    <input type="number" id="newQNum" placeholder="输入题号" style="width:100%;padding:11px 14px;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none;margin-bottom:16px">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="hideModal()" style="padding:8px 18px;border-radius:8px;border:none;background:none;font-size:14px;color:#424242;cursor:pointer">取消</button>
+      <button onclick="confirmAddQ()" style="padding:8px 18px;border-radius:8px;border:none;background:var(--primary);color:#fff;font-size:14px;font-weight:500;cursor:pointer">添加</button>
+    </div>`;
+  document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+function hideModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+
+function confirmAddQ() {
+  const n = parseInt(document.getElementById('newQNum').value);
+  const questions = subjectDataMap[addingSub].questions;
+
+  if(!n || n <= 0) return;
+  if(questions.find(q => q.num === n)) return;
+
+  questions.push({ num: n, wrong: true, isNew: true });
+  questions.sort((a, b) => a.num - b.num);
+  subjectDataMap[addingSub].isEdited = true;
+  
+  hideModal();
+  renderPageBody();
+  renderAnchorBar();
+}
+
+renderAnchorBar();
+renderPageBody();
+
+const prdData={
+  1:{title:'标记 1 · AI识别结果展示',badge:'显示规则',badgeType:'data',
+     text:'每科展示：\n• 试卷缩略图（点击放大）\n• AI识别题目总数\n• 自动判定错题数\n• 当前人工修正后的错题数\n\n数据来源：AI识别结果（原型用模拟数据，每科默认10题2个错题）。'},
+  2:{title:'标记 2 · 题号勾选交互',badge:'交互规范',badgeType:'interaction',
+     text:'题号颜色：\n• 红色 = 错题\n• 灰色 = 正确\n• 橙色边框 = 新手动添加的题\n\n点击切换对/错。\n点击"+"可手动添加题号（弹窗输入）。\n修改后 Tab 上显示绿色小点"已人工微调"。'},
+  3:{title:'标记 3 · 生成报告按钮',badge:'业务规则',badgeType:'',
+     text:'文案：生成大考诊断报告（N科全涵盖）。\n点击后写入 localStorage.reportTask，跳转 loading.html。\n报告包含：考试名称、科目列表、各科错题号列表。'}
+};
+function openPrd(e,id){
+  e.stopPropagation();closePrd();
+  const d=prdData[id];const mark=e.currentTarget;const rect=mark.getBoundingClientRect();
+  const overlay=document.createElement('div');overlay.className='prd-overlay';overlay.onclick=closePrd;document.body.appendChild(overlay);
+  const pop=document.createElement('div');pop.className='prd-popover';pop.id='prdPop';
+  const badgeCls='prd-pop-badge'+(d.badgeType?' '+d.badgeType:'');
+  pop.innerHTML='<div class="prd-pop-head"><div class="prd-pop-title">'+d.title+'<span class="'+badgeCls+'">'+d.badge+'</span></div></div><div class="prd-pop-body"><textarea id="prdTa">'+d.text+'</textarea></div><div class="prd-pop-foot"><button class="prd-btn-cancel" onclick="closePrd()">取消</button><button class="prd-btn-save" onclick="savePrd('+id+')">保存</button></div>';
+  const arrow=document.createElement('div');arrow.className='prd-popover-arrow';pop.appendChild(arrow);document.body.appendChild(pop);
+  const appRect=document.getElementById('app').getBoundingClientRect();
+  const popW=290,popH=260;
+  let left=Math.min(rect.left-10,appRect.right-popW-8);left=Math.max(appRect.left+8,left);
+  let top=rect.bottom+8;if(window.innerHeight-rect.bottom<popH)top=rect.top-popH-8;
+  pop.style.left=left+'px';pop.style.top=top+'px';
+}
+function closePrd(){document.querySelector('.prd-overlay')?.remove();document.getElementById('prdPop')?.remove();}
+function savePrd(id){const ta=document.getElementById('prdTa');if(ta)prdData[id].text=ta.value;closePrd();}
+</script>
+<script src="prd-runtime.js"></script>
+</body>
+</html>
